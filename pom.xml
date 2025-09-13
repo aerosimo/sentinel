@@ -120,7 +120,7 @@
         <json.version>20250107</json.version>
         <log4j.version>2.24.1</log4j.version>
         <junit.version>5.11.2</junit.version>
-        <mail.version>2.0.1</mail.version>
+        <mail.version>2.1.0</mail.version>
         <jstl.version>3.0.1</jstl.version>
         <xml.version>4.0.3</xml.version>
     </properties>
