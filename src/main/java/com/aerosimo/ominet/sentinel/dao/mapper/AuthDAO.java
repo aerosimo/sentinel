@@ -31,6 +31,7 @@
 
 package com.aerosimo.ominet.sentinel.dao.mapper;
 
+import com.aerosimo.ominet.sentinel.core.config.Connect;
 import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.MFAResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
@@ -49,6 +50,9 @@ public class AuthDAO {
     static String token;
     static String sql;
     static Connection con;
+    static {
+        con = Connect.dbase();
+    }
     static CallableStatement stmt;
 
     public static SignupResponseDTO signup(String email, String pword, String modifiedBy) {
