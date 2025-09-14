@@ -47,6 +47,8 @@ public class Connect {
     static Connection con;
     static Context ctx;
     static Context env;
+    static Context initCtx;
+    static Context envCtx;
     static DataSource ds;
     static Session sess;
 
@@ -68,9 +70,9 @@ public class Connect {
 
         try {
             log.info("Preparing Mail Session");
-            ctx = new InitialContext();
-            env = (Context) ctx.lookup("java:/comp/env");
-            sess = (Session) env.lookup("mail/Session");
+            initCtx = new InitialContext();
+            envCtx = (Context) initCtx.lookup("java:/comp/env");
+            sess = (Session) envCtx.lookup("mail/Session");
             log.info("Successfully retrieve email session");
         } catch (Exception err) {
             log.error("Email session failed with the following - {}", Connect.class.getName(), err);
