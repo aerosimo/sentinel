@@ -120,10 +120,10 @@
         <json.version>20250107</json.version>
         <log4j.version>2.24.1</log4j.version>
         <junit.version>5.11.2</junit.version>
-        <angus.version>2.0.4</angus.version>
         <mail.version>2.1.4</mail.version>
         <jstl.version>3.0.1</jstl.version>
         <xml.version>4.0.3</xml.version>
+        <sun.version>2.0.2</sun.version>
     </properties>
 
     <dependencies>
@@ -168,9 +168,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.angus</groupId>
+            <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
-            <version>${angus.version}</version>
+            <version>${sun.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
