@@ -104,7 +104,7 @@ public class WelcomeMail {
                     "  </table>\n" +
                     "</body>\n" +
                     "</html>");
-            response = Postmaster.sendEmail(email,"Welcome to Sentinel",memo.toString(),"","Aerosimo Support <support@aerosimo.com>","text/html");
+            response = Postmaster.sendEmail(email,"Welcome to Sentinel",memo.toString(),"");
             log.info("Sent welcome email from Sentinel to {}", email);
         } catch (Exception err) {
             response = "Welcome Email failed";

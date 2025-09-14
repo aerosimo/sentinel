@@ -33,7 +33,6 @@ package com.aerosimo.ominet.sentinel.core.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import jakarta.mail.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -46,16 +45,12 @@ public class Connect {
     private static final Logger log = LogManager.getLogger(Connect.class.getName());
     static Connection con;
     static Context ctx;
-    static Context env;
-    static Context initCtx;
-    static Context envCtx;
     static DataSource ds;
-    static Session sess;
 
     public static Connection dbase() {
-
+        log.info("Preparing connection to Oracle Database");
         try {
-            log.info("Preparing connection to Oracle Database");
+            log.info("Retrieving JNDI resource to connect Oracle Database");
             ctx = new InitialContext();
             ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/hats");
             con = ds.getConnection();
@@ -65,19 +60,4 @@ public class Connect {
         }
         return con;
     }
-
-    public static Session email() {
-
-        try {
-            log.info("Preparing Mail Session");
-            initCtx = new InitialContext();
-            envCtx = (Context) initCtx.lookup("java:/comp/env");
-            sess = (Session) envCtx.lookup("mail/Session");
-            log.info("Successfully retrieve email session");
-        } catch (Exception err) {
-            log.error("Email session failed with the following - {}", Connect.class.getName(), err);
-        }
-        return sess;
-    }
-
 }

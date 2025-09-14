@@ -31,57 +31,82 @@
 
 package com.aerosimo.ominet.sentinel.models.litemail;
 
-import com.aerosimo.ominet.sentinel.core.config.Connect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
+import org.w3c.dom.Document;
 
-import java.io.IOException;
-import java.util.Date;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Postmaster {
 
     private static final Logger log = LogManager.getLogger(Postmaster.class.getName());
+    private static final String ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postalsystem/ws/postmaster";
     static String response;
-    static MimeBodyPart messageBodyPart;
-    static Multipart multipart;
-    static Message msg;
 
-    public static String sendEmail(String emailAddress, String emailSubject, String emailMessage, String emailFiles,
-                                   String emailFrom, String emailContentType) {
+    public static String sendEmail(String emailAddress, String emailSubject, String emailMessage, String emailFiles) {
+
         response = "Message sent successfully";
         try {
-            msg = new MimeMessage(Connect.email());
-            msg.setFrom(new InternetAddress(emailFrom));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailAddress));
-            msg.setSubject(emailSubject);
-            msg.setSentDate(new Date());
-            messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setContent(emailMessage, emailContentType + "; charset=UTF-8");
-            multipart = new MimeMultipart();
-            multipart.addBodyPart(messageBodyPart);
-            if (!emailFiles.isEmpty()) {
-                String[] attachFiles = emailFiles.split(",");
-                for (String filePath : attachFiles) {
-                    MimeBodyPart attachPart = new MimeBodyPart();
-                    attachPart.attachFile(filePath);
-                    multipart.addBodyPart(attachPart);
-                }
+            // Build SOAP request XML
+            String soapRequest =
+                    """
+                    <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+                                   xmlns:pos="https://aerosimo.com/api/ws/postmaster">
+                        <soap:Body>
+                            <pos:sendEmail>
+                                <emailAddress>%s</emailAddress>
+                                <emailSubject>%s</emailSubject>
+                                <emailMessage>%s</emailMessage>
+                                <emailFiles>%s</emailFiles>
+                            </pos:sendEmail>
+                        </soap:Body>
+                    </soap:Envelope>
+                    """.formatted(
+                            escapeXml(emailAddress),
+                            escapeXml(emailSubject),
+                            escapeXml(emailMessage),
+                            emailFiles != null ? escapeXml(emailFiles) : ""
+                    );
+
+            // Open HTTP connection
+            URL url = new URL(ENDPOINT_URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/soap+xml; charset=utf-8");
+
+            // Send SOAP request
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(soapRequest.getBytes());
             }
-            msg.setContent(multipart);
-            Transport.send(msg);
-            log.info("Message sent successfully");
-        } catch (MessagingException | IOException err) {
+
+            // Parse SOAP response
+            Document doc = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder()
+                    .parse(conn.getInputStream());
+
+            // Extract <Status> from response
+            if (doc.getElementsByTagName("Status").getLength() > 0) {
+                response = doc.getElementsByTagName("Status").item(0).getTextContent();
+            } else {
+                log.warn("No <Status> element found in SOAP response.");
+            }
+        } catch (Exception err) {
             response = "Message not successful";
-            log.error("Email Notification Service failed with the following - {}", Postmaster.class.getName(), err);
+            log.error("Email Notification Service failed in {} with error: ", Postmaster.class.getName(), err);
         }
         return response;
+    }
+    // Utility to safely escape XML special chars in inputs
+    private static String escapeXml(String input) {
+        return input == null ? "" : input
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&apos;");
     }
 }
