@@ -74,4 +74,23 @@
         <location>/500.html</location>
     </error-page>
 
+    <!-- Specifying jndi resource -->
+    <resource-ref>
+        <description>
+            Resource reference to a factory for jakarta.mail.Session
+            instances that may be used for sending electronic mail
+            messages, preconfigured to connect to the appropriate
+            SMTP server.
+        </description>
+        <res-ref-name>
+            mail/Session
+        </res-ref-name>
+        <res-type>
+            jakarta.mail.Session
+        </res-type>
+        <res-auth>
+            Container
+        </res-auth>
+    </resource-ref>
+
 </web-app>

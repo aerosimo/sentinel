@@ -70,7 +70,7 @@ public class Connect {
             log.info("Preparing Mail Session");
             ctx = new InitialContext();
             env = (Context) ctx.lookup("java:/comp/env");
-            sess = (Session) env.lookup("mail/aerosimo");
+            sess = (Session) env.lookup("mail/Session");
             log.info("Successfully retrieve email session");
         } catch (Exception err) {
             log.error("Email session failed with the following - {}", Connect.class.getName(), err);
