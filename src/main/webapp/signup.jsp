@@ -2,9 +2,9 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      500.html                                                       ~
-  ~ Created:   13/09/2025, 01:36                                              ~
-  ~ Modified:  13/09/2025, 01:36                                              ~
+  ~ File:      signup.html                                                    ~
+  ~ Created:   13/09/2025, 01:28                                              ~
+  ~ Modified:  14/09/2025, 17:59                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2025.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -29,6 +29,7 @@
   ~                                                                           ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +44,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>500 SERVER ERROR | Aerosimo Ltd</title>
+    <title>Sign up | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -53,23 +54,71 @@
     <link href="assets/img/favicon/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
     <!-- Bootstrap CSS (local) -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/fault.css" rel="stylesheet">
+    <link href="assets/css/auth.css" rel="stylesheet">
 </head>
-
 <body>
-<h1>500</h1>
-<div><p>> <span>ERROR CODE</span>: "<i>HTTP 500 Internal Server Error</i>"</p>
-    <p>> <span>ERROR DESCRIPTION</span>: "<i>The server has encountered a situation it doesn't know how to handle</i>"</p>
-    <p>> <span>ERROR POSSIBLY CAUSED BY</span>: [<b>Server that is down for maintenance or that is overloaded</b>...]</p>
-    <p>> <span>SOME PAGES ON THIS SERVER THAT YOU DO HAVE PERMISSION TO ACCESS</span>: [<a href="index.html">Welcome Page</a>, <a
-            href="signin.jsp">Login</a>, <a href="signup.jsp">Sign Up</a>...]</p>
-    <p>> <span>HAVE A NICE DAY :-)</span></p>
-    <br>
-    <br>
-    <p>> <span><a href="javascript:history.back()">Go Back</a></span></p>
+
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="row g-0 login-wrap w-100">
+        <div class="col-md-6 left-pane d-flex flex-column justify-content-center">
+            <div class="form text-center">
+                <img src="assets/img/favicon/logo-icon.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
+            </div>
+            <h1>Signup</h1>
+            <p>Please register to make your app management easy and fun!. As Adventure starts here 🚀.</p>
+        </div>
+            <!-- Display error message if present -->
+            <%
+                String errorMessage = (String) request.getAttribute("errorMessage");
+                if (errorMessage != null && !errorMessage.isEmpty()) {
+            %>
+                <div class="alert alert-danger text-center" role="alert">
+                    <%= errorMessage %>
+                </div>
+            <% } %>
+
+        <div class="col-md-6 right-pane">
+            <form novalidate action="signup" method="POST">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input autofocus
+                           class="form-control"
+                           id="email"
+                           name="email"
+                           placeholder="example@domain.com"
+                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                           required
+                           title="Must contain the Local Part (username), the @ symbol and domain name"
+                           type="email">
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input autocomplete="off"
+                           class="form-control"
+                           id="password"
+                           minlength="8"
+                           name="password"
+                           placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                           required
+                           title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                           type="password">
+                </div>
+
+                <div class="form-actions text-center mt-3">
+                    <a href="signin.html" class="d-block mb-2">Already have an account? <strong>Sign in</strong></a>
+                    <a href="forgot.html" class="d-block">Forgot your password?</a>
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-cta" type="submit">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-<!--   Java Script   -->
-<script src="assets/js/fault.js"></script>
+<!-- Bootstrap JS (local) -->
+<script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

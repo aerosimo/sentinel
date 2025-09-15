@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Connect.java                                                    *
- * Created:   11/09/2025, 00:14                                               *
- * Modified:  11/09/2025, 00:14                                               *
+ * File:      VeryMFA.java                                                    *
+ * Created:   15/09/2025, 02:53                                               *
+ * Modified:  15/09/2025, 02:53                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,40 +29,53 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.core.config;
+package com.aerosimo.ominet.sentinel.web.controllers;
 
+import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-public class Connect {
+import java.io.IOException;
+
+@WebServlet(name = "mfa",
+        description = "A simple servlet to capture the information from mfa email form",
+        value = "/mfa")
+public class VeryMFA extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Connect.class.getName());
+        log = LogManager.getLogger(VeryMFA.class.getName());
     }
 
-    static Connection con;
-    static Context ctx;
-    static DataSource ds;
+    static String mfaToken;
+    static String modifiedBy;
+    static String result;
 
-    public static Connection dbase() {
-        log.info("Preparing connection to Oracle Database");
-        try {
-            log.info("Retrieving JNDI resource to connect Oracle Database");
-            ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/hats");
-            con = ds.getConnection();
-            log.info("Successfully connected to Oracle Database");
-        } catch (NamingException | SQLException err) {
-            log.error("Oracle Database Connection failed with the following - {}", Connect.class.getName(), err);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        mfaToken = req.getParameter("mfaToken");
+        modifiedBy = "Sentinel";
+        log.info("Preparing to confirm login token");
+        // Call DAO method
+        result = String.valueOf(AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),mfaToken,(String) req.getSession().getAttribute("inet"),(String) req.getSession().getAttribute("user") + (String) req.getSession().getAttribute("userAgent"), modifiedBy));
+        log.info("Logging response of login confirmation email {}", result);
+        // Check response and redirect
+        if ("success".equalsIgnoreCase(result)) {
+            log.info("MFA email confirmed successfully");
+            resp.sendRedirect("index.jsp");
+        } else {
+            log.error("MFA email confirmation failed with the following: {}", result);
+            // Stay on signup page, optionally show error message
+            req.setAttribute("errorMessage", result);
+            req.getRequestDispatcher("mfa.jsp").forward(req, resp);
         }
-        return con;
+
     }
 }

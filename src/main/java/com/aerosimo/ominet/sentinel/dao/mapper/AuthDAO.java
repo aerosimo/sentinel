@@ -44,13 +44,15 @@ import java.sql.SQLException;
 
 public class AuthDAO {
 
-    private static final Logger log = LogManager.getLogger(AuthDAO.class.getName());
+    private static final Logger log;
 
     static String response;
     static String token;
     static String sql;
     static Connection con;
+
     static {
+        log = LogManager.getLogger(AuthDAO.class.getName());
         con = Connect.dbase();
     }
     static CallableStatement stmt;

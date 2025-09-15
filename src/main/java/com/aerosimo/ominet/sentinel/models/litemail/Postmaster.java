@@ -31,6 +31,7 @@
 
 package com.aerosimo.ominet.sentinel.models.litemail;
 
+import com.aerosimo.ominet.sentinel.dao.mapper.ErrorVaultDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -42,8 +43,18 @@ import java.net.URL;
 
 public class Postmaster {
 
-    private static final Logger log = LogManager.getLogger(Postmaster.class.getName());
-    private static final String ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postalsystem/ws/postmaster";
+    private static final Logger log;
+
+    static {
+        log = LogManager.getLogger(Postmaster.class.getName());
+    }
+
+    private static final String ENDPOINT_URL;
+
+    static {
+        ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postalsystem/ws/postmaster";
+    }
+
     static String response;
 
     public static String sendEmail(String emailAddress, String emailSubject, String emailMessage, String emailFiles) {
@@ -97,6 +108,7 @@ public class Postmaster {
         } catch (Exception err) {
             response = "Message not successful";
             log.error("Email Notification Service failed in {} with error: ", Postmaster.class.getName(), err);
+            ErrorVaultDAO.storeError("EM-20007",err.getMessage(), Postmaster.class.getName());
         }
         return response;
     }

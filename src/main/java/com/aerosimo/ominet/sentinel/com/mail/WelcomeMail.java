@@ -37,7 +37,11 @@ import org.apache.logging.log4j.Logger;
 
 public class WelcomeMail {
 
-    private static final Logger log = LogManager.getLogger(WelcomeMail.class.getName());
+    private static final Logger log;
+
+    static {
+        log = LogManager.getLogger(WelcomeMail.class.getName());
+    }
 
     static String response;
 
@@ -68,7 +72,7 @@ public class WelcomeMail {
                     "          <!-- Body -->\n" +
                     "          <tr>\n" +
                     "            <td style=\"padding:30px; font-size:16px; line-height:1.6; color:#333;\">\n" +
-                    "              <p>Hi");
+                    "              <p>Hi ");
             memo.append(email);
             memo.append(",</p>\n" +
                     "              <p><strong>Sentinel</strong> is your diligent and watchful guardian, keeping track of your servers and providing <strong>real-time insights</strong> to ensure smooth operations.</p>\n" +

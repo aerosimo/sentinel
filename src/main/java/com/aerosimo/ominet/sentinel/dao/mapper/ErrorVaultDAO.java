@@ -42,7 +42,11 @@ import java.sql.Types;
 
 public class ErrorVaultDAO {
 
-    private static final Logger log = LogManager.getLogger(ErrorVaultDAO.class.getName());
+    private static final Logger log;
+
+    static {
+        log = LogManager.getLogger(ErrorVaultDAO.class.getName());
+    }
 
     static String response;
     static String sql;
