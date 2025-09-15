@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      VeryMFA.java                                                    *
- * Created:   15/09/2025, 02:53                                               *
- * Modified:  15/09/2025, 02:53                                               *
+ * File:      Forgot.java                                                     *
+ * Created:   15/09/2025, 15:16                                               *
+ * Modified:  15/09/2025, 15:16                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,11 +31,10 @@
 
 package com.aerosimo.ominet.sentinel.web.controllers;
 
-import com.aerosimo.ominet.sentinel.dao.impl.MFAResponseDTO;
+import com.aerosimo.ominet.sentinel.com.mail.ForgotMail;
+import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -43,44 +42,49 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "mfa",
-        description = "A simple servlet to capture the information from mfa email form",
-        value = "/mfa")
-public class VeryMFA extends HttpServlet {
+@WebServlet(name = "forgot",
+        description = "A simple servlet to recover password for the application user",
+        value = "/forgot")
+public class Forgot {
 
     private static final Logger log;
-    static String mfaToken;
-    static String modifiedBy;
-    static MFAResponseDTO result;
 
     static {
-        log = LogManager.getLogger(VeryMFA.class.getName());
+        log = LogManager.getLogger(Forgot.class.getName());
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
-        mfaToken = req.getParameter("mfaToken");
-        modifiedBy = "Sentinel";
-        log.info("Preparing to confirm login token");
-        // Call DAO method
-        result = AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),
-                mfaToken, (String) req.getSession().getAttribute("inet"),
-                req.getSession().getAttribute("user") + (String) req.getSession().getAttribute("userAgent"),
-                modifiedBy);
-        log.info("Logging response of login confirmation email {}", result.getResponse());
-        // Check response and redirect
-        if ("success".equalsIgnoreCase(result.getResponse())) {
-            log.info("MFA email confirmed successfully");
-            log.info("Session token is: {}", result.getSessionToken());
-            req.getSession().setAttribute("SessionToken", result.getSessionToken());
-            resp.sendRedirect("index.jsp");
-        } else {
-            log.error("MFA email confirmation failed with the following: {}", result.getResponse());
-            // Stay on signup page, optionally show error message
-            req.setAttribute("errorMessage", result.getSessionToken());
-            req.getRequestDispatcher("mfa.jsp").forward(req, resp);
-        }
+    static String email;
+    static String modifiedBy;
+    static String result;
+    static SignupResponseDTO response;
 
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        email = req.getParameter("email");
+        modifiedBy = "Sentinel";
+        log.info("Preparing to find user via email address {}", email);
+        // Call DAO method
+        response = AuthDAO.forgotPassword(email, modifiedBy);
+        log.info("Logging response of sign in {}", response.getResponse());
+        // Remove all stored session attributes
+        req.getSession().removeAttribute("inet");
+        req.getSession().removeAttribute("host");
+        req.getSession().removeAttribute("user");
+        req.getSession().removeAttribute("email");
+        req.getSession().removeAttribute("userAgent");
+        req.getSession().removeAttribute("SessionToken");
+        req.getSession().invalidate();
+        // Check response and redirect
+        if ("success".equalsIgnoreCase(response.getResponse())) {
+            log.info("Password forgot ran successfully for {}", email);
+            log.info("email verification code of password reset is: {}", response.getVerificationCode());
+            // Send forgot email to the new user
+            result = ForgotMail.sendMail(email,response.getVerificationCode());
+            log.info("Forgot email response is : {}", result);
+            resp.sendRedirect("reset.jsp");
+        } else {
+            log.error("Forgot password request failed with the following: {}", response.getResponse());
+            resp.sendRedirect("index.jsp");
+        }
     }
 }

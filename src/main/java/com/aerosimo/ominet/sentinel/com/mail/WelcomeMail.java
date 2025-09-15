@@ -94,7 +94,7 @@ public class WelcomeMail {
                     "          <!-- Footer -->\n" +
                     "          <tr>\n" +
                     "            <td align=\"center\" style=\"background-color:#f8f9fa; padding:20px; font-size:14px; color:#666;\">\n" +
-                    "              <p>Aerosimo &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved.</p>\n" +
+                    "              <p>&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</p>\n" +
                     "              <p>\n" +
                     "                <a href=\"mailto:support@aerosimo.com?subject=Confidential%20email%20to%20not%20the%20intended%20recipient\" style=\"color:#4d3b7a; text-decoration:none;\">Contact Support</a> | \n" +
                     "                <a href=\"https://yourdomain.com/settings\" style=\"color:#4d3b7a; text-decoration:none;\">Settings</a>\n" +

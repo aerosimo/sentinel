@@ -2,9 +2,9 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      verify.html                                                    ~
-  ~ Created:   13/09/2025, 01:34                                              ~
-  ~ Modified:  14/09/2025, 18:13                                              ~
+  ~ File:      reset.html                                                     ~
+  ~ Created:   13/09/2025, 01:33                                              ~
+  ~ Modified:  13/09/2025, 01:33                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2025.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -44,7 +44,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>Verify code | Aerosimo Ltd</title>
+    <title>Reset password | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -64,31 +64,30 @@
             <div class="form text-center">
                 <img src="assets/img/favicon/logo-icon.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
             </div>
-            <h1>Verify Code</h1>
-            <p>Please enter the 10-character code sent to your email address.</p>
+            <h1>Reset Password</h1>
+            <p>Please enter the authentication code sent to your email. Also set the new password to be associated with this account. 🔄</p>
         </div>
 
-            <!-- Display error message if present -->
-            <%
-                String email = (String) request.getAttribute("email");
-                String errorMessage = (String) request.getAttribute("errorMessage");
-                if (errorMessage != null && !errorMessage.isEmpty()) {
-            %>
-                <div class="alert alert-danger text-center" role="alert">
-                    <%= errorMessage %>
-                </div>
-            <% } %>
+        <!-- Display error message if present -->
+        <%
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+        %>
+        <div class="alert alert-danger text-center" role="alert">
+            <%= errorMessage %>
+        </div>
+        <% } %>
 
         <div class="col-md-6 right-pane">
-            <form novalidate action="verify" method="POST">
+            <form novalidate action="reset" method="POST">
                 <div class="field">
-                    <label for="verifyToken">Verification Code</label>
+                    <label for="token">Authentication Code</label>
                     <input autofocus
                            class="form-control"
-                           id="verifyToken"
-                           name="verifyToken"
+                           id="token"
+                           name="token"
                            placeholder="XXXXXX"
-                           maxlength="10"
+                           maxlength="6"
                            pattern="[A-Za-z0-9]{6}"
                            required
                            title="6 alphanumeric characters"
@@ -96,8 +95,20 @@
                            required>
                 </div>
 
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input autocomplete="off"
+                           class="form-control"
+                           id="password"
+                           minlength="8"
+                           name="password"
+                           placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                           required
+                           title="New Password must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                           type="password">
+                </div>
                 <div class="text-center">
-                    <button class="btn btn-cta" type="submit">Verify</button>
+                    <button class="btn btn-cta" type="submit">Reset</button>
                 </div>
             </form>
         </div>

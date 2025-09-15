@@ -2,9 +2,9 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      verify.html                                                    ~
-  ~ Created:   13/09/2025, 01:34                                              ~
-  ~ Modified:  14/09/2025, 18:13                                              ~
+  ~ File:      401.html                                                       ~
+  ~ Created:   13/09/2025, 01:42                                              ~
+  ~ Modified:  13/09/2025, 01:42                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2025.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -29,7 +29,7 @@
   ~                                                                           ~
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page isErrorPage="true" contentType="text/html; charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +44,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>Verify code | Aerosimo Ltd</title>
+    <title>401 UNAUTHORIZED | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -54,57 +54,48 @@
     <link href="assets/img/favicon/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
     <!-- Bootstrap CSS (local) -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/auth.css" rel="stylesheet">
+    <link href="assets/css/fault.css" rel="stylesheet">
 </head>
+
 <body>
+<h1>401</h1>
+<div><p>> <span>ERROR CODE</span>: "<i>HTTP 401 Unauthorized</i>"</p>
+    <p>> <span>ERROR DESCRIPTION</span>: "<i>Access Denied. The request has not been applied because it lacks valid authentication credentials for the target resource</i>"</p>
+    <p>> <span>ERROR POSSIBLY CAUSED BY</span>: [<b>execute access forbidden, read access forbidden, write access
+        forbidden, ssl required, ssl 128 required, ip address rejected, client certificate required, site access denied,
+        too many users, invalid configuration, password change, mapper denied access, client certificate revoked,
+        directory listing denied, client access licenses exceeded, client certificate is untrusted or invalid, client
+        certificate has expired or is not yet valid, passport logon failed, source access denied, infinite depth is
+        denied, too many requests from the same client ip</b>...]</p>
+    <p>> <span>SOME PAGES ON THIS SERVER THAT YOU DO HAVE PERMISSION TO ACCESS</span>: [<a href="index.jsp">Welcome Page</a>, <a
+            href="signin.jsp">Login</a>, <a href="signup.jsp">Sign Up</a>...]</p>
+    <p>> <span>HAVE A NICE DAY :-)</span></p>
+    <br>
+    <br>
+    <p>> <span><a href="javascript:history.back()">Go Back</a></span></p>
 
-<div class="d-flex align-items-center justify-content-center min-vh-100">
-    <div class="row g-0 login-wrap w-100">
-        <div class="col-md-6 left-pane d-flex flex-column justify-content-center">
-            <div class="form text-center">
-                <img src="assets/img/favicon/logo-icon.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
-            </div>
-            <h1>Verify Code</h1>
-            <p>Please enter the 10-character code sent to your email address.</p>
-        </div>
+    <%-- 🔹 Show actual server error if available --%>
+    <%
+    if (exception != null) {
+    %>
+    <hr>
+    <h3>Debug Information (Server Error)</h3>
+    <p><b>Message:</b> <%= exception.getMessage() %></p>
+    <details>
+        <summary>Stack Trace</summary>
+        <pre>
+                <%
+                    exception.printStackTrace(new java.io.PrintWriter(out));
+                %>
+            </pre>
+    </details>
+    <%
+    }
+    %>
 
-            <!-- Display error message if present -->
-            <%
-                String email = (String) request.getAttribute("email");
-                String errorMessage = (String) request.getAttribute("errorMessage");
-                if (errorMessage != null && !errorMessage.isEmpty()) {
-            %>
-                <div class="alert alert-danger text-center" role="alert">
-                    <%= errorMessage %>
-                </div>
-            <% } %>
-
-        <div class="col-md-6 right-pane">
-            <form novalidate action="verify" method="POST">
-                <div class="field">
-                    <label for="verifyToken">Verification Code</label>
-                    <input autofocus
-                           class="form-control"
-                           id="verifyToken"
-                           name="verifyToken"
-                           placeholder="XXXXXX"
-                           maxlength="10"
-                           pattern="[A-Za-z0-9]{6}"
-                           required
-                           title="6 alphanumeric characters"
-                           type="text"
-                           required>
-                </div>
-
-                <div class="text-center">
-                    <button class="btn btn-cta" type="submit">Verify</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
-<!-- Bootstrap JS (local) -->
-<script src="assets/js/bootstrap.bundle.min.js"></script>
+<!--   Java Script   -->
+<script src="assets/js/fault.js"></script>
 </body>
 </html>

@@ -260,10 +260,7 @@
 
         <!-- Footer -->
         <footer>
-            <div class='copy'>Copyright &copy;
-                <script>document.write(new Date().getFullYear());</script>
-                Aerosimo | All rights reserved.
-            </div>
+            <div class='copy'>&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>
         </footer>
     </div>
 </div>

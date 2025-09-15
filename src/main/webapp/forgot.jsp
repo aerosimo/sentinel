@@ -2,9 +2,9 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      verify.html                                                    ~
-  ~ Created:   13/09/2025, 01:34                                              ~
-  ~ Modified:  14/09/2025, 18:13                                              ~
+  ~ File:      forgot.html                                                    ~
+  ~ Created:   13/09/2025, 01:32                                              ~
+  ~ Modified:  13/09/2025, 01:32                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2025.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -44,7 +44,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>Verify code | Aerosimo Ltd</title>
+    <title>Forgot password | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -64,40 +64,37 @@
             <div class="form text-center">
                 <img src="assets/img/favicon/logo-icon.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
             </div>
-            <h1>Verify Code</h1>
-            <p>Please enter the 10-character code sent to your email address.</p>
+            <h1>Forgot password</h1>
+            <p>To reset your password, please confirm your email address. 🤦</p>
         </div>
 
-            <!-- Display error message if present -->
-            <%
-                String email = (String) request.getAttribute("email");
-                String errorMessage = (String) request.getAttribute("errorMessage");
-                if (errorMessage != null && !errorMessage.isEmpty()) {
-            %>
-                <div class="alert alert-danger text-center" role="alert">
-                    <%= errorMessage %>
-                </div>
-            <% } %>
+        <!-- Display error message if present -->
+        <%
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+        %>
+        <div class="alert alert-danger text-center" role="alert">
+            <%= errorMessage %>
+        </div>
+        <% } %>
 
         <div class="col-md-6 right-pane">
-            <form novalidate action="verify" method="POST">
+            <form novalidate action="forgot" method="POST">
                 <div class="field">
-                    <label for="verifyToken">Verification Code</label>
+                    <label for="email">Email</label>
                     <input autofocus
                            class="form-control"
-                           id="verifyToken"
-                           name="verifyToken"
-                           placeholder="XXXXXX"
-                           maxlength="10"
-                           pattern="[A-Za-z0-9]{6}"
+                           id="email"
+                           name="email"
+                           placeholder="example@domain.com"
+                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                            required
-                           title="6 alphanumeric characters"
-                           type="text"
-                           required>
+                           title="Must contain the Local Part (username), the @ symbol and domain name"
+                           type="email">
                 </div>
 
                 <div class="text-center">
-                    <button class="btn btn-cta" type="submit">Verify</button>
+                    <button class="btn btn-cta" type="submit">Submit</button>
                 </div>
             </form>
         </div>
