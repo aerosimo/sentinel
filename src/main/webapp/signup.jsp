@@ -62,7 +62,7 @@
     <div class="row g-0 login-wrap w-100">
         <div class="col-md-6 left-pane d-flex flex-column justify-content-center">
             <div class="form text-center">
-                <img src="assets/img/favicon/logo-icon.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
+                <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
             </div>
             <h1>Signup</h1>
             <p>Please register to make your app management easy and fun!. As Adventure starts here 🚀.</p>

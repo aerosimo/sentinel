@@ -1,0 +1,144 @@
+/******************************************************************************
+ * This piece of work is to enhance sentinel project functionality.           *
+ *                                                                            *
+ * Author:    eomisore                                                        *
+ * File:      server.css                                                      *
+ * Created:   15/09/2025, 22:49                                               *
+ * Modified:  15/09/2025, 22:49                                               *
+ *                                                                            *
+ * Copyright (c)  2025.  Aerosimo Ltd                                         *
+ *                                                                            *
+ * Permission is hereby granted, free of charge, to any person obtaining a    *
+ * copy of this software and associated documentation files (the "Software"), *
+ * to deal in the Software without restriction, including without limitation  *
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+ * and/or sell copies of the Software, and to permit persons to whom the      *
+ * Software is furnished to do so, subject to the following conditions:       *
+ *                                                                            *
+ * The above copyright notice and this permission notice shall be included    *
+ * in all copies or substantial portions of the Software.                     *
+ *                                                                            *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,            *
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES            *
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                   *
+ * NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                 *
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,               *
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING               *
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                 *
+ * OR OTHER DEALINGS IN THE SOFTWARE.                                         *
+ *                                                                            *
+ ******************************************************************************/
+
+/* Server Widget Card */
+.dashboard-card.server-widget {
+    background: linear-gradient(135deg, #3a3897 0%, #2c2a72 40%, #1a1a4e 100%);
+    color: #fff;
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Scrollable rack container */
+.server-rack {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 300px; /* adjust as you like */
+    padding-right: 6px;
+}
+
+/* Rack server row */
+.server-rack article {
+    background: #202730;
+    margin: 10px 0;
+    border-radius: 6px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+    padding: 8px 12px;
+    position: relative;
+}
+
+/* Rack lights (left side indicators) */
+.server-rack article span {
+    width: 7px;
+    height: 7px;
+    border-radius: 100%;
+    display: inline-block;
+    margin-right: 5px;
+}
+.server-rack article span:nth-child(1) {
+    background: #28cb40;
+    animation: blinker 0.7s linear infinite;
+}
+.server-rack article span:nth-child(2) {
+    background: #c99a31;
+    animation: blinker 1.3s linear infinite;
+}
+.server-rack article span:nth-child(3) {
+    background: transparent;
+    border: 1px solid #fff;
+}
+
+/* Server bar animations */
+.server-rack article ul {
+    display: flex;
+    align-items: center;
+    margin: 6px 0 0 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+/* Bars */
+.server-rack article ul li {
+    width: 10px;
+    height: 30px;
+    background: #818993;
+    margin-right: 6px;
+    animation: fade 2s infinite alternate;
+}
+.server-rack article ul li:nth-child(1) { animation-delay: 0s; }
+.server-rack article ul li:nth-child(2) { animation-delay: 0.2s; }
+.server-rack article ul li:nth-child(3) { animation-delay: 0.4s; }
+.server-rack article ul li:nth-child(4) { animation-delay: 0.6s; }
+.server-rack article ul li:nth-child(5) { animation-delay: 0.8s; }
+.server-rack article ul li:nth-child(6) { animation-delay: 1s; }
+.server-rack article ul li:nth-child(7) { animation-delay: 1.2s; }
+.server-rack article ul li:nth-child(8) { animation-delay: 1.4s; }
+
+/* Server name + status */
+.server-rack article ul li.server-name {
+    min-width: 90px;
+    padding: 0 8px;
+    background: #32a3ef;
+    color: #202730;
+    font-family: monospace;
+    font-size: 0.8rem;
+    line-height: 22px;
+    text-align: center;
+    border-radius: 4px;
+    animation: pulse 1.5s linear infinite;
+    margin-left: auto; /* pushes to right */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Status badge */
+.server-status {
+    font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes blinker { 50% { opacity: 0; } }
+@keyframes pulse {
+    from { background-color: #32a3ef; box-shadow: 0 0 9px #333; }
+    50% { background-color: #59B6F2; box-shadow: 0 0 15px #047AC7; }
+    to { background-color: #32a3ef; box-shadow: 0 0 9px #333; }
+}
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

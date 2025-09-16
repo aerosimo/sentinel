@@ -170,3 +170,12 @@ footer {
 .sidebar.shrink .sidebar-logo {
   max-width: 40px;  /* smaller version */
 }
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card canvas {
+    max-height: 200px; /* keeps charts compact */
+}
