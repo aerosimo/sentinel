@@ -66,7 +66,7 @@ public class VeryMFA extends HttpServlet {
         // Call DAO method
         result = AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),
                 mfaToken, (String) req.getSession().getAttribute("inet"),
-                req.getSession().getAttribute("user") + (String) req.getSession().getAttribute("userAgent"),
+                (String) req.getSession().getAttribute("userAgent"),
                 modifiedBy);
         log.info("Logging response of login confirmation email {}", result.getResponse());
         // Check response and redirect

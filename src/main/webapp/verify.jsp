@@ -89,9 +89,9 @@
                            name="verifyToken"
                            placeholder="XXXXXX"
                            maxlength="10"
-                           pattern="[A-Za-z0-9]{6}"
+                           pattern="[A-Za-z0-9]{10}"
                            required
-                           title="6 alphanumeric characters"
+                           title="10 alphanumeric characters"
                            type="text"
                            required>
                 </div>

@@ -57,6 +57,7 @@ public class Signup extends HttpServlet {
 
     static String password;
     static String email;
+    static String uname;
     static String modifiedBy;
     static String result;
     static SignupResponseDTO response;
@@ -64,19 +65,20 @@ public class Signup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
+        uname = req.getParameter("uname");
         email = req.getParameter("email");
         password = req.getParameter("password");
         modifiedBy = "Sentinel";
         log.info("Preparing to register new user account for {}", email);
         // Call DAO method
-        response = AuthDAO.signup(email, password, modifiedBy);
+        response = AuthDAO.signup(uname, email, password, modifiedBy);
         log.info("Logging response of Account registration {}", response.getResponse());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {
             log.info("New user is now successfully created and now sending welcome email");
             log.info("verification code is: {}", response.getVerificationCode());
             // Send welcome email to the new user
-            result = WelcomeMail.sendMail(email,response.getVerificationCode());
+            result = WelcomeMail.sendMail(uname,email,response.getVerificationCode());
             log.info("Welcome email response is : {}", result);
             // Store data in session
             req.getSession().setAttribute("email", email);

@@ -104,7 +104,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
                             <img src="assets/img/user/user.png" alt="User" class="rounded-circle me-2" width="40" height="40"/>
-                            <span>${email}</span>
+                            <span>${uname}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
@@ -256,7 +256,7 @@
         new Chart(document.getElementById("memoryChart"), {
             type: "pie",
             data: { labels: ["Used", "Free", "Committed"],
-                datasets: [{ data: [4.2, 2.8, 6.0], backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784"] }]},
+                datasets: [{ data: ${memoryusage}, backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784"] }]},
             options: { plugins: { legend: { position: "bottom" } } }
         });
 
@@ -264,7 +264,7 @@
         new Chart(document.getElementById("diskChart"), {
             type: "doughnut",
             data: { labels: ["Used", "Free", "Usable"],
-                datasets: [{ data: [120, 80, 100], backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"] }]},
+                datasets: [{ data: ${diskusage}, backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"] }]},
             options: { cutout: "70%", plugins: { legend: { position: "bottom" } } }
         });
 

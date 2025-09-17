@@ -33,15 +33,25 @@ package com.aerosimo.ominet.sentinel.dao.impl;
 
 public class LoginResponseDTO {
 
+    private String username;
     private String mfaToken;
     private String response;
 
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(String mfaToken, String response) {
+    public LoginResponseDTO(String username, String mfaToken, String response) {
+        this.username = username;
         this.mfaToken = mfaToken;
         this.response = response;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getMfaToken() {

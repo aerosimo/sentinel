@@ -48,6 +48,7 @@ public class AuthDAO {
 
     static String response;
     static String token;
+    static String uname;
     static String sql;
     static Connection con;
 
@@ -57,19 +58,20 @@ public class AuthDAO {
     }
     static CallableStatement stmt;
 
-    public static SignupResponseDTO signup(String email, String pword, String modifiedBy) {
+    public static SignupResponseDTO signup(String uname, String email, String pword, String modifiedBy) {
         log.info("Preparing to register new user");
         try {
-            sql = "{call auth_pkg.signup(?,?,?,?,?)}";
+            sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, pword);
-            stmt.setString(3, modifiedBy);
-            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, pword);
+            stmt.setString(4, modifiedBy);
             stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.execute();
-            token = stmt.getString(4);
-            response = stmt.getString(5);
+            token = stmt.getString(5);
+            response = stmt.getString(6);
             log.info("Successfully register new user");
         } catch (SQLException err) {
             token =  null;
@@ -103,7 +105,7 @@ public class AuthDAO {
     public static LoginResponseDTO login(String email, String pword, String inet, String device, String modifiedBy) {
         log.info("Preparing to login");
         try{
-            sql = "{call auth_pkg.login(?,?,?,?,?,?,?)}";
+            sql = "{call auth_pkg.login(?,?,?,?,?,?,?,?)}";
             stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, pword);
@@ -112,18 +114,21 @@ public class AuthDAO {
             stmt.setString(5, modifiedBy);
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(8, java.sql.Types.VARCHAR);
             stmt.execute();
-            token = stmt.getString(6);
-            response = stmt.getString(7);
+            uname = stmt.getString(6);
+            token = stmt.getString(7);
+            response = stmt.getString(8);
             log.info("Successfully login");
         } catch (SQLException err) {
+            uname = null;
             token = null;
             response = "Login error";
             log.error("Unknown error occurred in auth_pkg (LOGIN) with the following - {}", AuthDAO.class.getName(), err);
             ErrorVaultDAO.storeError("DB-20003",err.getMessage(),AuthDAO.class.getName());
         }
 
-        return  new LoginResponseDTO(token,response);
+        return  new LoginResponseDTO(uname,token,response);
     }
 
     public static MFAResponseDTO confirmMFA(String email, String MFACode, String inet, String device, String modifiedBy) {

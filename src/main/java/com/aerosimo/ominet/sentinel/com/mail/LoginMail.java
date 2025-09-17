@@ -45,7 +45,7 @@ public class LoginMail {
 
     static String response;
 
-    public static String sendMail(String email, String token, String inet, String user, String device) {
+    public static String sendMail(String uname, String email, String token, String inet, String device) {
 
         log.info("Preparing email body content to the following email address: {}", email);
         StringBuilder memo;
@@ -128,7 +128,7 @@ public class LoginMail {
                     "    <!-- Content -->\n" +
                     "    <div class=\"content\">\n" +
                     "      <h1>Hi, <strong>");
-            memo.append(email);
+            memo.append(uname);
             memo.append("</strong></h1>\n" +
                     "      <p>We detected a login attempt on your account. Please confirm it's you by entering the code below.</p>\n" +
                     "\n" +
@@ -143,9 +143,6 @@ public class LoginMail {
             memo.append(inet);
             memo.append("</p>\n" +
                     "      <p>\uD83D\uDC64 <strong>User: </strong>");
-            memo.append(user);
-            memo.append("</p>\n" +
-                    "      <p>\uD83D\uDCBB <strong>Device: </strong>");
             memo.append(device);
             memo.append("</p>\n" +
                     "\n" +

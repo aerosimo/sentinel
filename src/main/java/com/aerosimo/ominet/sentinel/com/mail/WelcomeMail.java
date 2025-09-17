@@ -45,7 +45,7 @@ public class WelcomeMail {
 
     static String response;
 
-    public static String sendMail(String email, String token) {
+    public static String sendMail(String uname, String email, String token) {
         log.info("Preparing email body content to the following email address: {}", email);
         StringBuilder memo;
         try {
@@ -73,7 +73,7 @@ public class WelcomeMail {
                     "          <tr>\n" +
                     "            <td style=\"padding:30px; font-size:16px; line-height:1.6; color:#333;\">\n" +
                     "              <p>Hi ");
-            memo.append(email);
+            memo.append(uname);
             memo.append(",</p>\n" +
                     "              <p><strong>Sentinel</strong> is your diligent and watchful guardian, keeping track of your servers and providing <strong>real-time insights</strong> to ensure smooth operations.</p>\n" +
                     "              \n" +

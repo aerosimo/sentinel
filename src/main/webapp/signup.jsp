@@ -80,6 +80,19 @@
         <div class="col-md-6 right-pane">
             <form novalidate action="signup" method="POST">
                 <div class="field">
+                    <label for="Username">Username</label>
+                    <input autofocus
+                           class="form-control"
+                           id="Username"
+                           name="Username"
+                           placeholder="Enter your username"
+                           pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"
+                           required
+                           title="Alternatively referred to as an account name, login ID, nickname, and user ID"
+                           type="text">
+                </div>
+
+                <div class="field">
                     <label for="email">Email</label>
                     <input autofocus
                            class="form-control"
