@@ -251,32 +251,92 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Memory Pie
-        new Chart(document.getElementById("memoryChart"), {
-            type: "pie",
-            data: { labels: ["Used", "Free", "Committed"],
-                datasets: [{ data: ${memoryusage}, backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784"] }]},
-            options: { plugins: { legend: { position: "bottom" } } }
-        });
+document.addEventListener("DOMContentLoaded", function () {
+    let memoryChart, diskChart, cpuChart;
 
-        // Disk Doughnut
-        new Chart(document.getElementById("diskChart"), {
-            type: "doughnut",
-            data: { labels: ["Used", "Free", "Usable"],
-                datasets: [{ data: ${diskusage}, backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"] }]},
-            options: { cutout: "70%", plugins: { legend: { position: "bottom" } } }
-        });
+    async function fetchMetrics() {
+        try {
+            const res = await fetch("metrics");
+            const data = await res.json();
 
-        // CPU Bar
-        new Chart(document.getElementById("cpuChart"), {
-            type: "bar",
-            data: { labels: ["Running", "Waiting", "Blocked", "Terminated"],
-                datasets: [{ label: "Threads", data: [12, 5, 2, 1],
-                    backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784"] }]},
-            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-        });
-    });
+            // Parse numeric values (strip "GB" text etc.)
+            const memoryData = data.memory.map(v => parseFloat(v));
+            const diskData   = data.disk.map(v => parseFloat(v));
+
+            const cpuStates = {};
+            for (let i = 0; i < data.cpu.length; i += 3) {
+                const state = data.cpu[i+1];
+                cpuStates[state] = (cpuStates[state] || 0) + 1;
+            }
+
+            // If charts not created → create them
+            if (!memoryChart) {
+                memoryChart = new Chart(document.getElementById("memoryChart"), {
+                    type: "pie",
+                    data: {
+                        labels: ["Init", "Used", "Max", "Committed"],
+                        datasets: [{
+                            data: memoryData,
+                            backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"]
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: "bottom" } } }
+                });
+            } else {
+                memoryChart.data.datasets[0].data = memoryData;
+                memoryChart.update();
+            }
+
+            if (!diskChart) {
+                diskChart = new Chart(document.getElementById("diskChart"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Total", "Free", "Usable"],
+                        datasets: [{
+                            data: diskData,
+                            backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"]
+                        }]
+                    },
+                    options: { responsive: true, cutout: "70%", plugins: { legend: { position: "bottom" } } }
+                });
+            } else {
+                diskChart.data.datasets[0].data = diskData;
+                diskChart.update();
+            }
+
+            if (!cpuChart) {
+                cpuChart = new Chart(document.getElementById("cpuChart"), {
+                    type: "bar",
+                    data: {
+                        labels: Object.keys(cpuStates),
+                        datasets: [{
+                            label: "Threads",
+                            data: Object.values(cpuStates),
+                            backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                    }
+                });
+            } else {
+                cpuChart.data.labels = Object.keys(cpuStates);
+                cpuChart.data.datasets[0].data = Object.values(cpuStates);
+                cpuChart.update();
+            }
+        } catch (err) {
+            console.error("Metrics fetch error:", err);
+        }
+    }
+
+    // Initial load
+    fetchMetrics();
+
+    // Auto-refresh every 10 seconds
+    setInterval(fetchMetrics, 10000);
+});
 </script>
 </body>
 </html>

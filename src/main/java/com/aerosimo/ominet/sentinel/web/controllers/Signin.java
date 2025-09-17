@@ -64,9 +64,9 @@ public class Signin extends HttpServlet {
     static String modifiedBy;
     static String result;
     static LoginResponseDTO response;
-    String[] diskusage;
-    String[] memoryusage;
-    ArrayList<String> cpuusage;
+    static String[] diskusage;
+    static String[] memoryusage;
+    static ArrayList<String> cpuusage;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

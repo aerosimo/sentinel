@@ -116,8 +116,8 @@ public class AuthDAO {
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(8, java.sql.Types.VARCHAR);
             stmt.execute();
-            uname = stmt.getString(6);
-            token = stmt.getString(7);
+            token = stmt.getString(6);
+            uname = stmt.getString(7);
             response = stmt.getString(8);
             log.info("Successfully login");
         } catch (SQLException err) {
