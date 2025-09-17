@@ -176,11 +176,18 @@
                 <!-- Row 2: Section 3 (full-width) -->
                 <div class="col-12">
                     <div class="card dashboard-card p-3">
-                        <h6 class="mb-3">System Metrics</h6>
-                        <div class="row">
-                            <div class="col-md-4"><canvas id="memoryChart" height="180"></canvas></div>
-                            <div class="col-md-4"><canvas id="diskChart" height="180"></canvas></div>
-                            <div class="col-md-4"><canvas id="cpuChart" height="180"></canvas></div>
+                        <div class="chart-container mb-4">
+                            <canvas id="memoryChart" height="180"></canvas>
+                        </div>
+                        <hr>
+
+                        <div class="chart-container mb-4">
+                            <canvas id="diskChart" height="180"></canvas>
+                        </div>
+                        <hr>
+
+                        <div class="chart-container">
+                            <canvas id="cpuChart" height="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -251,92 +258,111 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let memoryChart, diskChart, cpuChart;
+    document.addEventListener("DOMContentLoaded", function () {
+        let memoryChart, diskChart, cpuChart;
 
-    async function fetchMetrics() {
-        try {
-            const res = await fetch("metrics");
-            const data = await res.json();
+        async function fetchMetrics() {
+            try {
+                const res = await fetch("metrics");
+                const data = await res.json();
 
-            // Parse numeric values (strip "GB" text etc.)
-            const memoryData = data.memory.map(v => parseFloat(v));
-            const diskData   = data.disk.map(v => parseFloat(v));
+                // Parse numeric values (strip "GB" text etc.)
+                const memoryData = data.memory.map(v => parseFloat(v));
+                const diskData   = data.disk.map(v => parseFloat(v));
 
-            const cpuStates = {};
-            for (let i = 0; i < data.cpu.length; i += 3) {
-                const state = data.cpu[i+1];
-                cpuStates[state] = (cpuStates[state] || 0) + 1;
+                const cpuStates = {};
+                for (let i = 0; i < data.cpu.length; i += 3) {
+                    const state = data.cpu[i+1];
+                    cpuStates[state] = (cpuStates[state] || 0) + 1;
+                }
+
+                // If charts not created → create them
+                if (!memoryChart) {
+                    memoryChart = new Chart(document.getElementById("memoryChart"), {
+                        type: "pie",
+                        data: {
+                            labels: ["Init", "Used", "Max", "Committed"],
+                            datasets: [{
+                                data: memoryData,
+                                backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: "bottom" },
+                                title: { display: true, text: "Memory Usage", font: { size: 16, weight: "bold" } },
+                                subtitle: { display: true, text: "Heap memory (GB)", font: { size: 12, style: "italic" } }
+                            }
+                        }
+                    });
+                } else {
+                    memoryChart.data.datasets[0].data = memoryData;
+                    memoryChart.update();
+                }
+
+                if (!diskChart) {
+                    diskChart = new Chart(document.getElementById("diskChart"), {
+                        type: "doughnut",
+                        data: {
+                            labels: ["Total", "Free", "Usable"],
+                            datasets: [{
+                                data: diskData,
+                                backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            cutout: "70%",
+                            plugins: {
+                                legend: { position: "bottom" },
+                                title: { display: true, text: "Disk Usage", font: { size: 16, weight: "bold" } },
+                                subtitle: { display: true, text: "Root partition (/)", font: { size: 12, style: "italic" } }
+                            }
+                        }
+                    });
+                } else {
+                    diskChart.data.datasets[0].data = diskData;
+                    diskChart.update();
+                }
+
+                if (!cpuChart) {
+                    cpuChart = new Chart(document.getElementById("cpuChart"), {
+                        type: "bar",
+                        data: {
+                            labels: Object.keys(cpuStates),
+                            datasets: [{
+                                label: "Threads",
+                                data: Object.values(cpuStates),
+                                backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                title: { display: true, text: "CPU Threads", font: { size: 16, weight: "bold" } },
+                                subtitle: { display: true, text: "Active JVM threads by state", font: { size: 12, style: "italic" } }
+                            },
+                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                        }
+                    });
+                } else {
+                    cpuChart.data.labels = Object.keys(cpuStates);
+                    cpuChart.data.datasets[0].data = Object.values(cpuStates);
+                    cpuChart.update();
+                }
+            } catch (err) {
+                console.error("Metrics fetch error:", err);
             }
-
-            // If charts not created → create them
-            if (!memoryChart) {
-                memoryChart = new Chart(document.getElementById("memoryChart"), {
-                    type: "pie",
-                    data: {
-                        labels: ["Init", "Used", "Max", "Committed"],
-                        datasets: [{
-                            data: memoryData,
-                            backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"]
-                        }]
-                    },
-                    options: { responsive: true, plugins: { legend: { position: "bottom" } } }
-                });
-            } else {
-                memoryChart.data.datasets[0].data = memoryData;
-                memoryChart.update();
-            }
-
-            if (!diskChart) {
-                diskChart = new Chart(document.getElementById("diskChart"), {
-                    type: "doughnut",
-                    data: {
-                        labels: ["Total", "Free", "Usable"],
-                        datasets: [{
-                            data: diskData,
-                            backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"]
-                        }]
-                    },
-                    options: { responsive: true, cutout: "70%", plugins: { legend: { position: "bottom" } } }
-                });
-            } else {
-                diskChart.data.datasets[0].data = diskData;
-                diskChart.update();
-            }
-
-            if (!cpuChart) {
-                cpuChart = new Chart(document.getElementById("cpuChart"), {
-                    type: "bar",
-                    data: {
-                        labels: Object.keys(cpuStates),
-                        datasets: [{
-                            label: "Threads",
-                            data: Object.values(cpuStates),
-                            backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                    }
-                });
-            } else {
-                cpuChart.data.labels = Object.keys(cpuStates);
-                cpuChart.data.datasets[0].data = Object.values(cpuStates);
-                cpuChart.update();
-            }
-        } catch (err) {
-            console.error("Metrics fetch error:", err);
         }
-    }
 
-    // Initial load
-    fetchMetrics();
+        // Initial load
+        fetchMetrics();
 
-    // Auto-refresh every 10 seconds
-    setInterval(fetchMetrics, 10000);
-});
+        // Auto-refresh every 10 seconds
+        setInterval(fetchMetrics, 10000);
+    });
 </script>
 </body>
 </html>
