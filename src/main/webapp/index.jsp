@@ -150,7 +150,7 @@
                                 <ul>
                                     <li></li><li></li><li></li><li></li>
                                     <li></li><li></li><li></li><li></li>
-                                    <li class="server-name">Jenkins <span class="badge bg-success">🟢</span></li>
+                                    <li class="server-name" data-name="Jenkins">Jenkins <span class="badge bg-success">🟢</span></li>
                                 </ul>
                             </article>
                             <article>
@@ -158,7 +158,8 @@
                                 <ul>
                                     <li></li><li></li><li></li><li></li>
                                     <li></li><li></li><li></li><li></li>
-                                    <li class="server-name">Oracle <span class="badge bg-danger">🔴</span></li>
+                                    <!-- <li class="server-name">Oracle <span class="badge bg-danger">🔴</span></li> -->
+                                    <li class="server-name" data-name="Oracle">Oracle <span class="badge bg-success">🟢</span></li>
                                 </ul>
                             </article>
                             <article>
@@ -166,7 +167,7 @@
                                 <ul>
                                     <li></li><li></li><li></li><li></li>
                                     <li></li><li></li><li></li><li></li>
-                                    <li class="server-name">TomEE <span class="badge bg-success">🟢</span></li>
+                                    <li class="server-name" data-name="TomEE">TomEE <span class="badge bg-success">🟢</span></li>
                                 </ul>
                             </article>
                         </section>
@@ -260,6 +261,28 @@
 <script src="assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- Server Rack JS -->
+<script>
+function refreshServerRack() {
+  fetch("serverStatus")
+    .then(resp => resp.json())
+    .then(data => {
+      data.servers.forEach(server => {
+        const el = document.querySelector(`.server-name[data-name="${server.name}"]`);
+        if (el) {
+          el.querySelector(".badge").textContent = server.status === "running" ? "🟢" : "🔴";
+          el.querySelector(".badge").className = server.status === "running" ? "badge bg-success" : "badge bg-danger";
+        }
+      });
+    })
+    .catch(err => console.error("Error fetching server statuses:", err));
+}
+
+setInterval(refreshServerRack, 5000); // refresh every 5s
+
+</script>
+
+<!-- System Metrics JS -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let memoryChart, diskChart, cpuChart;

@@ -31,7 +31,6 @@
 
 package com.aerosimo.ominet.sentinel.web.controllers;
 
-import static com.aerosimo.ominet.sentinel.models.metrics.SystemMetrics.*;
 import com.aerosimo.ominet.sentinel.com.mail.LoginMail;
 import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
@@ -44,8 +43,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 @WebServlet(name = "signin",
@@ -64,9 +61,6 @@ public class Signin extends HttpServlet {
     static String modifiedBy;
     static String result;
     static LoginResponseDTO response;
-    static String[] diskusage;
-    static String[] memoryusage;
-    static ArrayList<String> cpuusage;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -85,13 +79,7 @@ public class Signin extends HttpServlet {
             // Send login email to the new user
             result = LoginMail.sendMail(response.getUsername(), email,response.getMfaToken(),req.getRemoteAddr(),req.getHeader("user-agent"));
             log.info("Login email response is : {}", result);
-            diskusage = getDisk();
-            memoryusage = getMemory();
-            cpuusage = getCpu();
             // Store data in session
-            req.getSession().setAttribute("diskusage", Arrays.toString(diskusage));
-            req.getSession().setAttribute("memoryusage", Arrays.toString(memoryusage));
-            req.getSession().setAttribute("cpuusage", cpuusage);
             req.getSession().setAttribute("email", email);
             req.getSession().setAttribute("inet", req.getRemoteAddr());
             req.getSession().setAttribute("host", req.getRemoteHost());

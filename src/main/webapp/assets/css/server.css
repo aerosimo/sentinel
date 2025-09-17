@@ -92,20 +92,29 @@
 
 /* Bars */
 .server-rack article ul li {
-    width: 10px;
-    height: 30px;
-    background: #818993;
-    margin-right: 6px;
-    animation: fade 2s infinite alternate;
+  width: 10px;
+  height: 30px;
+  background: #818993;
+  position: absolute;
+  display: inline-block;
+  z-index: 1;
+  top: 10px;
 }
-.server-rack article ul li:nth-child(1) { animation-delay: 0s; }
-.server-rack article ul li:nth-child(2) { animation-delay: 0.2s; }
-.server-rack article ul li:nth-child(3) { animation-delay: 0.4s; }
-.server-rack article ul li:nth-child(4) { animation-delay: 0.6s; }
-.server-rack article ul li:nth-child(5) { animation-delay: 0.8s; }
-.server-rack article ul li:nth-child(6) { animation-delay: 1s; }
-.server-rack article ul li:nth-child(7) { animation-delay: 1.2s; }
-.server-rack article ul li:nth-child(8) { animation-delay: 1.4s; }
+
+.server-rack article ul li:nth-child(1)  { left: 30px;  animation: fade 2s infinite alternate backwards; }
+.server-rack article ul li:nth-child(2)  { left: 50px;  animation: fade 1.8s 0.2s infinite alternate backwards; }
+.server-rack article ul li:nth-child(3)  { left: 70px;  animation: fade 1.6s 0.4s infinite alternate backwards; }
+.server-rack article ul li:nth-child(4)  { left: 90px;  animation: fade 1.4s 0.6s infinite alternate backwards; }
+.server-rack article ul li:nth-child(5)  { left: 110px; animation: fade 1.2s 0.8s infinite alternate backwards; }
+.server-rack article ul li:nth-child(6)  { left: 130px; animation: fade 1s 1s infinite alternate backwards; }
+.server-rack article ul li:nth-child(7)  { left: 150px; animation: fade 0.8s 1.2s infinite alternate backwards; }
+.server-rack article ul li:nth-child(8)  { left: 170px; animation: fade 0.6s 1.4s infinite alternate backwards; }
+
+/* Extend more bars */
+.server-rack article ul li:nth-child(9)  { left: 190px; animation: fade 0.6s 1.6s infinite alternate backwards; }
+.server-rack article ul li:nth-child(10) { left: 210px; animation: fade 0.6s 1.8s infinite alternate backwards; }
+.server-rack article ul li:nth-child(11) { left: 230px; animation: fade 0.6s 2s   infinite alternate backwards; }
+
 
 /* Server name + status */
 .server-rack article ul li.server-name {
