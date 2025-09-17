@@ -45,27 +45,30 @@
 .server-rack {
     flex: 1;
     overflow-y: auto;
-    max-height: 300px; /* adjust as you like */
+    max-height: 300px; /* adjust as needed */
     padding-right: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* Rack server row */
+/* Each server block */
 .server-rack article {
     background: #202730;
-    margin: 10px 0;
     border-radius: 6px;
     box-shadow: inset 0 0 8px rgba(0,0,0,.6);
     padding: 8px 12px;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Rack lights (left side indicators) */
+/* Rack lights (small LEDs on left) */
 .server-rack article span {
     width: 7px;
     height: 7px;
     border-radius: 100%;
     display: inline-block;
-    margin-right: 5px;
 }
 .server-rack article span:nth-child(1) {
     background: #28cb40;
@@ -80,44 +83,36 @@
     border: 1px solid #fff;
 }
 
-/* Server bar animations */
+/* Rack bars (auto-extend to server name) */
 .server-rack article ul {
+    flex: 1;
     display: flex;
     align-items: center;
-    margin: 6px 0 0 0;
+    gap: 6px;
+    margin: 0;
     padding: 0;
     list-style: none;
-    position: relative;
 }
 
-/* Bars */
+/* Animated bars */
 .server-rack article ul li {
-  width: 10px;
-  height: 30px;
-  background: #818993;
-  position: absolute;
-  display: inline-block;
-  z-index: 1;
-  top: 10px;
+    flex: 1;
+    max-width: 12px; /* thin bars */
+    height: 30px;
+    background: #818993;
+    animation: fade 1.4s infinite alternate;
 }
 
-.server-rack article ul li:nth-child(1)  { left: 30px;  animation: fade 2s infinite alternate backwards; }
-.server-rack article ul li:nth-child(2)  { left: 50px;  animation: fade 1.8s 0.2s infinite alternate backwards; }
-.server-rack article ul li:nth-child(3)  { left: 70px;  animation: fade 1.6s 0.4s infinite alternate backwards; }
-.server-rack article ul li:nth-child(4)  { left: 90px;  animation: fade 1.4s 0.6s infinite alternate backwards; }
-.server-rack article ul li:nth-child(5)  { left: 110px; animation: fade 1.2s 0.8s infinite alternate backwards; }
-.server-rack article ul li:nth-child(6)  { left: 130px; animation: fade 1s 1s infinite alternate backwards; }
-.server-rack article ul li:nth-child(7)  { left: 150px; animation: fade 0.8s 1.2s infinite alternate backwards; }
-.server-rack article ul li:nth-child(8)  { left: 170px; animation: fade 0.6s 1.4s infinite alternate backwards; }
-
-/* Extend more bars */
-.server-rack article ul li:nth-child(9)  { left: 190px; animation: fade 0.6s 1.6s infinite alternate backwards; }
-.server-rack article ul li:nth-child(10) { left: 210px; animation: fade 0.6s 1.8s infinite alternate backwards; }
-.server-rack article ul li:nth-child(11) { left: 230px; animation: fade 0.6s 2s   infinite alternate backwards; }
-
+.server-rack article ul li:nth-child(odd) {
+    animation-delay: 0.2s;
+}
+.server-rack article ul li:nth-child(even) {
+    animation-delay: 0.4s;
+}
 
 /* Server name + status */
 .server-rack article ul li.server-name {
+    flex: 0 0 auto;
     min-width: 90px;
     padding: 0 8px;
     background: #32a3ef;
@@ -128,16 +123,10 @@
     text-align: center;
     border-radius: 4px;
     animation: pulse 1.5s linear infinite;
-    margin-left: auto; /* pushes to right */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6px;
-}
-
-/* Status badge */
-.server-status {
-    font-size: 0.9rem;
 }
 
 /* Animations */
@@ -148,6 +137,6 @@
     to { background-color: #32a3ef; box-shadow: 0 0 9px #333; }
 }
 @keyframes fade {
-    from { opacity: 0; }
+    from { opacity: 0.3; }
     to { opacity: 1; }
 }

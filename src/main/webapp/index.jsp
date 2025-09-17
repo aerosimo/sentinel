@@ -144,33 +144,26 @@
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Server Rack</h6>
-                        <section class="server-rack">
-                            <article>
-                                <span></span><span></span><span></span>
-                                <ul>
-                                    <li></li><li></li><li></li><li></li>
-                                    <li></li><li></li><li></li><li></li>
-                                    <li class="server-name" data-name="Jenkins">Jenkins <span class="badge bg-success">🟢</span></li>
-                                </ul>
-                            </article>
-                            <article>
-                                <span></span><span></span><span></span>
-                                <ul>
-                                    <li></li><li></li><li></li><li></li>
-                                    <li></li><li></li><li></li><li></li>
-                                    <!-- <li class="server-name">Oracle <span class="badge bg-danger">🔴</span></li> -->
-                                    <li class="server-name" data-name="Oracle">Oracle <span class="badge bg-success">🟢</span></li>
-                                </ul>
-                            </article>
-                            <article>
-                                <span></span><span></span><span></span>
-                                <ul>
-                                    <li></li><li></li><li></li><li></li>
-                                    <li></li><li></li><li></li><li></li>
-                                    <li class="server-name" data-name="TomEE">TomEE <span class="badge bg-success">🟢</span></li>
-                                </ul>
-                            </article>
-                        </section>
+                        <div class="server-rack">
+                            <div class="server" data-name="Jenkins">
+                                <div class="rack-bars"></div>
+                                <span class="server-name">Jenkins
+                                    <span class="badge bg-success">🟢</span>
+                                </span>
+                            </div>
+                            <div class="server" data-name="Oracle">
+                                <div class="rack-bars"></div>
+                                <span class="server-name">Oracle
+                                    <span class="badge bg-danger">🔴</span>
+                                </span>
+                            </div>
+                            <div class="server" data-name="TomEE">
+                                <div class="rack-bars"></div>
+                                <span class="server-name">TomEE
+                                    <span class="badge bg-success">🟢</span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -262,23 +255,30 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Server Rack JS -->
+<!-- Server Rack JS -->
 <script>
-function refreshServerRack() {
-  fetch("serverStatus")
-    .then(resp => resp.json())
-    .then(data => {
-      data.servers.forEach(server => {
-        const el = document.querySelector(`.server-name[data-name="${server.name}"]`);
-        if (el) {
-          el.querySelector(".badge").textContent = server.status === "running" ? "🟢" : "🔴";
-          el.querySelector(".badge").className = server.status === "running" ? "badge bg-success" : "badge bg-danger";
-        }
-      });
-    })
-    .catch(err => console.error("Error fetching server statuses:", err));
-}
+    function refreshServerRack() {
+        fetch("serverStatus")
+            .then(resp => resp.json())
+            .then(data => {
+                data.servers.forEach(server => {
+                    const el = document.querySelector(`.server[data-name="${server.name}"] .badge`);
+                    if (el) {
+                        if (server.status === "running") {
+                            el.textContent = "🟢";
+                            el.className = "badge bg-success";
+                        } else {
+                            el.textContent = "🔴";
+                            el.className = "badge bg-danger";
+                        }
+                    }
+                });
+            })
+            .catch(err => console.error("Error fetching server statuses:", err));
+    }
 
-setInterval(refreshServerRack, 5000); // refresh every 5s
+    setInterval(refreshServerRack, 5000);
+
 
 </script>
 
