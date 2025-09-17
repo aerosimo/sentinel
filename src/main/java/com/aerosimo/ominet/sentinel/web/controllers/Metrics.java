@@ -34,6 +34,7 @@ package com.aerosimo.ominet.sentinel.web.controllers;
 import com.aerosimo.ominet.sentinel.models.metrics.SystemMetrics;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,6 +45,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@WebServlet(name = "metrics",
+        description = "A simple servlet to populate server metrics",
+        value = "/metrics")
 public class Metrics extends HttpServlet {
 
     private static final Logger log;
