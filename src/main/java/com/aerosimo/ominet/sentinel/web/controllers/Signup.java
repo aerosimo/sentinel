@@ -65,7 +65,7 @@ public class Signup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        uname = req.getParameter("uname");
+        uname = req.getParameter("Username");
         email = req.getParameter("email");
         password = req.getParameter("password");
         modifiedBy = "Sentinel";
