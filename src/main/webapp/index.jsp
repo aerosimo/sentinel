@@ -176,18 +176,21 @@
                 <!-- Row 2: Section 3 (full-width) -->
                 <div class="col-12">
                     <div class="card dashboard-card p-3">
-                        <div class="chart-container mb-4">
-                            <canvas id="memoryChart" height="180"></canvas>
-                        </div>
-                        <hr>
+                        <div class="row">
+                            <!-- Memory Chart -->
+                            <div class="col-md-4 text-center">
+                                <canvas id="memoryChart" height="200"></canvas>
+                            </div>
 
-                        <div class="chart-container mb-4">
-                            <canvas id="diskChart" height="180"></canvas>
-                        </div>
-                        <hr>
+                            <!-- Disk Chart -->
+                            <div class="col-md-4 text-center">
+                                <canvas id="diskChart" height="200"></canvas>
+                            </div>
 
-                        <div class="chart-container">
-                            <canvas id="cpuChart" height="200"></canvas>
+                            <!-- CPU Chart -->
+                            <div class="col-md-4 text-center">
+                                <canvas id="cpuChart" height="200"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
