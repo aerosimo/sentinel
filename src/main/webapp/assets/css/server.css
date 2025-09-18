@@ -30,113 +30,85 @@
  ******************************************************************************/
 
 /* Server Widget Card */
+/* Card styling */
 .dashboard-card.server-widget {
-    background: linear-gradient(135deg, #3a3897 0%, #2c2a72 40%, #1a1a4e 100%);
-    color: #fff;
-    border: none;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  background: #f9f9f9;
+  color: #333;
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-/* Scrollable rack container */
 .server-rack {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 300px; /* adjust as needed */
-    padding-right: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* Each server block */
+/* Each server row */
 .server-rack article {
-    background: #202730;
-    border-radius: 6px;
-    box-shadow: inset 0 0 8px rgba(0,0,0,.6);
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  background: #202730;
+  border-radius: 6px;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
-/* Rack lights (small LEDs on left) */
-.server-rack article span {
-    width: 7px;
-    height: 7px;
-    border-radius: 100%;
-    display: inline-block;
-}
-.server-rack article span:nth-child(1) {
-    background: #28cb40;
-    animation: blinker 0.7s linear infinite;
-}
-.server-rack article span:nth-child(2) {
-    background: #c99a31;
-    animation: blinker 1.3s linear infinite;
-}
-.server-rack article span:nth-child(3) {
-    background: transparent;
-    border: 1px solid #fff;
+/* Left status LED */
+.server-rack article .led {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: #28cb40; /* default green */
+  animation: blinkGreen 1s infinite;
 }
 
-/* Rack bars (auto-extend to server name) */
+/* Rack bars */
 .server-rack article ul {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 6px;
+  align-items: center;
 }
 
-/* Animated bars */
 .server-rack article ul li {
-    flex: 1;
-    max-width: 12px; /* thin bars */
-    height: 30px;
-    background: #818993;
-    animation: fade 1.4s infinite alternate;
+  width: 10px;
+  height: 25px;
+  background: #818993;
+  animation: fade 1.5s infinite alternate;
 }
 
 .server-rack article ul li:nth-child(odd) {
-    animation-delay: 0.2s;
-}
-.server-rack article ul li:nth-child(even) {
-    animation-delay: 0.4s;
+  animation-delay: 0.3s;
 }
 
-/* Server name + status */
-.server-rack article ul li.server-name {
-    flex: 0 0 auto;
-    min-width: 90px;
-    padding: 0 8px;
-    background: #32a3ef;
-    color: #202730;
-    font-family: monospace;
-    font-size: 0.8rem;
-    line-height: 22px;
-    text-align: center;
-    border-radius: 4px;
-    animation: pulse 1.5s linear infinite;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+/* Server logo */
+.server-rack article ul li.server-logo {
+  background: none;
+  animation: none;
+  margin-left: auto;
+}
+.server-rack article ul li.server-logo img {
+  height: 28px;
+  object-fit: contain;
 }
 
 /* Animations */
-@keyframes blinker { 50% { opacity: 0; } }
-@keyframes pulse {
-    from { background-color: #32a3ef; box-shadow: 0 0 9px #333; }
-    50% { background-color: #59B6F2; box-shadow: 0 0 15px #047AC7; }
-    to { background-color: #32a3ef; box-shadow: 0 0 9px #333; }
-}
-@keyframes fade {
-    from { opacity: 0.3; }
-    to { opacity: 1; }
+@keyframes blinkGreen { 50% { background: #c99a31; } }   /* green ↔ yellow */
+@keyframes blinkRed   { 50% { background: #d22c32; } }   /* red flashing */
+@keyframes fade { from { opacity: 0.3; } to { opacity: 1; } }
+
+/* Down state class */
+.server-down .led {
+  background: #d22c32 !important;
+  animation: blinkRed 1s infinite !important;
 }

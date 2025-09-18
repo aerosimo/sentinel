@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      ServerStatus.java                                               *
- * Created:   18/09/2025, 00:18                                               *
- * Modified:  18/09/2025, 00:18                                               *
+ * File:      PingServer.java                                                 *
+ * Created:   18/09/2025, 10:19                                               *
+ * Modified:  18/09/2025, 10:19                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,34 +29,25 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web.controllers;
-
-import com.aerosimo.ominet.sentinel.models.utils.PingServer;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+package com.aerosimo.ominet.sentinel.models.utils;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-@WebServlet(name = "serverStatus",
-        description = "A simple servlet to populate server status",
-        value = "/serverStatus")
-public class ServerStatus extends HttpServlet {
+public class PingServer {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
-
-        boolean jenkins = PingServer.isAlive("http://ominet.aerosimo.com:8080");
-        boolean oracle  = PingServer.isAlive("http://ominet.aerosimo.com:1521");
-        boolean tomee   = PingServer.isAlive("http://ominet.aerosimo.com:8081");
-        boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
-
-        String json = String.format(
-                "{ \"jenkins\": %b, \"oracle\": %b, \"tomee\": %b, \"linux\": %b }",
-                jenkins, oracle, tomee, linux
-        );
-        resp.getWriter().write(json);
+    public static boolean isAlive(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(2000); // 2 sec timeout
+            conn.setReadTimeout(2000);
+            conn.setRequestMethod("GET");
+            int code = conn.getResponseCode();
+            return (code >= 200 && code < 400);
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

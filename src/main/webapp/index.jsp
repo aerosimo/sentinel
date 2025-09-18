@@ -120,7 +120,7 @@
         <main class="container-fluid my-4">
             <div class="row g-4">
 
-                <!-- Row 1: Section 1 + Section 2 -->
+                <!-- Row 1: Section 1 -->
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6>Server Overview</h6>
@@ -141,29 +141,57 @@
                     </div>
                 </div>
 
+                <!-- Row 1: Section 2 -->
                 <div class="col-md-6">
-                    <div class="card dashboard-card p-3 h-100">
+                    <div class="card dashboard-card server-widget p-3 h-100">
                         <h6 class="mb-3">Server Rack</h6>
-                        <div class="server-rack">
-                            <div class="server" data-name="Jenkins">
-                                <div class="rack-bars"></div>
-                                <span class="server-name">Jenkins
-                                    <span class="badge bg-success">🟢</span>
-                                </span>
-                            </div>
-                            <div class="server" data-name="Oracle">
-                                <div class="rack-bars"></div>
-                                <span class="server-name">Oracle
-                                    <span class="badge bg-danger">🔴</span>
-                                </span>
-                            </div>
-                            <div class="server" data-name="TomEE">
-                                <div class="rack-bars"></div>
-                                <span class="server-name">TomEE
-                                    <span class="badge bg-success">🟢</span>
-                                </span>
-                            </div>
-                        </div>
+                        <section class="server-rack">
+
+                            <!-- Jenkins -->
+                            <article data-server="jenkins">
+                                <span class="led"></span>
+                                <ul>
+                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                                    <li class="server-logo">
+                                        <img src="assets/img/logo/jenkins.png" alt="Jenkins">
+                                    </li>
+                                </ul>
+                            </article>
+
+                            <!-- Oracle -->
+                            <article data-server="oracle">
+                                <span class="led"></span>
+                                <ul>
+                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                                    <li class="server-logo">
+                                        <img src="assets/img/logo/oracle.png" alt="Oracle">
+                                    </li>
+                                </ul>
+                            </article>
+
+                            <!-- TomEE -->
+                            <article data-server="tomee">
+                                <span class="led"></span>
+                                <ul>
+                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                                    <li class="server-logo">
+                                        <img src="assets/img/logo/tomee.png" alt="TomEE">
+                                    </li>
+                                </ul>
+                            </article>
+
+                            <!-- Linux -->
+                            <article data-server="linux">
+                                <span class="led"></span>
+                                <ul>
+                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                                    <li class="server-logo">
+                                        <img src="assets/img/logo/linux.png" alt="Linux">
+                                    </li>
+                                </ul>
+                            </article>
+
+                        </section>
                     </div>
                 </div>
 
@@ -255,32 +283,30 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Server Rack JS -->
-<!-- Server Rack JS -->
+
 <script>
-    function refreshServerRack() {
-        fetch("serverStatus")
-            .then(resp => resp.json())
-            .then(data => {
-                data.servers.forEach(server => {
-                    const el = document.querySelector(`.server[data-name="${server.name}"] .badge`);
-                    if (el) {
-                        if (server.status === "running") {
-                            el.textContent = "🟢";
-                            el.className = "badge bg-success";
-                        } else {
-                            el.textContent = "🔴";
-                            el.className = "badge bg-danger";
-                        }
-                    }
-                });
-            })
-            .catch(err => console.error("Error fetching server statuses:", err));
+    async function refreshServerStatus() {
+        try {
+            let res = await fetch("server-status");
+            let status = await res.json();
+
+            Object.keys(status).forEach(server => {
+                let el = document.querySelector(`article[data-server='${server}']`);
+                if (status[server]) {
+                    el.classList.remove("server-down");
+                } else {
+                    el.classList.add("server-down");
+                }
+            });
+        } catch (e) {
+            console.error("Failed to fetch server status", e);
+        }
     }
 
-    setInterval(refreshServerRack, 5000);
-
-
+    setInterval(refreshServerStatus, 5000); // every 5s
+    refreshServerStatus();
 </script>
+
 
 <!-- System Metrics JS -->
 <script>
