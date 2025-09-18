@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.models.metrics;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Duration;
@@ -43,10 +44,15 @@ public class ServerOverview {
     private static final Instant START_TIME = Instant.now();
 
     public static String getUptime() {
-        Duration uptime = Duration.between(START_TIME, Instant.now());
+        RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
+        long uptimeMillis = rb.getUptime();
+        Duration uptime = Duration.ofMillis(uptimeMillis);
+
         long days = uptime.toDays();
         long hours = uptime.minusDays(days).toHours();
-        return days + "d " + hours + "h";
+        long minutes = uptime.minusDays(days).minusHours(hours).toMinutes();
+
+        return String.format("%dd %dh %dm", days, hours, minutes);
     }
 
     public static double getLoadAverage() {
