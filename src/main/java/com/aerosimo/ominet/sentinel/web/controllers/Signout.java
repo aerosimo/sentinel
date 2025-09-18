@@ -56,6 +56,11 @@ public class Signout extends HttpServlet {
     static String modifiedBy;
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        doPost(req, resp); // forward GET to POST
+    }
+    
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
         modifiedBy = "Sentinel";
