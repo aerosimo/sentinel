@@ -140,16 +140,16 @@
                         <h6>Server Overview</h6>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Uptime <span class="badge bg-success">12 days</span>
+                                Uptime <span id="uptime" class="badge bg-success">--</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Load Average <span class="badge bg-info">1.24</span>
+                                Load Average <span id="load" class="badge bg-info">--</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Active Connections <span class="badge bg-primary">152</span>
+                                Active Connections <span id="connections" class="badge bg-primary">--</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Health Status <span class="badge bg-success">Running</span>
+                                Health Status <span id="status" class="badge bg-success">--</span>
                             </li>
                         </ul>
                     </div>
@@ -266,6 +266,31 @@
 <!-- Bootstrap JS -->
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/main.js"></script>
+
+<!-- Server Overview Poller -->
+<script>
+async function refreshOverview() {
+    try {
+        const res = await fetch("overview");
+        const data = await res.json();
+
+        document.getElementById("uptime").textContent = data.uptime;
+        document.getElementById("load").textContent = data.load.toFixed(2);
+        document.getElementById("connections").textContent = data.connections;
+        document.getElementById("status").textContent = data.status;
+
+        // Change badge colour based on status
+        const statusBadge = document.getElementById("status");
+        statusBadge.className = "badge " + (data.status === "Running" ? "bg-success" : "bg-danger");
+
+    } catch (err) {
+        console.error("Overview fetch error:", err);
+    }
+}
+
+setInterval(refreshOverview, 10000); // every 10s
+refreshOverview(); // run once
+</script>
 
 <!-- Server Rack Poller -->
 <script>
