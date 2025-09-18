@@ -86,7 +86,7 @@
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column p-3" id="sidebar">
         <div class="text-center mb-4">
-            <img alt="Logo" class="sidebar-logo" src="assets/img/favicon/logo-icon.png">
+            <img alt="Logo" class="sidebar-logo" src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png">
         </div>
         <h4 class="text-white">Dashboard</h4>
         <hr class="bg-light"/>
@@ -113,12 +113,12 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
                             <img alt="User" class="rounded-circle me-2" height="40" src="assets/img/user/user.png" width="40"/>
-                            <span>User</span>
+                            <span>${uname}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">>Sign out</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "Logout",
+@WebServlet(name = "logout",
         description = "A simple logout servlet to log a user out of the application",
         value = "/logout")
 public class Signout extends HttpServlet {
