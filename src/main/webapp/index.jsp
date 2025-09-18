@@ -118,7 +118,12 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="logout">Sign out</a></li>
+                            <!-- <li><a class="dropdown-item" href="logout">Sign out</a></li> -->
+                            <li>
+                                <form action="${pageContext.request.contextPath}/logout" method="post" style="display: inline;">
+                                    <button type="submit" class="dropdown-item">Sign out</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>
