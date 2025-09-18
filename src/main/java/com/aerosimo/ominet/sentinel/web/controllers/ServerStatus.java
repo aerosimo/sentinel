@@ -54,8 +54,11 @@ public class ServerStatus extends HttpServlet {
         boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
 
         String json = String.format(
-                "{ \"jenkins\": %b, \"oracle\": %b, \"tomee\": %b, \"linux\": %b }",
-                jenkins, oracle, tomee, linux
+                "{ \"jenkins\": \"%s\", \"oracle\": \"%s\", \"tomee\": \"%s\", \"linux\": \"%s\" }",
+                jenkins ? "online" : "offline",
+                oracle  ? "online" : "offline",
+                tomee   ? "online" : "offline",
+                linux   ? "online" : "offline"
         );
         resp.getWriter().write(json);
     }

@@ -46,7 +46,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>Admin Dashboard | Aerosimo Ltd</title>
+    <title>Sentinel Dashboard | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -54,11 +54,19 @@
     <link href="assets/img/favicon/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
     <link href="assets/img/favicon/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
     <link href="assets/img/favicon/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
-    <!-- Bootstrap CSS (local) -->
+    <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/css/weather.css" rel="stylesheet">
     <link href="assets/css/server.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -74,10 +82,11 @@
 
 <div class="d-flex">
 
+<div class="d-flex">
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column p-3" id="sidebar">
         <div class="text-center mb-4">
-            <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Logo" class="sidebar-logo">
+            <img alt="Logo" class="sidebar-logo" src="assets/img/favicon/logo-icon.png">
         </div>
         <h4 class="text-white">Dashboard</h4>
         <hr class="bg-light"/>
@@ -103,8 +112,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
-                            <img src="assets/img/user/user.png" alt="User" class="rounded-circle me-2" width="40" height="40"/>
-                            <span>${uname}</span>
+                            <img alt="User" class="rounded-circle me-2" height="40" src="assets/img/user/user.png" width="40"/>
+                            <span>User</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
@@ -120,7 +129,7 @@
         <main class="container-fluid my-4">
             <div class="row g-4">
 
-                <!-- Row 1: Section 1 -->
+                <!-- Row 1: Section 1 + Section 2 -->
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6>Server Overview</h6>
@@ -141,84 +150,67 @@
                     </div>
                 </div>
 
-                <!-- Row 1: Section 2 -->
+                <!-- Section 2: Server Rack -->
                 <div class="col-md-6">
                     <div class="card dashboard-card server-widget p-3 h-100">
                         <h6 class="mb-3">Server Rack</h6>
+
                         <section class="server-rack">
+                            <!-- TomEE -->
+                            <article id="server-tomee">
+                                <div class="led"></div>
+                                <ul>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li class="server-logo"><img src="assets/img/logo/tomee.png" alt="TomEE"></li>
+                                </ul>
+                            </article>
 
                             <!-- Jenkins -->
-                            <article data-server="jenkins">
-                                <span class="led"></span>
+                            <article id="server-jenkins">
+                                <div class="led"></div>
                                 <ul>
-                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-                                    <li class="server-logo">
-                                        <img src="assets/img/logo/jenkins.png" alt="Jenkins">
-                                    </li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li class="server-logo"><img src="assets/img/logo/jenkins.png" alt="Jenkins"></li>
                                 </ul>
                             </article>
 
                             <!-- Oracle -->
-                            <article data-server="oracle">
-                                <span class="led"></span>
+                            <article id="server-oracle">
+                                <div class="led"></div>
                                 <ul>
-                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-                                    <li class="server-logo">
-                                        <img src="assets/img/logo/oracle.png" alt="Oracle">
-                                    </li>
-                                </ul>
-                            </article>
-
-                            <!-- TomEE -->
-                            <article data-server="tomee">
-                                <span class="led"></span>
-                                <ul>
-                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-                                    <li class="server-logo">
-                                        <img src="assets/img/logo/tomee.png" alt="TomEE">
-                                    </li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li class="server-logo"><img src="assets/img/logo/oracle.png" alt="Oracle"></li>
                                 </ul>
                             </article>
 
                             <!-- Linux -->
-                            <article data-server="linux">
-                                <span class="led"></span>
+                            <article id="server-linux">
+                                <div class="led"></div>
                                 <ul>
-                                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-                                    <li class="server-logo">
-                                        <img src="assets/img/logo/linux.png" alt="Linux">
-                                    </li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li></li><li></li><li></li><li></li>
+                                    <li class="server-logo"><img src="assets/img/logo/linux.png" alt="Linux"></li>
                                 </ul>
                             </article>
-
                         </section>
                     </div>
                 </div>
 
-                <!-- Row 2: Section 3 (full-width) -->
+                <!-- Row 2: Section 3 (Charts) -->
                 <div class="col-12">
                     <div class="card dashboard-card p-3">
                         <div class="row">
-                            <!-- Memory Chart -->
-                            <div class="col-md-4 text-center">
-                                <canvas id="memoryChart" height="200"></canvas>
-                            </div>
-
-                            <!-- Disk Chart -->
-                            <div class="col-md-4 text-center">
-                                <canvas id="diskChart" height="200"></canvas>
-                            </div>
-
-                            <!-- CPU Chart -->
-                            <div class="col-md-4 text-center">
-                                <canvas id="cpuChart" height="200"></canvas>
-                            </div>
+                            <div class="col-md-4 text-center"><canvas height="200" id="memoryChart"></canvas></div>
+                            <div class="col-md-4 text-center"><canvas height="200" id="diskChart"></canvas></div>
+                            <div class="col-md-4 text-center"><canvas height="200" id="cpuChart"></canvas></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Row 3: Section 4 + Section 5 -->
-                <!-- Section 4: Alerts & Logs -->
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Alerts & Logs</h6>
@@ -231,24 +223,17 @@
                             <div class="list-group-item">ℹ️ Scheduled job completed</div>
                             <div class="list-group-item">⚠️ Network latency spike detected</div>
                         </div>
-                        <div class="text-center mt-2">
-                            <button class="btn btn-sm btn-outline-primary">Load More</button>
-                        </div>
+                        <div class="text-center mt-2"><button class="btn btn-sm btn-outline-primary">Load More</button></div>
                     </div>
                 </div>
 
-                <!-- Section 5: Recent Errors -->
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Recent Errors</h6>
                         <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
                             <table class="table table-sm table-hover align-middle">
                                 <thead class="table-light">
-                                <tr>
-                                    <th>Error Ref</th>
-                                    <th>Message</th>
-                                    <th>Timestamp</th>
-                                </tr>
+                                <tr><th>Error Ref</th><th>Message</th><th>Timestamp</th></tr>
                                 </thead>
                                 <tbody>
                                 <tr><td>#E1023</td><td>Database connection timeout</td><td>2025-09-15 10:22</td></tr>
@@ -260,12 +245,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="text-center mt-2">
-                            <button class="btn btn-sm btn-outline-primary">Load More</button>
-                        </div>
+                        <div class="text-center mt-2"><button class="btn btn-sm btn-outline-primary">Load More</button></div>
                     </div>
                 </div>
-
             </div>
         </main>
 
@@ -278,37 +260,36 @@
 
 <!-- Bootstrap JS -->
 <script src="assets/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <script src="assets/js/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Server Rack JS -->
-
+<!-- Server Rack Poller -->
 <script>
-    async function refreshServerStatus() {
+    async function fetchStatus() {
         try {
-            let res = await fetch("server-status");
-            let status = await res.json();
+            const res = await fetch("serverStatus");
+            const data = await res.json();
 
-            Object.keys(status).forEach(server => {
-                let el = document.querySelector(`article[data-server='${server}']`);
-                if (status[server]) {
-                    el.classList.remove("server-down");
+            Object.entries(data).forEach(([name, status]) => {
+                const row = document.getElementById("server-" + name);
+                const logo = row.querySelector(".server-logo");
+
+                if (status === "online") {
+                    row.classList.remove("server-down");
+                    logo.classList.remove("offline");
                 } else {
-                    el.classList.add("server-down");
+                    row.classList.add("server-down");
+                    logo.classList.add("offline");
                 }
             });
         } catch (e) {
-            console.error("Failed to fetch server status", e);
+            console.error("Error fetching server status:", e);
         }
     }
-
-    setInterval(refreshServerStatus, 5000); // every 5s
-    refreshServerStatus();
+    setInterval(fetchStatus, 5000);
+    fetchStatus();
 </script>
 
-
-<!-- System Metrics JS -->
+<!-- System Metrics Poller -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let memoryChart, diskChart, cpuChart;
@@ -318,35 +299,19 @@
                 const res = await fetch("metrics");
                 const data = await res.json();
 
-                // Parse numeric values (strip "GB" text etc.)
                 const memoryData = data.memory.map(v => parseFloat(v));
-                const diskData   = data.disk.map(v => parseFloat(v));
-
+                const diskData = data.disk.map(v => parseFloat(v));
                 const cpuStates = {};
                 for (let i = 0; i < data.cpu.length; i += 3) {
-                    const state = data.cpu[i+1];
+                    const state = data.cpu[i + 1];
                     cpuStates[state] = (cpuStates[state] || 0) + 1;
                 }
 
-                // If charts not created → create them
                 if (!memoryChart) {
                     memoryChart = new Chart(document.getElementById("memoryChart"), {
                         type: "pie",
-                        data: {
-                            labels: ["Init", "Used", "Max", "Committed"],
-                            datasets: [{
-                                data: memoryData,
-                                backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"]
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { position: "bottom" },
-                                title: { display: true, text: "Memory Usage", font: { size: 16, weight: "bold" } },
-                                subtitle: { display: true, text: "Heap memory (GB)", font: { size: 12, style: "italic" } }
-                            }
-                        }
+                        data: { labels: ["Init", "Used", "Max", "Committed"], datasets: [{ data: memoryData, backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"] }] },
+                        options: { responsive: true, plugins: { legend: { position: "bottom" }, title: { display: true, text: "Memory Usage" } } }
                     });
                 } else {
                     memoryChart.data.datasets[0].data = memoryData;
@@ -356,22 +321,8 @@
                 if (!diskChart) {
                     diskChart = new Chart(document.getElementById("diskChart"), {
                         type: "doughnut",
-                        data: {
-                            labels: ["Total", "Free", "Usable"],
-                            datasets: [{
-                                data: diskData,
-                                backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"]
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            cutout: "70%",
-                            plugins: {
-                                legend: { position: "bottom" },
-                                title: { display: true, text: "Disk Usage", font: { size: 16, weight: "bold" } },
-                                subtitle: { display: true, text: "Root partition (/)", font: { size: 12, style: "italic" } }
-                            }
-                        }
+                        data: { labels: ["Total", "Free", "Usable"], datasets: [{ data: diskData, backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"] }] },
+                        options: { responsive: true, cutout: "70%", plugins: { legend: { position: "bottom" }, title: { display: true, text: "Disk Usage" } } }
                     });
                 } else {
                     diskChart.data.datasets[0].data = diskData;
@@ -381,23 +332,8 @@
                 if (!cpuChart) {
                     cpuChart = new Chart(document.getElementById("cpuChart"), {
                         type: "bar",
-                        data: {
-                            labels: Object.keys(cpuStates),
-                            datasets: [{
-                                label: "Threads",
-                                data: Object.values(cpuStates),
-                                backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"]
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { display: false },
-                                title: { display: true, text: "CPU Threads", font: { size: 16, weight: "bold" } },
-                                subtitle: { display: true, text: "Active JVM threads by state", font: { size: 12, style: "italic" } }
-                            },
-                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                        }
+                        data: { labels: Object.keys(cpuStates), datasets: [{ label: "Threads", data: Object.values(cpuStates), backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"] }] },
+                        options: { responsive: true, plugins: { legend: { display: false }, title: { display: true, text: "CPU Threads" } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
                     });
                 } else {
                     cpuChart.data.labels = Object.keys(cpuStates);
@@ -409,10 +345,7 @@
             }
         }
 
-        // Initial load
         fetchMetrics();
-
-        // Auto-refresh every 10 seconds
         setInterval(fetchMetrics, 10000);
     });
 </script>

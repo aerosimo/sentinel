@@ -179,3 +179,40 @@ footer {
 .dashboard-card canvas {
     max-height: 200px; /* keeps charts compact */
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Map servlet names to rack rows
+    const servers = {
+        tomee: document.getElementById("server-tomee"),
+        jenkins: document.getElementById("server-jenkins"),
+        oracle: document.getElementById("server-oracle"),
+        linux: document.getElementById("server-linux")
+    };
+
+    async function fetchStatus() {
+        try {
+            // Call your ServerStatus servlet (must return JSON like { tomee: "online", ... })
+            const res = await fetch("ServerStatus");
+            const data = await res.json();
+
+            Object.keys(servers).forEach(name => {
+                const row = servers[name];
+                const logo = row.querySelector(".server-logo");
+
+                if (data[name] === "online") {
+                    row.classList.remove("server-down");
+                    logo.classList.remove("offline");
+                } else {
+                    row.classList.add("server-down");
+                    logo.classList.add("offline");
+                }
+            });
+        } catch (e) {
+            console.error("Error fetching server status:", e);
+        }
+    }
+
+    // Initial + auto refresh every 10s
+    fetchStatus();
+    setInterval(fetchStatus, 10000);
+});
