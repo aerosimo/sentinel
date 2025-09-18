@@ -33,19 +33,42 @@ package com.aerosimo.ominet.sentinel.models.utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 
 public class PingServer {
 
-    public static boolean isAlive(String urlString) {
+    public static boolean isAlive(String target) {
+        if (target.startsWith("http://") || target.startsWith("https://")) {
+            return httpCheck(target);
+        } else if (target.contains(":")) {
+            String[] parts = target.split(":");
+            String host = parts[0];
+            int port = Integer.parseInt(parts[1]);
+            return tcpCheck(host, port);
+        }
+        return false;
+    }
+
+    private static boolean httpCheck(String urlString) {
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(2000); // 2 sec timeout
+            conn.setConnectTimeout(2000);
             conn.setReadTimeout(2000);
             conn.setRequestMethod("GET");
             int code = conn.getResponseCode();
             return (code >= 200 && code < 400);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private static boolean tcpCheck(String host, int port) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(host, port), 2000);
+            return true;
         } catch (IOException e) {
             return false;
         }
