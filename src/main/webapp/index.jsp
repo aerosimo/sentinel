@@ -118,7 +118,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">>Sign out</a></li>
+                            <li><a class="dropdown-item" href="logout">Sign out</a></li>
                         </ul>
                     </li>
                 </ul>
