@@ -48,10 +48,10 @@ public class ServerStatus extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
 
-        boolean jenkins = PingServer.isAlive("http://ominet.aerosimo.com:8080");
-        boolean oracle  = PingServer.isAlive("http://ominet.aerosimo.com:1521");
-        boolean tomee   = PingServer.isAlive("http://ominet.aerosimo.com:8081");
-        boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
+        boolean jenkins = PingServer.isAlive("ominet.aerosimo.com:8080");
+        boolean oracle  = PingServer.isAlive("ominet.aerosimo.com:1521");
+        boolean tomee   = PingServer.isAlive("ominet.aerosimo.com:8081");
+        boolean linux   = PingServer.isAlive("ominet.aerosimo.com:9090");
 
         String json = String.format(
                 "{ \"jenkins\": \"%s\", \"oracle\": \"%s\", \"tomee\": \"%s\", \"linux\": \"%s\" }",
