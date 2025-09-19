@@ -232,27 +232,31 @@
                     </div>
                 </div>
 
+                <!-- Section 5: Recent Errors -->
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Recent Errors</h6>
                         <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
-                            <table class="table table-sm table-hover align-middle">
+                            <table id="recentErrorsTable" class="table table-sm table-hover align-middle">
                                 <thead class="table-light">
-                                <tr><th>Error Ref</th><th>Message</th><th>Timestamp</th></tr>
+                                <tr>
+                                    <th>Error Ref</th>
+                                    <th>Message</th>
+                                    <th>Timestamp</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                <tr><td>#E1023</td><td>Database connection timeout</td><td>2025-09-15 10:22</td></tr>
-                                <tr><td>#E1022</td><td>Null pointer in Auth module</td><td>2025-09-15 10:05</td></tr>
-                                <tr><td>#E1021</td><td>Disk write failure</td><td>2025-09-15 09:55</td></tr>
-                                <tr><td>#E1020</td><td>Service unavailable</td><td>2025-09-15 09:40</td></tr>
-                                <tr><td>#E1019</td><td>Invalid user token</td><td>2025-09-15 09:25</td></tr>
-                                <tr><td>#E1018</td><td>API request timeout</td><td>2025-09-15 09:15</td></tr>
+                                    <!-- Auto-populated from spectreErrors servlet -->
                                 </tbody>
                             </table>
                         </div>
-                        <div class="text-center mt-2"><button class="btn btn-sm btn-outline-primary">Load More</button></div>
+                        <div class="text-center mt-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Load More</button>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
         </main>
 
@@ -379,5 +383,38 @@ refreshOverview(); // run once
         setInterval(fetchMetrics, 10000);
     });
 </script>
+
+<!-- Recent Errors Poller -->
+<script>
+    async function fetchRecentErrors() {
+        try {
+            const res = await fetch("spectreErrors?records=6"); // fetch top 6
+            const errors = await res.json();
+
+            const tbody = document.querySelector("#recentErrorsTable tbody");
+            tbody.innerHTML = "";
+
+            errors.forEach(err => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${err.errorRef}</td>
+                    <td>${err.message}</td>
+                    <td>${err.timestamp}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+        } catch (e) {
+            console.error("Failed to fetch errors", e);
+        }
+    }
+
+    // Initial load
+    fetchRecentErrors();
+
+    // Refresh every 15s
+    setInterval(fetchRecentErrors, 15000);
+</script>
+
 </body>
 </html>
