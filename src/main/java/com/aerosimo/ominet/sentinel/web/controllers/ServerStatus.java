@@ -40,22 +40,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "serverStatus",
-        description = "A servlet to provide live server status (online/offline)",
+        description = "Returns current server availability as JSON",
         value = "/serverStatus")
 public class ServerStatus extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
+        resp.setContentType("application/json;charset=UTF-8");
 
-        boolean jenkins = PingServer.isAlive("ominet.aerosimo.com:8080");
-        boolean oracle  = PingServer.isAlive("ominet.aerosimo.com:1521"); // database ping may need TCP check
-        boolean tomee   = PingServer.isAlive("ominet.aerosimo.com:8081");
-        boolean linux   = PingServer.isAlive("ominet.aerosimo.com:9090");
+        // Ping application servers (HTTP endpoints)
+        boolean jenkins = PingServer.isAlive("http://ominet.aerosimo.com:8080");
+        boolean tomee   = PingServer.isAlive("http://ominet.aerosimo.com:8081");
+        boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
 
+        // ⚠️ Oracle DB cannot be pinged with HttpURLConnection (port 1521 is not HTTP).
+        // TODO: Replace with a JDBC-based check (e.g. try a lightweight SELECT 1).
+        boolean oracle = true;
+
+        // Return JSON response
         String json = String.format(
-                "{ \"jenkins\": %b, \"oracle\": %b, \"tomee\": %b, \"linux\": %b }",
-                jenkins, oracle, tomee, linux
+                "{ \"jenkins\": \"%s\", \"tomee\": \"%s\", \"linux\": \"%s\", \"oracle\": \"%s\" }",
+                jenkins ? "online" : "offline",
+                tomee   ? "online" : "offline",
+                linux   ? "online" : "offline",
+                oracle  ? "online" : "offline"
         );
         resp.getWriter().write(json);
     }

@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Spectre.java                                                    *
- * Created:   20/09/2025, 00:40                                               *
- * Modified:  20/09/2025, 00:40                                               *
+ * File:      SpectreErrors.java                                             *
+ * Created:   20/09/2025, 00:52                                               *
+ * Modified:  20/09/2025, 00:52                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,58 +29,40 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.models.utils;
+package com.aerosimo.ominet.sentinel.web.controllers;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.aerosimo.ominet.sentinel.models.utils.Spectre; // Your SOAP client wrapper
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class Spectre {
-
-    private static final String BASE_URL = "http://ominet.aerosimo.com:8081/spectre/api";
+@WebServlet(name = "spectreErrors",
+        description = "Returns recent errors from Spectre SOAP service as JSON",
+        value = "/spectreErrors")
+public class SpectreErrors extends HttpServlet {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    /**
-     * Fetches top errors from Spectre REST API
-     * @param count number of records to fetch
-     * @return list of errors as List<Map<String,String>>
-     */
-    public static List<Map<String, Object>> getTopErrors(int count) throws Exception {
-        String endpoint = BASE_URL + "/errors?records=" + count;
-        String json = fetch(endpoint);
-        return mapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
-    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
 
-    /**
-     * Calls the REST endpoint and returns the response body as string
-     */
-    private static String fetch(String endpoint) throws Exception {
-        URL url = new URL(endpoint);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setConnectTimeout(3000);
-        conn.setReadTimeout(3000);
+        String recordsParam = req.getParameter("records");
+        int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
 
-        if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-        }
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            return sb.toString();
-        } finally {
-            conn.disconnect();
+        try {
+            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
+            mapper.writeValue(resp.getWriter(), errors);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            mapper.writeValue(resp.getWriter(),
+                    Map.of("error", "Failed to fetch errors", "details", e.getMessage()));
         }
     }
 }

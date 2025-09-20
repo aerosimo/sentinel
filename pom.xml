@@ -117,9 +117,11 @@
         <servlet.version>6.1.0</servlet.version>
         <log4j.version>2.25.1</log4j.version>
         <junit.version>5.13.4</junit.version>
+        <json.version>20250517</json.version>
         <gson.version>2.13.2</gson.version>
         <jstl.version>3.0.1</jstl.version>
         <xml.version>4.0.3</xml.version>
+
     </properties>
 
     <dependencies>
@@ -161,6 +163,23 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.20.0</version>
         </dependency>
 
     </dependencies>
