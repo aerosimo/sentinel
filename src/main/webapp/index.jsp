@@ -386,6 +386,7 @@ async function fetchRecentErrors() {
         const data = await res.json();
 
         console.log("Recent Errors JSON:", data); // debug line
+        console.log("First row:", data[0]); // log the first element
 
         const tbody = document.getElementById("errorsTableBody");
         tbody.innerHTML = ""; // clear old rows
