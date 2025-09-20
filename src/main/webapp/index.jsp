@@ -400,11 +400,12 @@ async function fetchRecentErrors() {
 
     errors.forEach(err => {
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${err.errorRef ?? ""}</td>
-        <td>${(err.errorMessage ?? "").replace(/\n/g, "<br/>")}</td>
-        <td>${err.errorTime ?? ""}</td>
-      `;
+        tr.innerHTML = `
+          <td>\${err.errorRef ?? ""}</td>
+          <td>\${(err.errorMessage ?? "").replace(/\\n/g, "<br/>")}</td>
+          <td>\${err.errorTime ?? ""}</td>
+        `;
+
       tbody.appendChild(tr);
     });
 
