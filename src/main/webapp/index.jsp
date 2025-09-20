@@ -243,7 +243,7 @@
                             <th>Timestamp</th>
                           </tr>
                         </thead>
-                        <tbody id="errorsTableBody"></tbody>
+                        <tbody id="errorsTableBody"></tbody> <!-- ✅ must match JS -->
                       </table>
                     </div>
                     <div class="text-center mt-2">
@@ -386,38 +386,38 @@ refreshOverview(); // run once
 async function fetchRecentErrors() {
   try {
     const res = await fetch("spectreErrors?records=6");
-    const errors = await res.json();   // it's already an array
+    const errors = await res.json();
     console.log("Fetched errors:", errors);
 
     const tbody = document.getElementById("errorsTableBody");
-    tbody.innerHTML = ""; // clear old rows
+    tbody.innerHTML = ""; // Clear existing rows
+
+    // Safety: make sure it's an array
+    if (!Array.isArray(errors)) {
+      console.error("Expected an array, got:", errors);
+      return;
+    }
 
     errors.forEach(err => {
       const tr = document.createElement("tr");
-
-      // Format safely
-      const safeRef = err.errorRef || "";
-      const safeMessage = (err.errorMessage || "").replace(/\n/g, "<br/>");
-      const safeTime = err.errorTime || "";
-
       tr.innerHTML = `
-        <td>${safeRef}</td>
-        <td>${safeMessage}</td>
-        <td>${safeTime}</td>
+        <td>${err.errorRef ?? ""}</td>
+        <td>${(err.errorMessage ?? "").replace(/\n/g, "<br/>")}</td>
+        <td>${err.errorTime ?? ""}</td>
       `;
-
       tbody.appendChild(tr);
     });
+
   } catch (e) {
     console.error("Error fetching recent errors:", e);
   }
 }
 
 // Run once on page load
-fetchRecentErrors();
-
-// Auto-refresh every 15s
-setInterval(fetchRecentErrors, 15000);
+document.addEventListener("DOMContentLoaded", () => {
+  fetchRecentErrors();
+  setInterval(fetchRecentErrors, 15000);
+});
 </script>
 
 
