@@ -40,7 +40,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "serverStatus",
-        description = "A simple servlet to populate server status",
+        description = "A servlet to provide live server status (online/offline)",
         value = "/serverStatus")
 public class ServerStatus extends HttpServlet {
 
@@ -49,16 +49,13 @@ public class ServerStatus extends HttpServlet {
         resp.setContentType("application/json");
 
         boolean jenkins = PingServer.isAlive("ominet.aerosimo.com:8080");
-        boolean oracle  = PingServer.isAlive("ominet.aerosimo.com:1521");
+        boolean oracle  = PingServer.isAlive("ominet.aerosimo.com:1521"); // database ping may need TCP check
         boolean tomee   = PingServer.isAlive("ominet.aerosimo.com:8081");
         boolean linux   = PingServer.isAlive("ominet.aerosimo.com:9090");
 
         String json = String.format(
-                "{ \"jenkins\": \"%s\", \"oracle\": \"%s\", \"tomee\": \"%s\", \"linux\": \"%s\" }",
-                jenkins ? "online" : "offline",
-                oracle  ? "online" : "offline",
-                tomee   ? "online" : "offline",
-                linux   ? "online" : "offline"
+                "{ \"jenkins\": %b, \"oracle\": %b, \"tomee\": %b, \"linux\": %b }",
+                jenkins, oracle, tomee, linux
         );
         resp.getWriter().write(json);
     }

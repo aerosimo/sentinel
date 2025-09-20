@@ -81,8 +81,6 @@
 %>
 
 <div class="d-flex">
-
-<div class="d-flex">
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column p-3" id="sidebar">
         <div class="text-center mb-4">
@@ -236,22 +234,18 @@
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Recent Errors</h6>
-                        <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                        <div class="table-responsive" style="max-height:200px;overflow-y:auto;">
                             <table id="recentErrorsTable" class="table table-sm table-hover align-middle">
                                 <thead class="table-light">
-                                <tr>
-                                    <th>Error Ref</th>
-                                    <th>Message</th>
-                                    <th>Timestamp</th>
-                                </tr>
+                                    <tr>
+                                        <th>Error Ref</th><th>Message</th><th>Timestamp</th>
+                                    </tr>
                                 </thead>
-                                <tbody id="errorsTableBody">
-                                    <!-- Auto-populated from spectreErrors servlet -->
-                                </tbody>
+                                <tbody id="errorsTableBody"></tbody>
                             </table>
                         </div>
                         <div class="text-center mt-2">
-                            <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Load More</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Refresh</button>
                         </div>
                     </div>
                 </div>
@@ -390,33 +384,21 @@ async function fetchRecentErrors() {
     try {
         const res = await fetch("spectreErrors?records=6");
         const data = await res.json();
-
         const tbody = document.getElementById("errorsTableBody");
-        tbody.innerHTML = ""; // clear old rows
-
+        tbody.innerHTML = "";
         data.forEach(err => {
             const tr = document.createElement("tr");
-
-            // Escape text (to avoid broken HTML)
-            const safeMessage = err.message.replace(/\n/g, "<br/>");
-
-            tr.innerHTML = `
-                <td>${err.errorRef}</td>
-                <td>${safeMessage}</td>
-                <td>${err.timestamp}</td>
-            `;
+            const msgTd = document.createElement("td");
+            msgTd.textContent = err.message; // safe
+            msgTd.style.whiteSpace = "pre-line"; // preserve line breaks
+            tr.innerHTML = `<td>${err.errorRef}</td>`;
+            tr.appendChild(msgTd);
+            tr.innerHTML += `<td>${err.timestamp}</td>`;
             tbody.appendChild(tr);
         });
-    } catch (e) {
-        console.error("Error fetching recent errors:", e);
-    }
+    } catch (e) { console.error("Error fetching errors:", e); }
 }
-
-// Run once on page load
-fetchRecentErrors();
-
-// Auto-refresh every 15 seconds
-setInterval(fetchRecentErrors, 15000);
+setInterval(fetchRecentErrors, 15000); fetchRecentErrors();
 </script>
 
 </body>
