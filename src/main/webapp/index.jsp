@@ -384,22 +384,35 @@ async function fetchRecentErrors() {
     try {
         const res = await fetch("spectreErrors?records=6");
         const data = await res.json();
+
         const tbody = document.getElementById("errorsTableBody");
-        tbody.innerHTML = "";
+        tbody.innerHTML = ""; // clear old rows
+
         data.forEach(err => {
             const tr = document.createElement("tr");
-            const msgTd = document.createElement("td");
-            msgTd.textContent = err.message; // safe
-            msgTd.style.whiteSpace = "pre-line"; // preserve line breaks
-            tr.innerHTML = `<td>${err.errorRef}</td>`;
-            tr.appendChild(msgTd);
-            tr.innerHTML += `<td>${err.timestamp}</td>`;
+
+            // Escape newlines in errorMessage for display
+            const safeMessage = err.errorMessage.replace(/\n/g, "<br/>");
+
+            tr.innerHTML = `
+                <td>${err.errorRef}</td>
+                <td>${safeMessage}</td>
+                <td>${err.errorTime}</td>
+            `;
             tbody.appendChild(tr);
         });
-    } catch (e) { console.error("Error fetching errors:", e); }
+    } catch (e) {
+        console.error("Error fetching recent errors:", e);
+    }
 }
-setInterval(fetchRecentErrors, 15000); fetchRecentErrors();
+
+// Run once on page load
+fetchRecentErrors();
+
+// Auto-refresh every 15s
+setInterval(fetchRecentErrors, 15000);
 </script>
+
 
 </body>
 </html>
