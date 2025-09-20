@@ -384,16 +384,23 @@ async function fetchRecentErrors() {
     try {
         const res = await fetch("spectreErrors?records=6");
         const data = await res.json();
+        console.log("Fetched JSON:", data);
 
-        console.log("Row data:", err);
+        // If wrapped in an object { errors: [...] }
+        const errors = Array.isArray(data) ? data : data.errors;
+
+        if (!errors) {
+            console.error("No errors array found!");
+            return;
+        }
 
         const tbody = document.getElementById("errorsTableBody");
         tbody.innerHTML = ""; // clear old rows
 
-        data.forEach(err => {
+        errors.forEach(err => {
+            console.log("Row:", err); // debug each row
             const tr = document.createElement("tr");
 
-            // Defensive fix for null values
             const safeRef = err.errorRef || "";
             const safeMessage = err.errorMessage
                 ? err.errorMessage.replace(/\n/g, "<br/>")
@@ -412,12 +419,10 @@ async function fetchRecentErrors() {
     }
 }
 
-// Run once on page load
 fetchRecentErrors();
-
-// Auto-refresh every 15s
 setInterval(fetchRecentErrors, 15000);
 </script>
+
 
 
 </body>
