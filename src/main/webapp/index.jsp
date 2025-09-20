@@ -385,26 +385,21 @@ async function fetchRecentErrors() {
         const res = await fetch("spectreErrors?records=6");
         const data = await res.json();
 
-        console.log("Recent Errors JSON:", data); // debug line
-        console.log("First row:", data[0]); // log the first element
-
         const tbody = document.getElementById("errorsTableBody");
         tbody.innerHTML = ""; // clear old rows
-
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">No recent errors</td></tr>`;
-            return;
-        }
 
         data.forEach(err => {
             const tr = document.createElement("tr");
 
-            const safeMessage = (err.errorMessage || err.message || "").replace(/\n/g, "<br/>");
+            // Defensive fix: handle nulls
+            const safeMessage = err.errorMessage
+                ? err.errorMessage.replace(/\n/g, "<br/>")
+                : "";
 
             tr.innerHTML = `
-                <td>${err.errorRef || err.ref || "--"}</td>
+                <td>${err.errorRef || ""}</td>
                 <td>${safeMessage}</td>
-                <td>${err.errorTime || err.timestamp || "--"}</td>
+                <td>${err.errorTime || ""}</td>
             `;
             tbody.appendChild(tr);
         });
