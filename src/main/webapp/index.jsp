@@ -388,7 +388,7 @@ refreshOverview(); // run once
 <script>
     async function fetchRecentErrors() {
         try {
-            const res = await fetch("spectreErrors?records=6"); // fetch top 6
+            const res = await fetch("${pageContext.request.contextPath}/spectreErrors?records=6"); // fetch top 6
             const errors = await res.json();
 
             const tbody = document.querySelector("#recentErrorsTable tbody");
