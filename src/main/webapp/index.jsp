@@ -245,7 +245,7 @@
                                     <th>Timestamp</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="errorsTableBody">
                                     <!-- Auto-populated from spectreErrors servlet -->
                                 </tbody>
                             </table>
@@ -386,34 +386,37 @@ refreshOverview(); // run once
 
 <!-- Recent Errors Poller -->
 <script>
-    async function fetchRecentErrors() {
-        try {
-            const res = await fetch("${pageContext.request.contextPath}/spectreErrors?records=6"); // fetch top 6
-            const errors = await res.json();
+async function fetchRecentErrors() {
+    try {
+        const res = await fetch("spectreErrors?records=6");
+        const data = await res.json();
 
-            const tbody = document.querySelector("#recentErrorsTable tbody");
-            tbody.innerHTML = "";
+        const tbody = document.getElementById("errorsTableBody");
+        tbody.innerHTML = ""; // clear old rows
 
-            errors.forEach(err => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${err.errorRef}</td>
-                    <td>${err.message}</td>
-                    <td>${err.timestamp}</td>
-                `;
-                tbody.appendChild(row);
-            });
+        data.forEach(err => {
+            const tr = document.createElement("tr");
 
-        } catch (e) {
-            console.error("Failed to fetch errors", e);
-        }
+            // Escape text (to avoid broken HTML)
+            const safeMessage = err.message.replace(/\n/g, "<br/>");
+
+            tr.innerHTML = `
+                <td>${err.errorRef}</td>
+                <td>${safeMessage}</td>
+                <td>${err.timestamp}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error("Error fetching recent errors:", e);
     }
+}
 
-    // Initial load
-    fetchRecentErrors();
+// Run once on page load
+fetchRecentErrors();
 
-    // Refresh every 15s
-    setInterval(fetchRecentErrors, 15000);
+// Auto-refresh every 15 seconds
+setInterval(fetchRecentErrors, 15000);
 </script>
 
 </body>
