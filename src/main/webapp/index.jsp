@@ -232,23 +232,26 @@
 
                 <!-- Section 5: Recent Errors -->
                 <div class="col-md-6">
-                    <div class="card dashboard-card p-3 h-100">
-                        <h6 class="mb-3">Recent Errors</h6>
-                        <div class="table-responsive" style="max-height:200px;overflow-y:auto;">
-                            <table id="recentErrorsTable" class="table table-sm table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Error Ref</th><th>Message</th><th>Timestamp</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="errorsTableBody"></tbody>
-                            </table>
-                        </div>
-                        <div class="text-center mt-2">
-                            <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Refresh</button>
-                        </div>
+                  <div class="card dashboard-card p-3 h-100">
+                    <h6 class="mb-3">Recent Errors</h6>
+                    <div class="table-responsive" style="max-height:200px;overflow-y:auto;">
+                      <table id="recentErrorsTable" class="table table-sm table-hover align-middle">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Error Ref</th>
+                            <th>Message</th>
+                            <th>Timestamp</th>
+                          </tr>
+                        </thead>
+                        <tbody id="errorsTableBody"></tbody>
+                      </table>
                     </div>
+                    <div class="text-center mt-2">
+                      <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Refresh</button>
+                    </div>
+                  </div>
                 </div>
+
 
 
             </div>
@@ -381,48 +384,41 @@ refreshOverview(); // run once
 <!-- Recent Errors Poller -->
 <script>
 async function fetchRecentErrors() {
-    try {
-        const res = await fetch("spectreErrors?records=6");
-        const data = await res.json();
-        console.log("Fetched JSON:", data);
+  try {
+    const res = await fetch("spectreErrors?records=6");
+    const errors = await res.json();   // it's already an array
+    console.log("Fetched errors:", errors);
 
-        // If wrapped in an object { errors: [...] }
-        const errors = Array.isArray(data) ? data : data.errors;
+    const tbody = document.getElementById("errorsTableBody");
+    tbody.innerHTML = ""; // clear old rows
 
-        if (!errors) {
-            console.error("No errors array found!");
-            return;
-        }
+    errors.forEach(err => {
+      const tr = document.createElement("tr");
 
-        const tbody = document.getElementById("errorsTableBody");
-        tbody.innerHTML = ""; // clear old rows
+      // Format safely
+      const safeRef = err.errorRef || "";
+      const safeMessage = (err.errorMessage || "").replace(/\n/g, "<br/>");
+      const safeTime = err.errorTime || "";
 
-        errors.forEach(err => {
-            console.log("Row:", err); // debug each row
-            const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${safeRef}</td>
+        <td>${safeMessage}</td>
+        <td>${safeTime}</td>
+      `;
 
-            const safeRef = err.errorRef || "";
-            const safeMessage = err.errorMessage
-                ? err.errorMessage.replace(/\n/g, "<br/>")
-                : "";
-            const safeTime = err.errorTime || "";
-
-            tr.innerHTML = `
-                <td>${safeRef}</td>
-                <td>${safeMessage}</td>
-                <td>${safeTime}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    } catch (e) {
-        console.error("Error fetching recent errors:", e);
-    }
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    console.error("Error fetching recent errors:", e);
+  }
 }
 
+// Run once on page load
 fetchRecentErrors();
+
+// Auto-refresh every 15s
 setInterval(fetchRecentErrors, 15000);
 </script>
-
 
 
 </body>
