@@ -52,7 +52,7 @@ public class Postmaster {
     private static final String ENDPOINT_URL;
 
     static {
-        ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postalsystem/ws/postmaster";
+        ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postmaster/ws/postmaster";
     }
 
     static String response;

@@ -49,7 +49,7 @@ public class ServerStatus extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
 
         // Ping application servers (HTTP endpoints)
-        boolean jenkins = PingServer.isAlive("http://ominet.aerosimo.com:8080");
+        boolean jenkins = PingServer.isAlive("ominet.aerosimo.com:8080");
         boolean tomee   = PingServer.isAlive("http://ominet.aerosimo.com:8081");
         boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
 
