@@ -33,7 +33,7 @@ package com.aerosimo.ominet.sentinel.core.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.naming.Context;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -42,27 +42,28 @@ import java.sql.SQLException;
 
 public class Connect {
 
-    private static final Logger log;
+    private static final Logger log = LogManager.getLogger(Connect.class.getName());
 
-    static {
-        log = LogManager.getLogger(Connect.class.getName());
-    }
-
-    static Connection con;
-    static Context ctx;
     static DataSource ds;
 
-    public static Connection dbase() {
-        log.info("Preparing connection to Oracle Database");
+    static {
         try {
-            log.info("Retrieving JNDI resource to connect Oracle Database");
-            ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/hats");
-            con = ds.getConnection();
-            log.info("Successfully connected to Oracle Database");
-        } catch (NamingException | SQLException err) {
-            log.error("Oracle Database Connection failed with the following - {}", Connect.class.getName(), err);
+            log.info("Looking up JNDI DataSource for Oracle DB");
+            InitialContext ctx = new InitialContext();
+            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/hats"); // <-- check JNDI name
+            log.info("DataSource lookup successful");
+        } catch (NamingException e) {
+            log.error("JNDI lookup for Oracle DB failed", e);
+            throw new ExceptionInInitializerError(e);
         }
-        return con;
+    }
+
+    /**
+     * Always fetch a fresh connection from the pool.
+     * Caller must close the connection (use try-with-resources).
+     */
+    public static Connection dbase() throws SQLException {
+        log.debug("Fetching a new connection from Oracle DataSource");
+        return ds.getConnection();
     }
 }

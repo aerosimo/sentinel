@@ -35,6 +35,7 @@ import com.aerosimo.ominet.sentinel.core.config.Connect;
 import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.MFAResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
+import com.aerosimo.ominet.sentinel.models.utils.Spectre;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,69 +45,80 @@ import java.sql.SQLException;
 
 public class AuthDAO {
 
-    private static final Logger log;
+    private static final Logger log = LogManager.getLogger(AuthDAO.class.getName());
 
-    static String response;
-    static String token;
-    static String uname;
-    static String sql;
-    static Connection con;
-
-    static {
-        log = LogManager.getLogger(AuthDAO.class.getName());
-        con = Connect.dbase();
+    private AuthDAO() {
+        // utility class
     }
-    static CallableStatement stmt;
 
     public static SignupResponseDTO signup(String uname, String email, String pword, String modifiedBy) {
-        log.info("Preparing to register new user");
-        try {
-            sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+        String token = null;
+        String response = "Signup error";
+
+        String sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, uname);
             stmt.setString(2, email);
             stmt.setString(3, pword);
             stmt.setString(4, modifiedBy);
             stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+
             stmt.execute();
             token = stmt.getString(5);
             response = stmt.getString(6);
-            log.info("Successfully register new user");
+
+            log.info("Successfully registered new user");
         } catch (SQLException err) {
-            token =  null;
-            response = "Signup error";
-            log.error("Unknown error occurred in auth_pkg (SIGNUP) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20001",err.getMessage(),AuthDAO.class.getName());
+            log.error("Error in auth_pkg (SIGNUP)", err);
+            try {
+                Spectre.recordError("DB-20001", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return new SignupResponseDTO(token, response);
     }
 
-    public static String verifyemail(String email, String VerificationToken, String modifiedBy) {
-        log.info("Preparing to verify email");
-        try {
-            sql = "{call auth_pkg.confirm_email(?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+    public static String verifyEmail(String email, String verificationToken, String modifiedBy) {
+        String response = "Email verification error";
+        String sql = "{call auth_pkg.confirm_email(?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
-            stmt.setString(2, VerificationToken);
+            stmt.setString(2, verificationToken);
             stmt.setString(3, modifiedBy);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+
             stmt.execute();
             response = stmt.getString(4);
-            log.info("Successfully verify email");
+
+            log.info("Successfully verified email");
         } catch (SQLException err) {
-            response = "Email verification error";
-            log.error("Unknown error occurred in auth_pkg (CONFIRM EMAIL) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20002",err.getMessage(),AuthDAO.class.getName());
+            log.error("Error in auth_pkg (CONFIRM EMAIL)", err);
+            try {
+                Spectre.recordError("DB-20002", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return response;
     }
 
     public static LoginResponseDTO login(String email, String pword, String inet, String device, String modifiedBy) {
-        log.info("Preparing to login");
-        try{
-            sql = "{call auth_pkg.login(?,?,?,?,?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+        String token = null;
+        String uname = null;
+        String response = "Login error";
+
+        String sql = "{call auth_pkg.login(?,?,?,?,?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
             stmt.setString(2, pword);
             stmt.setString(3, inet);
@@ -115,106 +127,138 @@ public class AuthDAO {
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(8, java.sql.Types.VARCHAR);
+
             stmt.execute();
             token = stmt.getString(6);
             uname = stmt.getString(7);
             response = stmt.getString(8);
-            log.info("Successfully login");
-        } catch (SQLException err) {
-            uname = null;
-            token = null;
-            response = "Login error";
-            log.error("Unknown error occurred in auth_pkg (LOGIN) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20003",err.getMessage(),AuthDAO.class.getName());
-        }
 
-        return  new LoginResponseDTO(uname,token,response);
+            log.info("Successfully logged in");
+        } catch (SQLException err) {
+            log.error("Error in auth_pkg (LOGIN)", err);
+            try {
+                Spectre.recordError("DB-20003", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return new LoginResponseDTO(uname, token, response);
     }
 
-    public static MFAResponseDTO confirmMFA(String email, String MFACode, String inet, String device, String modifiedBy) {
-        log.info("Preparing to verify MFA token");
-        try{
-            sql = "{call auth_pkg.confirm_mfa(?,?,?,?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+    public static MFAResponseDTO confirmMFA(String email, String mfaCode, String inet, String device, String modifiedBy) {
+        String token = null;
+        String response = "Confirm MFA error";
+
+        String sql = "{call auth_pkg.confirm_mfa(?,?,?,?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
-            stmt.setString(2, MFACode);
+            stmt.setString(2, mfaCode);
             stmt.setString(3, inet);
             stmt.setString(4, device);
             stmt.setString(5, modifiedBy);
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
+
             stmt.execute();
             token = stmt.getString(6);
             response = stmt.getString(7);
-            log.info("Successfully verify mfa token");
+
+            log.info("Successfully verified MFA token");
         } catch (SQLException err) {
-            token = null;
-            response = "confirm mfa error";
-            log.error("Unknown error occurred in auth_pkg (CONFIRM MFA) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20004",err.getMessage(),AuthDAO.class.getName());
+            log.error("Error in auth_pkg (CONFIRM MFA)", err);
+            try {
+                Spectre.recordError("DB-20004", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-        return new MFAResponseDTO(token,response);
+        return new MFAResponseDTO(token, response);
     }
 
-    public static String logout(String email, String SessionToken, String modifiedBy) {
-        log.info("Preparing to logout");
-        try{
-            sql = "{call auth_pkg.logout(?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+    public static String logout(String email, String sessionToken, String modifiedBy) {
+        String response = "Logout error";
+        String sql = "{call auth_pkg.logout(?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
-            stmt.setString(2, SessionToken);
+            stmt.setString(2, sessionToken);
             stmt.setString(3, modifiedBy);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+
             stmt.execute();
             response = stmt.getString(4);
-            log.info("Successfully logout");
-        } catch (SQLException err){
-            response = "Logout error";
-            log.error("Unknown error occurred in auth_pkg (LOGOUT) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20005",err.getMessage(),AuthDAO.class.getName());
+
+            log.info("Successfully logged out");
+        } catch (SQLException err) {
+            log.error("Error in auth_pkg (LOGOUT)", err);
+            try {
+                Spectre.recordError("DB-20005", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return response;
     }
 
     public static SignupResponseDTO forgotPassword(String email, String modifiedBy) {
-        log.info("Preparing to process forgot password");
-        try{
-            sql = "{call auth_pkg.forgot_password(?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+        String token = null;
+        String response = "Forgot password error";
+
+        String sql = "{call auth_pkg.forgot_password(?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
             stmt.setString(2, modifiedBy);
             stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+
             stmt.execute();
             token = stmt.getString(3);
             response = stmt.getString(4);
-            log.info("Successfully generate new verification code");
-        } catch (SQLException err){
-            token = null;
-            response = "forgot password error";
-            log.error("Unknown error occurred in auth_pkg (FORGOT PASSWORD) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20005",err.getMessage(),AuthDAO.class.getName());
+
+            log.info("Successfully generated new verification code");
+        } catch (SQLException err) {
+            log.error("Error in auth_pkg (FORGOT PASSWORD)", err);
+            try {
+                Spectre.recordError("DB-20006", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-        return new SignupResponseDTO(token,response);
+        return new SignupResponseDTO(token, response);
     }
 
-    public static String resetPassword(String email, String VerificationToken, String pword, String modifiedBy) {
-        log.info("Preparing to reset password");
-        try {
-            sql = "{call auth_pkg.reset_password(?,?,?,?)}";
-            stmt = con.prepareCall(sql);
+    public static String resetPassword(String email, String verificationToken, String pword, String modifiedBy) {
+        String response = "Reset password error";
+        String sql = "{call auth_pkg.reset_password(?,?,?,?)}";
+
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+
             stmt.setString(1, email);
-            stmt.setString(2, VerificationToken);
+            stmt.setString(2, verificationToken);
             stmt.setString(3, pword);
             stmt.setString(4, modifiedBy);
-            stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+
             stmt.execute();
-            response = stmt.getString(4);
+            response = stmt.getString(5);
+
             log.info("Successfully reset password");
-        } catch (SQLException err){
-            response = "Reset password error";
-            log.error("Unknown error occurred in auth_pkg (RESET PASSWORD) with the following - {}", AuthDAO.class.getName(), err);
-            ErrorVaultDAO.storeError("DB-20006",err.getMessage(),AuthDAO.class.getName());
+        } catch (SQLException err) {
+            log.error("Error in auth_pkg (RESET PASSWORD)", err);
+            try {
+                Spectre.recordError("DB-20007", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return response;
     }

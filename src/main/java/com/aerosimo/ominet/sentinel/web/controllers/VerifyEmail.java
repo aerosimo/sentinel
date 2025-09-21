@@ -64,7 +64,7 @@ public class VerifyEmail extends HttpServlet {
         modifiedBy = "Sentinel";
         log.info("Preparing to verify new user email address");
         // Call DAO method
-        result = AuthDAO.verifyemail((String) req.getSession().getAttribute("email"), verifyToken, modifiedBy);
+        result = AuthDAO.verifyEmail((String) req.getSession().getAttribute("email"), verifyToken, modifiedBy);
         log.info("Logging response of verification email {}", result);
         // Check response and redirect
         if ("success".equalsIgnoreCase(result)) {

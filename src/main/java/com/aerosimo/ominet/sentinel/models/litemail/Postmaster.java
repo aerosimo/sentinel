@@ -31,7 +31,8 @@
 
 package com.aerosimo.ominet.sentinel.models.litemail;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.ErrorVaultDAO;
+import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import com.aerosimo.ominet.sentinel.models.utils.Spectre;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -108,7 +109,11 @@ public class Postmaster {
         } catch (Exception err) {
             response = "Message not successful";
             log.error("Email Notification Service failed in {} with error: ", Postmaster.class.getName(), err);
-            ErrorVaultDAO.storeError("EM-20007",err.getMessage(), Postmaster.class.getName());
+            try {
+                Spectre.recordError("EM-20007", err.getMessage(), AuthDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         return response;
     }
