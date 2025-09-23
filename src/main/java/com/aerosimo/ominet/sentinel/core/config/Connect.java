@@ -44,26 +44,18 @@ public class Connect {
 
     private static final Logger log = LogManager.getLogger(Connect.class.getName());
 
-    static DataSource ds;
-
-    static {
-        try {
+    public static Connection dbase() {
+        log.debug("Fetching a new connection from Oracle DataSource");
+        Connection con = null;
+        try{
             log.info("Looking up JNDI DataSource for Oracle DB");
             InitialContext ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/hats"); // <-- check JNDI name
-            log.info("DataSource lookup successful");
-        } catch (NamingException e) {
-            log.error("JNDI lookup for Oracle DB failed", e);
-            throw new ExceptionInInitializerError(e);
+            DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/hats");
+            con = ds.getConnection();
+            log.info("Connection Established successfully");
+        } catch (NamingException | SQLException err) {
+            log.error("JNDI lookup for Oracle DB failed", err);
         }
-    }
-
-    /**
-     * Always fetch a fresh connection from the pool.
-     * Caller must close the connection (use try-with-resources).
-     */
-    public static Connection dbase() throws SQLException {
-        log.debug("Fetching a new connection from Oracle DataSource");
-        return ds.getConnection();
+        return con;
     }
 }

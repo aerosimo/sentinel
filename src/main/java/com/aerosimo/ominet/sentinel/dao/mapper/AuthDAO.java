@@ -47,29 +47,25 @@ public class AuthDAO {
 
     private static final Logger log = LogManager.getLogger(AuthDAO.class.getName());
 
-    private AuthDAO() {
-        // utility class
-    }
-
     public static SignupResponseDTO signup(String uname, String email, String pword, String modifiedBy) {
+        log.info("Preparing to register new user");
         String token = null;
         String response = "Signup error";
-
+        Connection con = null;
+        CallableStatement stmt = null;
         String sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, uname);
             stmt.setString(2, email);
             stmt.setString(3, pword);
             stmt.setString(4, modifiedBy);
             stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
-
             stmt.execute();
             token = stmt.getString(5);
             response = stmt.getString(6);
-
             log.info("Successfully registered new user");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (SIGNUP)", err);
@@ -78,25 +74,34 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (signup) Closed....");
         }
         return new SignupResponseDTO(token, response);
     }
 
     public static String verifyEmail(String email, String verificationToken, String modifiedBy) {
+        log.info("Preparing to new user email");
         String response = "Email verification error";
         String sql = "{call auth_pkg.confirm_email(?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        Connection con = null;
+        CallableStatement stmt = null;
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, verificationToken);
             stmt.setString(3, modifiedBy);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-
             stmt.execute();
             response = stmt.getString(4);
-
             log.info("Successfully verified email");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (CONFIRM EMAIL)", err);
@@ -105,20 +110,30 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (verifyEmail) Closed....");
         }
         return response;
     }
 
     public static LoginResponseDTO login(String email, String pword, String inet, String device, String modifiedBy) {
+        log.info("Preparing to authenticate user");
         String token = null;
         String uname = null;
         String response = "Login error";
-
+        Connection con = null;
+        CallableStatement stmt = null;
         String sql = "{call auth_pkg.login(?,?,?,?,?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, pword);
             stmt.setString(3, inet);
@@ -127,12 +142,10 @@ public class AuthDAO {
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(8, java.sql.Types.VARCHAR);
-
             stmt.execute();
             token = stmt.getString(6);
             uname = stmt.getString(7);
             response = stmt.getString(8);
-
             log.info("Successfully logged in");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (LOGIN)", err);
@@ -141,19 +154,29 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (login) Closed....");
         }
         return new LoginResponseDTO(uname, token, response);
     }
 
     public static MFAResponseDTO confirmMFA(String email, String mfaCode, String inet, String device, String modifiedBy) {
+        log.info("Preparing to confirm mfa code");
         String token = null;
         String response = "Confirm MFA error";
-
+        Connection con = null;
+        CallableStatement stmt = null;
         String sql = "{call auth_pkg.confirm_mfa(?,?,?,?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, mfaCode);
             stmt.setString(3, inet);
@@ -161,11 +184,9 @@ public class AuthDAO {
             stmt.setString(5, modifiedBy);
             stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
-
             stmt.execute();
             token = stmt.getString(6);
             response = stmt.getString(7);
-
             log.info("Successfully verified MFA token");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (CONFIRM MFA)", err);
@@ -174,25 +195,34 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (confirmMFA) Closed....");
         }
         return new MFAResponseDTO(token, response);
     }
 
     public static String logout(String email, String sessionToken, String modifiedBy) {
+        log.info("Preparing to logout user");
         String response = "Logout error";
         String sql = "{call auth_pkg.logout(?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        Connection con = null;
+        CallableStatement stmt = null;
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, sessionToken);
             stmt.setString(3, modifiedBy);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-
             stmt.execute();
             response = stmt.getString(4);
-
             log.info("Successfully logged out");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (LOGOUT)", err);
@@ -201,28 +231,36 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (logout) Closed....");
         }
         return response;
     }
 
     public static SignupResponseDTO forgotPassword(String email, String modifiedBy) {
+        log.info("Preparing to start forgot Password");
         String token = null;
         String response = "Forgot password error";
-
         String sql = "{call auth_pkg.forgot_password(?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        Connection con = null;
+        CallableStatement stmt = null;
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, modifiedBy);
             stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
             stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-
             stmt.execute();
             token = stmt.getString(3);
             response = stmt.getString(4);
-
             log.info("Successfully generated new verification code");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (FORGOT PASSWORD)", err);
@@ -231,26 +269,35 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (forgotPassword) Closed....");
         }
         return new SignupResponseDTO(token, response);
     }
 
     public static String resetPassword(String email, String verificationToken, String pword, String modifiedBy) {
+        log.info("Preparing to start reset Password");
         String response = "Reset password error";
         String sql = "{call auth_pkg.reset_password(?,?,?,?)}";
-
-        try (Connection con = Connect.dbase();
-             CallableStatement stmt = con.prepareCall(sql)) {
-
+        Connection con = null;
+        CallableStatement stmt = null;
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, verificationToken);
             stmt.setString(3, pword);
             stmt.setString(4, modifiedBy);
             stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
-
             stmt.execute();
             response = stmt.getString(5);
-
             log.info("Successfully reset password");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (RESET PASSWORD)", err);
@@ -259,6 +306,15 @@ public class AuthDAO {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (resetPassword) Closed....");
         }
         return response;
     }

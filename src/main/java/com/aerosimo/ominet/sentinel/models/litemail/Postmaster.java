@@ -31,16 +31,17 @@
 
 package com.aerosimo.ominet.sentinel.models.litemail;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import com.aerosimo.ominet.sentinel.models.utils.Spectre;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Postmaster {
 
@@ -50,80 +51,60 @@ public class Postmaster {
         log = LogManager.getLogger(Postmaster.class.getName());
     }
 
-    private static final String ENDPOINT_URL;
+    // REST endpoint instead of SOAP
+    private static final String ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postmaster/api/postmaster";
 
-    static {
-        ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postmaster/ws/postmaster";
-    }
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    static String response;
-
+    /**
+     * Send an email via Postmaster REST service
+     */
     public static String sendEmail(String emailAddress, String emailSubject, String emailMessage, String emailFiles) {
+        String response = "Message sent successfully";
 
-        response = "Message sent successfully";
         try {
-            // Build SOAP request XML
-            String soapRequest =
-                    """
-                    <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-                                   xmlns:pos="https://aerosimo.com/api/ws/postmaster">
-                        <soap:Body>
-                            <pos:sendEmail>
-                                <emailAddress>%s</emailAddress>
-                                <emailSubject>%s</emailSubject>
-                                <emailMessage>%s</emailMessage>
-                                <emailFiles>%s</emailFiles>
-                            </pos:sendEmail>
-                        </soap:Body>
-                    </soap:Envelope>
-                    """.formatted(
-                            escapeXml(emailAddress),
-                            escapeXml(emailSubject),
-                            escapeXml(emailMessage),
-                            emailFiles != null ? escapeXml(emailFiles) : ""
-                    );
+            // Build JSON request body
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("emailAddress", emailAddress);
+            payload.put("emailSubject", emailSubject);
+            payload.put("emailMessage", emailMessage);
+            payload.put("emailFiles", emailFiles);
+
+            String jsonRequest = mapper.writeValueAsString(payload);
 
             // Open HTTP connection
             URL url = new URL(ENDPOINT_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "application/soap+xml; charset=utf-8");
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 
-            // Send SOAP request
+            // Send JSON request
             try (OutputStream os = conn.getOutputStream()) {
-                os.write(soapRequest.getBytes());
+                os.write(jsonRequest.getBytes(StandardCharsets.UTF_8));
             }
 
-            // Parse SOAP response
-            Document doc = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder()
-                    .parse(conn.getInputStream());
-
-            // Extract <Status> from response
-            if (doc.getElementsByTagName("Status").getLength() > 0) {
-                response = doc.getElementsByTagName("Status").item(0).getTextContent();
+            // Read JSON response
+            if (conn.getResponseCode() == 200) {
+                Map<String, String> result = mapper.readValue(conn.getInputStream(), Map.class);
+                response = result.getOrDefault("Status", "Message sent successfully");
             } else {
-                log.warn("No <Status> element found in SOAP response.");
+                response = "Message not successful: HTTP " + conn.getResponseCode();
+                log.error("Postmaster REST failed with HTTP code {}", conn.getResponseCode());
             }
+
         } catch (Exception err) {
             response = "Message not successful";
             log.error("Email Notification Service failed in {} with error: ", Postmaster.class.getName(), err);
             try {
-                Spectre.recordError("EM-20007", err.getMessage(), AuthDAO.class.getName());
+                Spectre.recordError("EM-20007", err.getMessage(), Postmaster.class.getName());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
+
         return response;
-    }
-    // Utility to safely escape XML special chars in inputs
-    private static String escapeXml(String input) {
-        return input == null ? "" : input
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
     }
 }
