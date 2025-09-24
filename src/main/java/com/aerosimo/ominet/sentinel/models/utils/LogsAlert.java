@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      SpectreErrors.java                                             *
- * Created:   20/09/2025, 00:52                                               *
- * Modified:  20/09/2025, 00:52                                               *
+ * File:      LogsAlert.java                                                  *
+ * Created:   24/09/2025, 00:38                                               *
+ * Modified:  24/09/2025, 00:38                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,40 +29,56 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web.controllers;
+package com.aerosimo.ominet.sentinel.models.utils;
 
-import com.aerosimo.ominet.sentinel.models.utils.Spectre; // Your SOAP client wrapper
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.aerosimo.ominet.sentinel.core.config.Connect;
+import com.aerosimo.ominet.sentinel.dao.impl.AlertResponseDTO;
+import oracle.jdbc.OracleTypes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@WebServlet(name = "spectreErrors",
-        description = "Returns recent errors from Spectre",
-        value = "/spectreErrors")
-public class SpectreErrors extends HttpServlet {
+public class LogsAlert {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger log = LogManager.getLogger(LogsAlert.class.getName());
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
-
-        String recordsParam = req.getParameter("records");
-        int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
-
-        try {
-            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
-            mapper.writeValue(resp.getWriter(), errors);
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            mapper.writeValue(resp.getWriter(),
-                    Map.of("error", "Failed to fetch errors", "details", e.getMessage()));
+    public static List<AlertResponseDTO> getTopAlerts(int records){
+        log.info("Preparing to fetch new top logs and alerts");
+        List<AlertResponseDTO> alertList = new ArrayList<>();
+        String sql = "{call alert_log_pkg.get_alerts(?,?)}";
+        Connection con = null;
+        CallableStatement stmt = null;
+        try{
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
+            stmt.setInt(1, records);
+            stmt.registerOutParameter(2, OracleTypes.CURSOR);
+            stmt.execute();
+            ResultSet rs = (ResultSet) stmt.getObject(2);
+            while (rs.next()) alertList.add(new AlertResponseDTO(rs.getInt(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5)));
+        } catch (SQLException err) {
+            log.error("Database adaptor error (getTopAlerts) occurred with the following - {}", LogsAlert.class.getName(), err);
+        } finally {
+            // Close the statement and connection
+            try {
+                stmt.close();
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            log.info("DB Connection for (getTopAlerts) Closed....");
         }
+        return alertList;
     }
+
 }

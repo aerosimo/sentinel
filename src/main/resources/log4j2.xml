@@ -36,24 +36,42 @@
         <property name="filemonth">${date:MMMM}</property>
         <property name="fileday">${date:ddMMyyyy}</property>
     </Properties>
+
     <Appenders>
-        <RollingFile name="LogToRollingFile" fileName="/opt/logs/${fileyear}/${filemonth}/${fileday}.log"
+        <!-- Rolling File Appender -->
+        <RollingFile name="LogToRollingFile"
+                     fileName="/opt/logs/${fileyear}/${filemonth}/${fileday}.log"
                      filePattern="/opt/logs/${fileyear}/${filemonth}/${fileday}-%d{dd-MMMM-yyyy}-%i.log.gz">
             <PatternLayout>
                 <pattern>[%-5level] %d{EEE dd-MM-yyyy HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
             </PatternLayout>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-                <SizeBasedTriggeringPolicy size="10MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
             </Policies>
         </RollingFile>
+
+        <!-- Database Appender -->
+        <JDBC name="DBAppender" tableName="alert_log_tbl">
+            <ConnectionFactory class="com.aerosimo.ominet.sentinel.core.config.Connect" method="dbase"/>
+            <Column name="log_time" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}"/>
+            <Column name="log_level" pattern="%p"/>
+            <Column name="log_logger" pattern="%c"/>
+            <Column name="log_message" pattern="%m"/>
+        </JDBC>
     </Appenders>
+
     <Loggers>
-        <Logger name="com.aerosimo" level="trace" additivity="false">
+        <!-- Application Logs -->
+        <Logger name="com.aerosimo" level="warn" additivity="false">
             <AppenderRef ref="LogToRollingFile"/>
+            <AppenderRef ref="DBAppender"/>
         </Logger>
+
+        <!-- Root Logger -->
         <Root level="trace" additivity="false">
             <AppenderRef ref="LogToRollingFile"/>
+            <AppenderRef ref="DBAppender"/>
         </Root>
     </Loggers>
 </Configuration>

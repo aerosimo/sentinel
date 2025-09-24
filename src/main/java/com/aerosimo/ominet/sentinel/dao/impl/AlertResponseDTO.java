@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      SpectreErrors.java                                             *
- * Created:   20/09/2025, 00:52                                               *
- * Modified:  20/09/2025, 00:52                                               *
+ * File:      AlertResponseDTO.java                                           *
+ * Created:   24/09/2025, 00:39                                               *
+ * Modified:  24/09/2025, 00:39                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,40 +29,64 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web.controllers;
+package com.aerosimo.ominet.sentinel.dao.impl;
 
-import com.aerosimo.ominet.sentinel.models.utils.Spectre; // Your SOAP client wrapper
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+public class AlertResponseDTO {
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+    private Integer id;
+    private String time;
+    private String level;
+    private String logger;
+    private String message;
 
-@WebServlet(name = "spectreErrors",
-        description = "Returns recent errors from Spectre",
-        value = "/spectreErrors")
-public class SpectreErrors extends HttpServlet {
+    public AlertResponseDTO() {
+    }
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    public AlertResponseDTO(Integer id, String time, String level, String logger, String message) {
+        this.id = id;
+        this.time = time;
+        this.level = level;
+        this.logger = logger;
+        this.message = message;
+    }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
+    public Integer getId() {
+        return id;
+    }
 
-        String recordsParam = req.getParameter("records");
-        int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-        try {
-            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
-            mapper.writeValue(resp.getWriter(), errors);
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            mapper.writeValue(resp.getWriter(),
-                    Map.of("error", "Failed to fetch errors", "details", e.getMessage()));
-        }
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getLogger() {
+        return logger;
+    }
+
+    public void setLogger(String logger) {
+        this.logger = logger;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

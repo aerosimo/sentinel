@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      SpectreErrors.java                                             *
- * Created:   20/09/2025, 00:52                                               *
- * Modified:  20/09/2025, 00:52                                               *
+ * File:      Alerts.java                                                  *
+ * Created:   24/09/2025, 00:54                                               *
+ * Modified:  24/09/2025, 00:54                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,7 +31,8 @@
 
 package com.aerosimo.ominet.sentinel.web.controllers;
 
-import com.aerosimo.ominet.sentinel.models.utils.Spectre; // Your SOAP client wrapper
+import com.aerosimo.ominet.sentinel.dao.impl.AlertResponseDTO;
+import com.aerosimo.ominet.sentinel.models.utils.LogsAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -42,10 +43,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "spectreErrors",
-        description = "Returns recent errors from Spectre",
-        value = "/spectreErrors")
-public class SpectreErrors extends HttpServlet {
+@WebServlet(name = "alerts",
+        description = "Returns recent alerts",
+        value = "/alerts")
+public class Alerts extends HttpServlet {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -57,8 +58,8 @@ public class SpectreErrors extends HttpServlet {
         int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
 
         try {
-            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
-            mapper.writeValue(resp.getWriter(), errors);
+            List<AlertResponseDTO> logs = LogsAlert.getTopAlerts(count);
+            mapper.writeValue(resp.getWriter(), logs);
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             mapper.writeValue(resp.getWriter(),

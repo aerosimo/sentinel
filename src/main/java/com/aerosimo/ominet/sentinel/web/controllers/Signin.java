@@ -69,6 +69,7 @@ public class Signin extends HttpServlet {
         password = req.getParameter("password");
         modifiedBy = "Sentinel";
         log.info("Preparing to sign in user with email {}", email);
+        log.warn("Preparing to sign in user with email {}", email);
         // Call DAO method
         response = AuthDAO.login(email, password,req.getRemoteAddr(),req.getHeader("user-agent"), modifiedBy);
         log.info("Logging response of sign in {}", response.getResponse());
