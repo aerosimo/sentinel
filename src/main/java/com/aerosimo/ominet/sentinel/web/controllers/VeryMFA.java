@@ -42,6 +42,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet(name = "mfa",
         description = "A simple servlet to capture the information from mfa email form",
@@ -65,7 +66,7 @@ public class VeryMFA extends HttpServlet {
         log.info("Preparing to confirm login token");
         // Call DAO method
         result = AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),
-                mfaToken, (String) req.getSession().getAttribute("inet"),
+                mfaToken.toUpperCase(Locale.ROOT), (String) req.getSession().getAttribute("inet"),
                 (String) req.getSession().getAttribute("userAgent"),
                 modifiedBy);
         log.info("Logging response of login confirmation email {}", result.getResponse());
