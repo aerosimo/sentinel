@@ -214,23 +214,37 @@
                     </div>
                 </div>
 
-                <!-- Row 3: Section 5 (Recent Errors, full width) -->
-                <div class="col-12">
+                <!-- Row 3: Section 4 (Alerts & Logs) -->
+                <div class="col-md-6">
+                    <div class="card dashboard-card p-3 h-100">
+                        <h6 class="mb-3">Alerts & Logs</h6>
+                        <div class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            <div class="list-group-item">⚠️ High CPU usage detected at 10:20</div>
+                            <div class="list-group-item">ℹ️ User admin logged in at 10:05</div>
+                            <div class="list-group-item">⚠️ Disk space warning on /dev/sda1</div>
+                            <div class="list-group-item">✅ Backup completed successfully</div>
+                            <div class="list-group-item">⚠️ Memory threshold exceeded</div>
+                            <div class="list-group-item">ℹ️ Scheduled job completed</div>
+                            <div class="list-group-item">⚠️ Network latency spike detected</div>
+                        </div>
+                        <div class="text-center mt-2"><button class="btn btn-sm btn-outline-primary">Load More</button></div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Section 5 (Recent Errors) -->
+                <div class="col-md-6">
                     <div class="card dashboard-card p-3 h-100">
                         <h6 class="mb-3">Recent Errors</h6>
-                        <div class="table-responsive" style="max-height:400px; overflow-y:auto;">
+                        <div class="table-responsive" style="max-height:200px;overflow-y:auto;">
                             <table id="recentErrorsTable" class="table table-sm table-hover align-middle">
                                 <thead class="table-light">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Ref</th>
-                                        <th>Time</th>
-                                        <th>Code</th>
-                                        <th>Message</th>
-                                        <th>Service</th>
-                                    </tr>
+                                <tr>
+                                    <th>Error Ref</th>
+                                    <th>Message</th>
+                                    <th>Timestamp</th>
+                                </tr>
                                 </thead>
-                                <tbody id="errorsTableBody"></tbody>
+                                <tbody id="errorsTableBody"></tbody> <!-- ✅ must match JS -->
                             </table>
                         </div>
                         <div class="text-center mt-2">
@@ -368,40 +382,42 @@ refreshOverview(); // run once
 
 <!-- Recent Errors Poller -->
 <script>
-async function fetchRecentErrors() {
-    try {
-        const res = await fetch("spectreErrors?records=10"); // fetch top 10
-        const data = await res.json();
+    async function fetchRecentErrors() {
+        try {
+            const res = await fetch("spectreErrors?records=6");
+            const errors = await res.json();
+            console.log("Fetched errors:", errors);
 
-        const tbody = document.getElementById("errorsTableBody");
-        tbody.innerHTML = ""; // clear old rows
+            const tbody = document.getElementById("errorsTableBody");
+            tbody.innerHTML = ""; // Clear existing rows
 
-        data.forEach(err => {
-            const tr = document.createElement("tr");
+            // Safety: make sure it's an array
+            if (!Array.isArray(errors)) {
+                console.error("Expected an array, got:", errors);
+                return;
+            }
 
-            // Replace newlines for HTML display
-            const safeMessage = err.errorMessage ? err.errorMessage.replace(/\n/g, "<br/>") : "";
+            errors.forEach(err => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+          <td>\${err.errorRef ?? ""}</td>
+          <td>\${(err.errorMessage ?? "").replace(/\\n/g, "<br/>")}</td>
+          <td>\${err.errorTime ?? ""}</td>
+        `;
 
-            tr.innerHTML = `
-                <td>${err.errorID ?? ""}</td>
-                <td>${err.errorRef ?? ""}</td>
-                <td>${err.errorTime ?? ""}</td>
-                <td>${err.errorCode ?? ""}</td>
-                <td>${safeMessage}</td>
-                <td>${err.errorService ?? ""}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    } catch (e) {
-        console.error("Error fetching recent errors:", e);
+                tbody.appendChild(tr);
+            });
+
+        } catch (e) {
+            console.error("Error fetching recent errors:", e);
+        }
     }
-}
 
-// Run once on page load
-fetchRecentErrors();
-
-// Auto-refresh every 15s
-setInterval(fetchRecentErrors, 15000);
+    // Run once on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchRecentErrors();
+        setInterval(fetchRecentErrors, 15000);
+    });
 </script>
 
 </body>
