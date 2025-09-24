@@ -41,6 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet(name = "verify",
         description = "A simple verification servlet to capture the information from email verification form",
@@ -64,7 +65,7 @@ public class VerifyEmail extends HttpServlet {
         modifiedBy = "Sentinel";
         log.info("Preparing to verify new user email address");
         // Call DAO method
-        result = AuthDAO.verifyEmail((String) req.getSession().getAttribute("email"), verifyToken, modifiedBy);
+        result = AuthDAO.verifyEmail((String) req.getSession().getAttribute("email"), verifyToken.toUpperCase(Locale.ROOT), modifiedBy);
         log.info("Logging response of verification email {}", result);
         // Check response and redirect
         if ("success".equalsIgnoreCase(result)) {
