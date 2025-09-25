@@ -57,15 +57,11 @@
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
-    <link href="assets/css/weather.css" rel="stylesheet">
     <link href="assets/css/server.css" rel="stylesheet">
-
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -95,6 +91,11 @@
             <li><a class="nav-link" href="#"><i class="bi bi-file-earmark-text"></i><span>Reports</span></a></li>
             <li><a class="nav-link" href="#"><i class="bi bi-people"></i><span>Users</span></a></li>
             <li><a class="nav-link" href="#"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+            <li>
+                <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline;">
+                    <button type="submit" class="nav-link"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
+                </form>
+            </li>
         </ul>
     </nav>
 
