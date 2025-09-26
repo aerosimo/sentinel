@@ -31,6 +31,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page session="true" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,6 +86,70 @@
             margin-top: 70px; /* leave space for avatar */
         }
     </style>
+        <style>
+            .flip-card {
+                background-color: transparent;
+                width: 260px;
+                height: 200px;
+                perspective: 1000px;
+                margin: auto;
+            }
+
+            .flip-card-inner {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                border-radius: .5rem;
+            }
+
+            .flip-card:hover .flip-card-inner {
+                transform: rotateY(180deg);
+            }
+
+            .flip-card-front,
+            .flip-card-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+                border-radius: .5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem;
+            }
+
+            .flip-card-front {
+                background: linear-gradient(135deg, #4d3b7a, #6a4fb6);
+                color: #fff;
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+            .flip-card-back {
+                background: #fff;
+                color: #333;
+                transform: rotateY(180deg);
+                text-align: left;
+            }
+
+            .flip-card-back h4 {
+                font-weight: 600;
+                margin-bottom: .5rem;
+                font-size: 1rem;
+                color: #4d3b7a;
+            }
+
+            .flip-card-back p {
+                font-size: .9rem;
+                line-height: 1.4;
+            }
+
+        </style>
 </head>
 <body>
 
@@ -158,17 +223,17 @@ response.sendRedirect("signin.jsp");
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3">
                         <h6 class="mb-3">Personal Info</h6>
-                        <p><b>Name:</b> ${person.firstName} ${person.lastName}</p>
-                        <p><b>Email:</b> ${person.email}</p>
-                        <p><b>Gender:</b> ${person.gender}</p>
-                        <p><b>DOB:</b> ${person.birthday} (Age: ${person.age})</p>
+                        <p class="mb-1"><span class="fw-bold">Name:</span> ${person.firstName} ${person.lastName}</p>
+                        <p class="mb-1"><span class="fw-bold">Email:</span> ${person.email}</p>
+                        <p class="mb-1"><span class="fw-bold">Gender:</span> ${person.gender}</p>
+                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${person.birthday} (Age: ${person.age})</p>
                     </div>
 
                     <div class="card dashboard-card p-3 mt-3">
                         <h6 class="mb-3">Contact Info</h6>
-                        <p><b>Phone:</b> ${contact.address}</p>
-                        <p><b>City:</b> ${address.city}</p>
-                        <p><b>Country:</b> ${address.country}</p>
+                        <p class="mb-1"><span class="fw-bold">Phone:</span> ${contact.address}</p>
+                        <p class="mb-1"><span class="fw-bold">City:</span> ${address.city}</p>
+                        <p class="mb-1"><span class="fw-bold">Country:</span> ${address.country}</p>
                     </div>
                 </div>
 
@@ -176,17 +241,24 @@ response.sendRedirect("signin.jsp");
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3">
                         <h6 class="mb-3">Profile Details</h6>
-                        <p><b>Marital Status:</b> ${profile.maritalStatus}</p>
-                        <p><b>Ethnicity:</b> ${profile.ethnicity}</p>
-                        <p><b>Religion:</b> ${profile.religion}</p>
-                        <p><b>Eye Colour:</b> ${profile.eyeColour}</p>
+                        <p class="mb-1"><span class="fw-bold">Marital Status:</span> ${profile.maritalStatus}</p>
+                        <p class="mb-1"><span class="fw-bold">Ethnicity:</span> ${profile.ethnicity}</p>
+                        <p class="mb-1"><span class="fw-bold">Religion:</span> ${profile.religion}</p>
+                        <p class="mb-1"><span class="fw-bold">Eye Colour:</span> ${profile.eyeColour}</p>
                     </div>
 
-                    <div class="card dashboard-card p-3 mt-3">
-                        <h6 class="mb-3">Horoscope</h6>
-                        <p><b>${horoscope.zodiac} - ${horoscope.currentDay}</b></p>
-                        <p>${horoscope.narrative}</p>
-                    </div>
+                    <!-- Horoscope Card -->
+                    <c:if test="${not empty horoscope}">
+                        <div class="card dashboard-card p-3 h-100">
+                            <span class="badge bg-primary">${horoscope.zodiacSign}</span>
+                            <small class="text-muted">${horoscope.currentDay}</small>
+                            <p>${horoscope.narrative}</p>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty horoscope}">
+                        <div class="alert alert-warning">No horoscope available for this sign.</div>
+                    </c:if>
+
                 </div>
             </div>
 

@@ -86,7 +86,7 @@
         <hr class="bg-light"/>
         <ul class="nav nav-pills flex-column mb-auto">
             <li><a class="nav-link active" href="#"><i class="bi bi-house"></i><span>Home</span></a></li>
-            <li><a class="nav-link" href="profile.jsp"><i class="bi bi-person"></i><span>Profile</span></a></li>
+            <li><a class="nav-link" href="horoscope"><i class="bi bi-person"></i><span>Profile</span></a></li>
             <li><a class="nav-link" href="#"><i class="bi bi-graph-up"></i><span>Analytics</span></a></li>
             <li><a class="nav-link" href="#"><i class="bi bi-file-earmark-text"></i><span>Reports</span></a></li>
             <li><a class="nav-link" href="#"><i class="bi bi-people"></i><span>Users</span></a></li>
