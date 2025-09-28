@@ -77,10 +77,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in signup", e);
             }
             log.info("DB Connection for (signup) Closed....");
         }
@@ -113,10 +113,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in verifyEmail", e);
             }
             log.info("DB Connection for (verifyEmail) Closed....");
         }
@@ -157,10 +157,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in login", e);
             }
             log.info("DB Connection for (login) Closed....");
         }
@@ -198,10 +198,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in confirmMFA", e);
             }
             log.info("DB Connection for (confirmMFA) Closed....");
         }
@@ -234,10 +234,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in logout", e);
             }
             log.info("DB Connection for (logout) Closed....");
         }
@@ -272,10 +272,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in forgotPassword", e);
             }
             log.info("DB Connection for (forgotPassword) Closed....");
         }
@@ -309,10 +309,10 @@ public class AuthDAO {
         } finally {
             // Close the statement and connection
             try {
-                stmt.close();
-                con.close();
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                log.error("Failed closing resources in resetPassword", e);
             }
             log.info("DB Connection for (resetPassword) Closed....");
         }

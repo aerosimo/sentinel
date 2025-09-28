@@ -223,17 +223,18 @@ response.sendRedirect("signin.jsp");
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3">
                         <h6 class="mb-3">Personal Info</h6>
-                        <p class="mb-1"><span class="fw-bold">Name:</span> ${person.firstName} ${person.lastName}</p>
-                        <p class="mb-1"><span class="fw-bold">Email:</span> ${person.email}</p>
-                        <p class="mb-1"><span class="fw-bold">Gender:</span> ${person.gender}</p>
-                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${person.birthday} (Age: ${person.age})</p>
+                        <p class="mb-1"><span class="fw-bold">Name:</span> ${silhouette.person.firstName} ${silhouette.person.middleName} ${silhouette.person.lastName}</p>
+                        <p class="mb-1"><span class="fw-bold">Email:</span> ${silhouette.person.email}</p>
+                        <p class="mb-1"><span class="fw-bold">Gender:</span> ${silhouette.person.gender}</p>
+                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${silhouette.person.birthday} (Age: ${silhouette.person.age})</p>
                     </div>
 
                     <div class="card dashboard-card p-3 mt-3">
                         <h6 class="mb-3">Contact Info</h6>
-                        <p class="mb-1"><span class="fw-bold">Phone:</span> ${contact.address}</p>
-                        <p class="mb-1"><span class="fw-bold">City:</span> ${address.city}</p>
-                        <p class="mb-1"><span class="fw-bold">Country:</span> ${address.country}</p>
+                        <p class="mb-1"><span class="fw-bold">Info:</span> ${silhouette.contacts[0].channel} : ${silhouette.contacts[0].address}</p>
+                        <p class="mb-1"><span class="fw-bold">Address:</span> ${silhouette.address.firstline} ${silhouette.address.secondline} ${silhouette.address.thirdline}</p>
+                        <p class="mb-1"><span class="fw-bold">City:</span> ${silhouette.address.city}</p>
+                        <p class="mb-1"><span class="fw-bold">Country:</span> ${silhouette.address.country}</p>
                     </div>
                 </div>
 
@@ -241,18 +242,23 @@ response.sendRedirect("signin.jsp");
                 <div class="col-md-6">
                     <div class="card dashboard-card p-3">
                         <h6 class="mb-3">Profile Details</h6>
-                        <p class="mb-1"><span class="fw-bold">Marital Status:</span> ${profile.maritalStatus}</p>
-                        <p class="mb-1"><span class="fw-bold">Ethnicity:</span> ${profile.ethnicity}</p>
-                        <p class="mb-1"><span class="fw-bold">Religion:</span> ${profile.religion}</p>
-                        <p class="mb-1"><span class="fw-bold">Eye Colour:</span> ${profile.eyeColour}</p>
+                        <p class="mb-1"><span class="fw-bold">Marital Status:</span> ${silhouette.profile.maritalStatus}</p>
+                        <p class="mb-1"><span class="fw-bold">Ethnicity:</span> ${silhouette.profile.ethnicity}</p>
+                        <p class="mb-1"><span class="fw-bold">Religion:</span> ${silhouette.profile.religion}</p>
+                        <p class="mb-1"><span class="fw-bold">Eye Colour:</span> ${silhouette.profile.eyeColour}</p>
+                        <p class="mb-1"><span class="fw-bold">Height:</span> ${silhouette.profile.height}</p>
+                        <p class="mb-1"><span class="fw-bold">Weight:</span> ${silhouette.profile.weight}</p>
+                        <p class="mb-1"><span class="fw-bold">Phenotype:</span> ${silhouette.profile.phenotype}</p>
+                        <p class="mb-1"><span class="fw-bold">Genotype:</span> ${silhouette.profile.genotype}</p>
+                        <p class="mb-1"><span class="fw-bold">Disability:</span> ${silhouette.profile.disability}</p>
                     </div>
 
                     <!-- Horoscope Card -->
-                    <c:if test="${not empty horoscope}">
+                    <c:if test="${not empty silhouette}">
                         <div class="card dashboard-card p-3 h-100">
-                            <span class="badge bg-primary">${horoscope.zodiacSign}</span>
-                            <small class="text-muted">${horoscope.currentDay}</small>
-                            <p>${horoscope.narrative}</p>
+                            <span class="badge bg-primary">${silhouette.horoscope.zodiacSign}</span>
+                            <small class="text-muted">${silhouette.horoscope.currentDay}</small>
+                            <p>${silhouette.horoscope.narrative}</p>
                         </div>
                     </c:if>
                     <c:if test="${empty horoscope}">
