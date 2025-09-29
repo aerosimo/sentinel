@@ -71,105 +71,123 @@ public class SilhouetteDAO {
             stmt.execute();
 
             // Person
-            try (ResultSet rs = (ResultSet) stmt.getObject(2)) {
-                if (rs.next()) {
-                    PersonResponseDTO person = new PersonResponseDTO(
-                            rs.getString("email"),
-                            rs.getString("title"),
-                            rs.getString("firstName"),
-                            rs.getString("middleName"),
-                            rs.getString("lastName"),
-                            rs.getString("zodiac"),
-                            rs.getString("gender"),
-                            rs.getString("birthday"),
-                            rs.getString("age"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    silhouette.setPerson(person);
+            Object personObj = stmt.getObject(2);
+            if (personObj instanceof ResultSet rs) {
+                try (rs) {
+                    if (rs.next()) {
+                        PersonResponseDTO person = new PersonResponseDTO(
+                                rs.getString("email"),
+                                rs.getString("title"),
+                                rs.getString("firstName"),
+                                rs.getString("middleName"),
+                                rs.getString("lastName"),
+                                rs.getString("zodiac"),
+                                rs.getString("gender"),
+                                rs.getString("birthday"),
+                                rs.getString("age"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        silhouette.setPerson(person);
+                    }
                 }
             }
 
             // Image
-            try (ResultSet rs = (ResultSet) stmt.getObject(3)) {
-                if (rs.next()) {
-                    ImageResponseDTO image = new ImageResponseDTO(
-                            rs.getString("email"),
-                            rs.getString("avatar"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    silhouette.setImage(image);
+            Object imageObj = stmt.getObject(3);
+            if (imageObj instanceof ResultSet rs) {
+                try (rs) {
+                    if (rs.next()) {
+                        ImageResponseDTO image = new ImageResponseDTO(
+                                rs.getString("email"),
+                                rs.getString("avatar"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        silhouette.setImage(image);
+                    }
                 }
             }
 
             // Address
-            try (ResultSet rs = (ResultSet) stmt.getObject(4)) {
-                if (rs.next()) {
-                    AddressResponseDTO address = new AddressResponseDTO(
-                            rs.getString("email"),
-                            rs.getString("firstline"),
-                            rs.getString("secondline"),
-                            rs.getString("thirdline"),
-                            rs.getString("city"),
-                            rs.getString("postcode"),
-                            rs.getString("country"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    silhouette.setAddress(address);
+            Object addressObj = stmt.getObject(4);
+            if (addressObj instanceof ResultSet rs) {
+                try (rs) {
+                    if (rs.next()) {
+                        AddressResponseDTO address = new AddressResponseDTO(
+                                rs.getString("email"),
+                                rs.getString("firstline"),
+                                rs.getString("secondline"),
+                                rs.getString("thirdline"),
+                                rs.getString("city"),
+                                rs.getString("postcode"),
+                                rs.getString("country"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        silhouette.setAddress(address);
+                    }
                 }
             }
 
-            // Contacts (multiple rows)
+            // Contacts
+            Object contactObj = stmt.getObject(5);
             List<ContactResponseDTO> contacts = new ArrayList<>();
-            try (ResultSet rs = (ResultSet) stmt.getObject(5)) {
-                while (rs.next()) {
-                    ContactResponseDTO contact = new ContactResponseDTO(
-                            rs.getString("email"),
-                            rs.getString("channel"),
-                            rs.getString("address"),
-                            rs.getString("consent"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    contacts.add(contact);
+            if (contactObj instanceof ResultSet rs) {
+                try (rs) {
+                    while (rs.next()) {
+                        ContactResponseDTO contact = new ContactResponseDTO(
+                                rs.getString("email"),
+                                rs.getString("channel"),
+                                rs.getString("address"),
+                                rs.getString("consent"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        contacts.add(contact);
+                    }
                 }
             }
             silhouette.setContacts(contacts);
 
             // Profile
-            try (ResultSet rs = (ResultSet) stmt.getObject(6)) {
-                if (rs.next()) {
-                    ProfileResponseDTO profile = new ProfileResponseDTO(
-                            rs.getString("email"),
-                            rs.getString("maritalStatus"),
-                            rs.getString("height"),
-                            rs.getString("weight"),
-                            rs.getString("ethnicity"),
-                            rs.getString("religion"),
-                            rs.getString("eyeColour"),
-                            rs.getString("phenotype"),
-                            rs.getString("genotype"),
-                            rs.getString("disability"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    silhouette.setProfile(profile);
+            Object profileObj = stmt.getObject(6);
+            if (profileObj instanceof ResultSet rs) {
+                try (rs) {
+                    if (rs.next()) {
+                        ProfileResponseDTO profile = new ProfileResponseDTO(
+                                rs.getString("email"),
+                                rs.getString("maritalStatus"),
+                                rs.getString("height"),
+                                rs.getString("weight"),
+                                rs.getString("ethnicity"),
+                                rs.getString("religion"),
+                                rs.getString("eyeColour"),
+                                rs.getString("phenotype"),
+                                rs.getString("genotype"),
+                                rs.getString("disability"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        silhouette.setProfile(profile);
+                    }
                 }
             }
 
             // Horoscope
-            try (ResultSet rs = (ResultSet) stmt.getObject(7)) {
-                if (rs.next()) {
-                    HoroscopeResponseDTO horoscope = new HoroscopeResponseDTO(
-                            rs.getString("zodiac"),
-                            rs.getString("currentDay"),
-                            rs.getString("narrative"),
-                            rs.getString("modifiedBy"),
-                            rs.getString("modifiedDate")
-                    );
-                    silhouette.setHoroscope(horoscope);
+            Object horoscopeObj = stmt.getObject(7);
+            if (horoscopeObj instanceof ResultSet rs) {
+                try (rs) {
+                    if (rs.next()) {
+                        HoroscopeResponseDTO horoscope = new HoroscopeResponseDTO(
+                                rs.getString("zodiac"),
+                                rs.getString("currentDay"),
+                                rs.getString("narrative"),
+                                rs.getString("modifiedBy"),
+                                rs.getString("modifiedDate")
+                        );
+                        silhouette.setHoroscope(horoscope);
+                    }
                 }
             }
 

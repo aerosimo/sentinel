@@ -216,10 +216,6 @@ response.sendRedirect("signin.jsp");
             <img src="assets/img/user/user.png" alt="Avatar" class="profile-avatar">
         </div>
 
-        <pre>
-        ${silhouette}
-        </pre>
-
         <!-- Page Content -->
         <main class="container-fluid my-4 profile-section">
             <div class="row g-4">
