@@ -101,4 +101,16 @@ public class SilhouetteResponseDTO {
     public void setHoroscope(HoroscopeResponseDTO horoscope) {
         this.horoscope = horoscope;
     }
+
+    @Override
+    public String toString() {
+        return "SilhouetteResponseDTO{" +
+                "person=" + person +
+                ", image=" + image +
+                ", address=" + address +
+                ", contacts=" + contacts +
+                ", profile=" + profile +
+                ", horoscope=" + horoscope +
+                '}';
+    }
 }

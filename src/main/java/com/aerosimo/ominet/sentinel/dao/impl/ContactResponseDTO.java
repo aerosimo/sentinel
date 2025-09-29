@@ -99,4 +99,16 @@ public class ContactResponseDTO {
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
+    @Override
+    public String toString() {
+        return "ContactResponseDTO{" +
+                "email='" + email + '\'' +
+                ", channel='" + channel + '\'' +
+                ", address='" + address + '\'' +
+                ", consent='" + consent + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                '}';
+    }
 }

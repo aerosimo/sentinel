@@ -79,4 +79,14 @@ public class ImageResponseDTO {
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
+    @Override
+    public String toString() {
+        return "ImageResponseDTO{" +
+                "email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                '}';
+    }
 }

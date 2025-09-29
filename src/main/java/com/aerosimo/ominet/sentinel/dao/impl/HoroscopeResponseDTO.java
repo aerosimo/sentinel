@@ -89,4 +89,15 @@ public class HoroscopeResponseDTO {
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
+    @Override
+    public String toString() {
+        return "HoroscopeResponseDTO{" +
+                "zodiacSign='" + zodiacSign + '\'' +
+                ", currentDay='" + currentDay + '\'' +
+                ", narrative='" + narrative + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                '}';
+    }
 }

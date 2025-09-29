@@ -129,4 +129,19 @@ public class AddressResponseDTO {
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
+    @Override
+    public String toString() {
+        return "AddressResponseDTO{" +
+                "email='" + email + '\'' +
+                ", firstline='" + firstline + '\'' +
+                ", secondline='" + secondline + '\'' +
+                ", thirdline='" + thirdline + '\'' +
+                ", city='" + city + '\'' +
+                ", postcode='" + postcode + '\'' +
+                ", country='" + country + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                '}';
+    }
 }

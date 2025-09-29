@@ -59,4 +59,12 @@ public class MFAResponseDTO {
     public void setResponse(String response) {
         this.response = response;
     }
+
+    @Override
+    public String toString() {
+        return "MFAResponseDTO{" +
+                "sessionToken='" + sessionToken + '\'' +
+                ", response='" + response + '\'' +
+                '}';
+    }
 }

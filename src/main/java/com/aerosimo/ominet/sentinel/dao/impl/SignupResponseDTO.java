@@ -59,4 +59,12 @@ public class SignupResponseDTO {
     public void setResponse(String response) {
         this.response = response;
     }
+
+    @Override
+    public String toString() {
+        return "SignupResponseDTO{" +
+                "verificationCode='" + verificationCode + '\'' +
+                ", response='" + response + '\'' +
+                '}';
+    }
 }

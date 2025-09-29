@@ -159,4 +159,22 @@ public class ProfileResponseDTO {
     public void setModifiedDate(String modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileResponseDTO{" +
+                "email='" + email + '\'' +
+                ", maritalStatus='" + maritalStatus + '\'' +
+                ", height='" + height + '\'' +
+                ", weight='" + weight + '\'' +
+                ", ethnicity='" + ethnicity + '\'' +
+                ", religion='" + religion + '\'' +
+                ", eyeColour='" + eyeColour + '\'' +
+                ", phenotype='" + phenotype + '\'' +
+                ", genotype='" + genotype + '\'' +
+                ", disability='" + disability + '\'' +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedDate='" + modifiedDate + '\'' +
+                '}';
+    }
 }

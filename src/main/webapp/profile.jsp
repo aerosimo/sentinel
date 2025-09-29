@@ -216,6 +216,10 @@ response.sendRedirect("signin.jsp");
             <img src="assets/img/user/user.png" alt="Avatar" class="profile-avatar">
         </div>
 
+        <pre>
+        ${silhouette}
+        </pre>
+
         <!-- Page Content -->
         <main class="container-fluid my-4 profile-section">
             <div class="row g-4">
@@ -231,7 +235,9 @@ response.sendRedirect("signin.jsp");
 
                     <div class="card dashboard-card p-3 mt-3">
                         <h6 class="mb-3">Contact Info</h6>
-                        <p class="mb-1"><span class="fw-bold">Info:</span> ${silhouette.contacts[0].channel} : ${silhouette.contacts[0].address}</p>
+                        <c:forEach var="c" items="${silhouette.contacts}">
+                           <p class="mb-1"><b>${c.channel}:</b> ${c.address}</p>
+                        </c:forEach>
                         <p class="mb-1"><span class="fw-bold">Address:</span> ${silhouette.address.firstline} ${silhouette.address.secondline} ${silhouette.address.thirdline}</p>
                         <p class="mb-1"><span class="fw-bold">City:</span> ${silhouette.address.city}</p>
                         <p class="mb-1"><span class="fw-bold">Country:</span> ${silhouette.address.country}</p>
@@ -254,14 +260,14 @@ response.sendRedirect("signin.jsp");
                     </div>
 
                     <!-- Horoscope Card -->
-                    <c:if test="${not empty silhouette}">
+                    <c:if test="${not empty silhouette.horoscope}">
                         <div class="card dashboard-card p-3 h-100">
                             <span class="badge bg-primary">${silhouette.horoscope.zodiacSign}</span>
                             <small class="text-muted">${silhouette.horoscope.currentDay}</small>
                             <p>${silhouette.horoscope.narrative}</p>
                         </div>
                     </c:if>
-                    <c:if test="${empty horoscope}">
+                    <c:if test="${empty silhouette.horoscope}">
                         <div class="alert alert-warning">No horoscope available for this sign.</div>
                     </c:if>
 
