@@ -34,6 +34,7 @@ package com.aerosimo.ominet.sentinel.web.controllers;
 import com.aerosimo.ominet.sentinel.dao.impl.SilhouetteResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.SilhouetteDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,6 +43,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+@WebServlet(name = "silhouette",
+        description = "A simple servlet to populate person, contacts and profile information",
+        value = "/silhouette")
 public class Silhouette extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(Silhouette.class.getName());
