@@ -51,7 +51,6 @@ public class SilhouetteDAO {
     public static SilhouetteResponseDTO GetSilhouette(String email) {
         log.info("Fetching silhouette profile for user: {}", email);
         String sql = "{call profile_pkg.GetSilhouette(?,?,?,?,?,?,?)}";
-
         Connection con = null;
         CallableStatement stmt = null;
         SilhouetteResponseDTO silhouette = new SilhouetteResponseDTO();
@@ -75,19 +74,20 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         PersonResponseDTO person = new PersonResponseDTO(
-                                rs.getString("EMAIL"),
-                                rs.getString("TITLE"),
-                                rs.getString("FIRSTNAME"),
-                                rs.getString("MIDDLENAME"),
-                                rs.getString("LASTNAME"),
-                                rs.getString("ZODIAC"),
-                                rs.getString("GENDER"),
-                                rs.getString("BIRTHDAY"),
-                                rs.getString("AGE"),
-                                rs.getString("MODIFIEDBY"),
-                                rs.getString("MODIFIEDDATE")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getString(6),
+                                rs.getString(7),
+                                rs.getString(8),
+                                rs.getString(9),
+                                rs.getString(10),
+                                rs.getString(11)
                         );
                         silhouette.setPerson(person);
+                        log.info("DAO call person = '{}'", person.toString());
                     }
                 }
             }
@@ -98,12 +98,13 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         ImageResponseDTO image = new ImageResponseDTO(
-                                rs.getString("email"),
-                                rs.getString("avatar"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4)
                         );
                         silhouette.setImage(image);
+                        log.info("DAO call image = '{}'", image.toString());
                     }
                 }
             }
@@ -114,17 +115,18 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         AddressResponseDTO address = new AddressResponseDTO(
-                                rs.getString("email"),
-                                rs.getString("firstline"),
-                                rs.getString("secondline"),
-                                rs.getString("thirdline"),
-                                rs.getString("city"),
-                                rs.getString("postcode"),
-                                rs.getString("country"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getString(6),
+                                rs.getString(7),
+                                rs.getString(8),
+                                rs.getString(9)
                         );
                         silhouette.setAddress(address);
+                        log.info("DAO call address = '{}'", address.toString());
                     }
                 }
             }
@@ -136,18 +138,19 @@ public class SilhouetteDAO {
                 try (rs) {
                     while (rs.next()) {
                         ContactResponseDTO contact = new ContactResponseDTO(
-                                rs.getString("email"),
-                                rs.getString("channel"),
-                                rs.getString("address"),
-                                rs.getString("consent"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getString(6)
                         );
                         contacts.add(contact);
                     }
                 }
             }
             silhouette.setContacts(contacts);
+            log.info("DAO call contacts = '{}'", contacts.toString());
 
             // Profile
             Object profileObj = stmt.getObject(6);
@@ -155,20 +158,21 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         ProfileResponseDTO profile = new ProfileResponseDTO(
-                                rs.getString("email"),
-                                rs.getString("maritalStatus"),
-                                rs.getString("height"),
-                                rs.getString("weight"),
-                                rs.getString("ethnicity"),
-                                rs.getString("religion"),
-                                rs.getString("eyeColour"),
-                                rs.getString("phenotype"),
-                                rs.getString("genotype"),
-                                rs.getString("disability"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5),
+                                rs.getString(6),
+                                rs.getString(7),
+                                rs.getString(8),
+                                rs.getString(9),
+                                rs.getString(10),
+                                rs.getString(11),
+                                rs.getString(12)
                         );
                         silhouette.setProfile(profile);
+                        log.info("DAO call profile = '{}'", profile.toString());
                     }
                 }
             }
@@ -179,13 +183,14 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         HoroscopeResponseDTO horoscope = new HoroscopeResponseDTO(
-                                rs.getString("zodiac"),
-                                rs.getString("currentDay"),
-                                rs.getString("narrative"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4),
+                                rs.getString(5)
                         );
                         silhouette.setHoroscope(horoscope);
+                        log.info("DAO call horoscope = '{}'", horoscope.toString());
                     }
                 }
             }
