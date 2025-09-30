@@ -41,6 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet(name = "reset",
         description = "A simple servlet to reset password for the application user",
@@ -69,7 +70,7 @@ public class Reset extends HttpServlet {
         modifiedBy = "Sentinel";
         log.info("Preparing to register new user account for {}", email);
         // Call DAO method
-        result = AuthDAO.resetPassword(email, password, modifiedBy, token);
+        result = AuthDAO.resetPassword(email, password, modifiedBy, token.toUpperCase(Locale.ROOT));
         // Check response and redirect
         if ("success".equalsIgnoreCase(result)) {
             log.info("Password reset ran successfully for {}", email);
