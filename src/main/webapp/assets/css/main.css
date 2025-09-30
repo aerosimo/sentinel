@@ -1,0 +1,266 @@
+/******************************************************************************
+ * This piece of work is to enhance sentinel project functionality.           *
+ *                                                                            *
+ * Author:    eomisore                                                        *
+ * File:      main.css                                                        *
+ * Created:   13/09/2025, 01:03                                               *
+ * Modified:  13/09/2025, 01:03                                               *
+ *                                                                            *
+ * Copyright (c)  2025.  Aerosimo Ltd                                         *
+ *                                                                            *
+ * Permission is hereby granted, free of charge, to any person obtaining a    *
+ * copy of this software and associated documentation files (the "Software"), *
+ * to deal in the Software without restriction, including without limitation  *
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+ * and/or sell copies of the Software, and to permit persons to whom the      *
+ * Software is furnished to do so, subject to the following conditions:       *
+ *                                                                            *
+ * The above copyright notice and this permission notice shall be included    *
+ * in all copies or substantial portions of the Software.                     *
+ *                                                                            *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,            *
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES            *
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                   *
+ * NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                 *
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,               *
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING               *
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                 *
+ * OR OTHER DEALINGS IN THE SOFTWARE.                                         *
+ *                                                                            *
+ ******************************************************************************/
+
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sidebar */
+.sidebar {
+    min-width: 220px;
+    max-width: 220px;
+    background-color: #4d3b7a;
+    color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s ease-in-out;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+.sidebar .nav-link {
+    color: #ddd;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.sidebar .nav-link i {
+    font-size: 1.2rem;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: rgba(255,255,255,.1);
+    color: #fff;
+}
+
+/* 🔹 Desktop shrink mode (icons only) */
+.sidebar.shrink {
+    min-width: 70px;   /* was 60px */
+    max-width: 70px;   /* was 60px */
+}
+.sidebar.shrink h4,
+.sidebar.shrink hr {
+    display: none;
+}
+.sidebar.shrink .nav-link span {
+    display: none;
+}
+.sidebar.shrink .nav-link {
+    text-align: center;
+    padding: 0.75rem 0;
+}
+.sidebar.shrink .nav-link i {
+    margin-right: 0;
+    font-size: 1.3rem;  /* make icons bigger in shrink mode */
+}
+
+/* 🔹 Mobile collapsed (slide offscreen) */
+.sidebar.sidebar-collapsed {
+    transform: translateX(-100%);
+    position: absolute;
+    z-index: 1050;
+}
+
+/* === Mobile-only: when collapsed on small screens, slide the sidebar off-canvas === */
+@media (max-width: 767.98px) {
+    .sidebar.sidebar-collapsed {
+        transform: translateX(-100%);   /* slide off screen */
+        position: absolute;
+        z-index: 1050;
+    }
+
+    /* When overlay active show it */
+    .sidebar-overlay {
+        display: none;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* When sidebar is collapsed on mobile we *don't* need to hide labels globally,
+       so we avoid hiding spans here (desktop shrink uses .shrink class). */
+}
+
+/* Overlay when sidebar open on mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 1040;
+}
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Main Content Wrapper */
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    transition: margin-left 0.3s ease-in-out;
+}
+@media (min-width: 768px) {
+    .content-wrapper.expanded {
+        margin-left: 220px; /* normal sidebar */
+    }
+    .content-wrapper.collapsed {
+        margin-left: 70px;  /* match shrink width */
+    }
+}
+
+/* Header */
+.navbar-custom {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Footer */
+footer {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Cards */
+.dashboard-card {
+    border-radius: .75rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+
+/* Default logo size */
+.sidebar .sidebar-logo {
+  max-width: 120px;
+  transition: all 0.3s ease;
+}
+
+/* Shrink mode */
+.sidebar.shrink .sidebar-logo {
+  max-width: 40px;  /* smaller version */
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card canvas {
+    max-height: 200px; /* keeps charts compact */
+}
+
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+.flip-card-front {
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flip-card-back {
+  background: #4d3b7a;
+  color: white;
+  transform: rotateY(180deg);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.horoscope-narrative {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Map servlet names to rack rows
+    const servers = {
+        tomee: document.getElementById("server-tomee"),
+        jenkins: document.getElementById("server-jenkins"),
+        oracle: document.getElementById("server-oracle"),
+        linux: document.getElementById("server-linux")
+    };
+
+    async function fetchStatus() {
+        try {
+            // Call your ServerStatus servlet (must return JSON like { tomee: "online", ... })
+            const res = await fetch("ServerStatus");
+            const data = await res.json();
+
+            Object.keys(servers).forEach(name => {
+                const row = servers[name];
+                const logo = row.querySelector(".server-logo");
+
+                if (data[name] === "online") {
+                    row.classList.remove("server-down");
+                    logo.classList.remove("offline");
+                } else {
+                    row.classList.add("server-down");
+                    logo.classList.add("offline");
+                }
+            });
+        } catch (e) {
+            console.error("Error fetching server status:", e);
+        }
+    }
+
+    // Initial + auto refresh every 10s
+    fetchStatus();
+    setInterval(fetchStatus, 10000);
+});

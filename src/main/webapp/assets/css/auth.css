@@ -1,0 +1,210 @@
+/******************************************************************************
+ * This piece of work is to enhance sentinel project functionality.           *
+ *                                                                            *
+ * Author:    eomisore                                                        *
+ * File:      auth.css                                                        *
+ * Created:   13/09/2025, 01:03                                               *
+ * Modified:  13/09/2025, 01:03                                               *
+ *                                                                            *
+ * Copyright (c)  2025.  Aerosimo Ltd                                         *
+ *                                                                            *
+ * Permission is hereby granted, free of charge, to any person obtaining a    *
+ * copy of this software and associated documentation files (the "Software"), *
+ * to deal in the Software without restriction, including without limitation  *
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+ * and/or sell copies of the Software, and to permit persons to whom the      *
+ * Software is furnished to do so, subject to the following conditions:       *
+ *                                                                            *
+ * The above copyright notice and this permission notice shall be included    *
+ * in all copies or substantial portions of the Software.                     *
+ *                                                                            *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,            *
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES            *
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                   *
+ * NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                 *
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,               *
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING               *
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                 *
+ * OR OTHER DEALINGS IN THE SOFTWARE.                                         *
+ *                                                                            *
+ ******************************************************************************/
+
+ :root {
+     --brand: #4d3b7a;
+     --brand-glow: rgba(77, 59, 122, .6);
+     --brand-accent: #bda7ff; /* subtle companion tint for shimmer */
+     --panel-bg: #4d3b7a;
+     --right-fg: #f1f1f2;
+ }
+
+ body {
+     background: #e2e2e5;
+     font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+     padding: 20px;
+ }
+
+ .login-wrap {
+     max-width: 900px;
+     border-radius: 1rem;
+     overflow: hidden;
+     background: #fff;
+     box-shadow: 0 6px 26px rgba(0, 0, 0, .12);
+ }
+
+ .left-pane {
+     padding: 48px 40px;
+ }
+
+ .left-pane h1 {
+     font-weight: 800;
+     font-size: 2.25rem;
+     margin-bottom: .75rem;
+ }
+
+ .left-pane p {
+     color: #666;
+     font-size: .95rem;
+     margin: 0;
+ }
+
+ .right-pane {
+     background: var(--panel-bg);
+     color: var(--right-fg);
+     padding: 48px 40px;
+ }
+
+ /* --- Fields --- */
+ .field {
+     position: relative;
+     margin-top: 26px;
+     border-radius: .6rem;
+     padding: 6px 0 10px 0; /* space for glow + underline */
+ }
+
+ .field label {
+     display: block;
+     font-size: .875rem;
+     color: #d4d2de;
+     margin-bottom: 6px;
+ }
+
+ .field input.form-control {
+     background: transparent;
+     border: none;
+     border-bottom: 1px solid rgba(255, 255, 255, .35);
+     color: #fff;
+     font-size: 1.05rem;
+     padding: 6px 0 8px 0;
+     border-radius: 0;
+     outline: none;
+     box-shadow: none;
+ }
+
+ .field input.form-control::placeholder {
+     color: rgba(255, 255, 255, .6);
+ }
+
+ .field input.form-control:focus {
+     box-shadow: none;
+     outline: none;
+ }
+
+ /* Full-width animated underline */
+ .field::after {
+     content: "";
+     position: absolute;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     height: 2px;
+     transform: scaleX(0);
+     transform-origin: left;
+     background: linear-gradient(90deg, var(--brand), var(--brand-accent), var(--brand));
+     background-size: 200% 100%;
+     transition: transform .25s ease;
+ }
+
+ .field:focus-within::after {
+     transform: scaleX(1);
+     animation: shimmer 1.3s linear infinite;
+ }
+
+ /* Continuous glow on wrapper while focused */
+ .field:focus-within {
+     animation: pulseGlow 1.6s ease-in-out infinite;
+ }
+
+ .btn-cta {
+     margin-top: 32px;
+     border: none;
+     border-radius: 9999px;
+     padding: .85rem 2.5rem; /* more padding for longer look */
+     min-width: 200px; /* ensures button has a decent width */
+     background: #1f1f27;
+     color: #fff;
+     font-weight: 600;
+     position: relative;
+     transition: transform .15s ease, box-shadow .2s ease;
+ }
+
+ .btn-cta:hover,
+ .btn-cta:focus-visible {
+     transform: translateY(-1px);
+     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+     animation: pulseGlowBtn 1.6s ease-in-out infinite;
+ }
+
+ /* subtle ring using pseudo-element */
+ .btn-cta::after {
+     content: "";
+     position: absolute;
+     inset: -2px;
+     border-radius: 9999px;
+     pointer-events: none;
+     opacity: 0;
+     background: radial-gradient(60% 60% at 50% 50%, var(--brand-glow) 0%, rgba(77, 59, 122, 0) 70%);
+     transition: opacity .2s ease;
+ }
+
+ .btn-cta:hover::after,
+ .btn-cta:focus-visible::after {
+     opacity: 1;
+ }
+
+ /* Accessibility: reduce motion */
+ @media (prefers-reduced-motion: reduce) {
+     .field:focus-within,
+     .field:focus-within::after,
+     .btn-cta:hover,
+     .btn-cta:focus-visible {
+         animation: none !important;
+     }
+ }
+
+ /* Keyframes */
+ @keyframes shimmer {
+     0% {
+         background-position: 0% 0;
+     }
+     100% {
+         background-position: 200% 0;
+     }
+ }
+
+ @keyframes pulseGlow {
+     0%, 100% {
+         box-shadow: 0 0 0 0 var(--brand-glow);
+     }
+     50% {
+         box-shadow: 0 0 18px 2px var(--brand-glow);
+     }
+ }
+
+ @keyframes pulseGlowBtn {
+     0%, 100% {
+         box-shadow: 0 0 0 0 var(--brand-glow);
+     }
+     50% {
+         box-shadow: 0 0 28px 4px var(--brand-glow);
+     }
+ }
