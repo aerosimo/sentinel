@@ -75,17 +75,17 @@ public class SilhouetteDAO {
                 try (rs) {
                     if (rs.next()) {
                         PersonResponseDTO person = new PersonResponseDTO(
-                                rs.getString("email"),
-                                rs.getString("title"),
+                                rs.getString("EMAIL"),
+                                rs.getString("TITLE"),
                                 rs.getString("FIRSTNAME"),
-                                rs.getString("middleName"),
-                                rs.getString("lastName"),
-                                rs.getString("zodiac"),
-                                rs.getString("gender"),
-                                rs.getString("birthday"),
-                                rs.getString("age"),
-                                rs.getString("modifiedBy"),
-                                rs.getString("modifiedDate")
+                                rs.getString("MIDDLENAME"),
+                                rs.getString("LASTNAME"),
+                                rs.getString("ZODIAC"),
+                                rs.getString("GENDER"),
+                                rs.getString("BIRTHDAY"),
+                                rs.getString("AGE"),
+                                rs.getString("MODIFIEDBY"),
+                                rs.getString("MODIFIEDDATE")
                         );
                         silhouette.setPerson(person);
                     }
