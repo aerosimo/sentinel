@@ -32,6 +32,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page session="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -262,7 +263,7 @@ response.sendRedirect("signin.jsp");
 
                                 <!-- Left: Zodiac Image -->
                                 <div class="col-md-4 text-center">
-                                    <img src="assets/img/zodiac/Scorpio.jpg"
+                                    <img src="assets/img/zodiac/${fn:toLowerCase(silhouette.horoscope.zodiacSign)}.png"
                                          alt="${silhouette.horoscope.zodiacSign}"
                                          class="img-fluid rounded"
                                          style="max-height:180px;">
