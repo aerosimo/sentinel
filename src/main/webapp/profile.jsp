@@ -255,17 +255,29 @@ response.sendRedirect("signin.jsp");
                         <p class="mb-1"><span class="fw-bold">Disability:</span> ${silhouette.profile.disability}</p>
                     </div>
 
-                    <!-- Horoscope Card -->
+                    <!-- Horoscope Flip Card -->
                     <c:if test="${not empty silhouette.horoscope}">
-                        <div class="card dashboard-card p-3 h-100">
-                            <span class="badge bg-primary">${silhouette.horoscope.zodiacSign}</span>
-                            <small class="text-muted">${silhouette.horoscope.currentDay}</small>
-                            <p>${silhouette.horoscope.narrative}</p>
+                        <div class="flip-card mx-auto" style="width:250px; height:350px;">
+                            <div class="flip-card-inner">
+                                <!-- Front -->
+                                <div class="flip-card-front d-flex align-items-center justify-content-center">
+                                    <img src="assets/img/zodiac/${silhouette.horoscope.zodiacSign}.jpg"
+                                         alt="${silhouette.horoscope.zodiacSign}"
+                                         class="img-fluid" style="max-height:200px;">
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back p-3 text-center">
+                                    <h5>${silhouette.horoscope.zodiacSign}</h5>
+                                    <small class="text-muted">${silhouette.horoscope.currentDay}</small>
+                                    <p class="mt-3">${silhouette.horoscope.narrative}</p>
+                                </div>
+                            </div>
                         </div>
                     </c:if>
                     <c:if test="${empty silhouette.horoscope}">
                         <div class="alert alert-warning">No horoscope available for this sign.</div>
                     </c:if>
+
 
                 </div>
             </div>
