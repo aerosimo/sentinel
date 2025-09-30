@@ -262,7 +262,7 @@ response.sendRedirect("signin.jsp");
 
                                 <!-- Left: Zodiac Image -->
                                 <div class="col-md-4 text-center">
-                                    <img src="assets/img/zodiac/${silhouette.horoscope.zodiacSign}.jpg"
+                                    <img src="assets/img/zodiac/Scorpio.jpg"
                                          alt="${silhouette.horoscope.zodiacSign}"
                                          class="img-fluid rounded"
                                          style="max-height:180px;">
