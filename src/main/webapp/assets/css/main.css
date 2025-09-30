@@ -223,6 +223,11 @@ footer {
   overflow-y: auto;
 }
 
+.horoscope-narrative {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // Map servlet names to rack rows
     const servers = {

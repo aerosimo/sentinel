@@ -263,7 +263,7 @@ response.sendRedirect("signin.jsp");
 
                                 <!-- Left: Zodiac Image -->
                                 <div class="col-md-4 text-center">
-                                    <img src="assets/img/zodiac/${fn:toLowerCase(silhouette.horoscope.zodiacSign)}.png"
+                                    <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
                                          alt="${silhouette.horoscope.zodiacSign}"
                                          class="img-fluid rounded"
                                          style="max-height:180px;">
@@ -273,7 +273,7 @@ response.sendRedirect("signin.jsp");
                                 <div class="col-md-8">
                                     <h6 class="mb-1">${silhouette.horoscope.zodiacSign}</h6>
                                     <small class="text-muted d-block mb-2">${silhouette.horoscope.currentDay}</small>
-                                    <p class="mb-0">${silhouette.horoscope.narrative}</p>
+                                    <p class="horoscope-narrative mb-0">${silhouette.horoscope.narrative}</p>
                                 </div>
                             </div>
                         </div>
