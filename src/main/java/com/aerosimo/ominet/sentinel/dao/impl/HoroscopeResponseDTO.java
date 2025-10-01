@@ -42,7 +42,7 @@ public class HoroscopeResponseDTO {
     public HoroscopeResponseDTO() {
     }
 
-    public HoroscopeResponseDTO(String zodiac, String currentDay, String narrative, String modifiedBy, String modifiedDate) {
+    public HoroscopeResponseDTO(String zodiacSign, String currentDay, String narrative, String modifiedBy, String modifiedDate) {
         this.zodiacSign = zodiacSign;
         this.currentDay = currentDay;
         this.narrative = narrative;
