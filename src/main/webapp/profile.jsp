@@ -255,11 +255,12 @@ response.sendRedirect("signin.jsp");
                         <p class="mb-1"><span class="fw-bold">Genotype:</span> ${silhouette.profile.genotype}</p>
                         <p class="mb-1"><span class="fw-bold">Disability:</span> ${silhouette.profile.disability}</p>
                     </div>
-
+<br>
+<br>
                     <!-- Horoscope Section -->
                     <c:if test="${not empty silhouette and not empty silhouette.horoscope}">
                         <%-- normalize and create a safe filename: trim -> lower -> replace spaces with hyphens (or remove) --%>
-                        <c:set var="rawSign" value="${silhouette.person.zodiacSign}" />
+                        <c:set var="rawSign" value="${silhouette.horoscope.zodiacSign}" />
                         <c:set var="signTrim" value="${fn:trim(rawSign)}" />
                         <c:set var="signFile" value="${fn:toLowerCase(fn:replace(signTrim,' ','-'))}" />
 
@@ -271,7 +272,7 @@ response.sendRedirect("signin.jsp");
                                     alt="${rawSign}"
                                     class="img-fluid rounded"
                                     style="max-height:200px; width:auto;"
-                                    onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/zodiac/aries.jpg'; console.warn('Zodiac image not found:', '${signFile}.jpg');"
+                                    onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/zodiac/astrology.jpg'; console.warn('Zodiac image not found:', '${signFile}.jpg');"
                                     data-zodiac="${rawSign}"
                                 >
 
