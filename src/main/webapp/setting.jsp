@@ -113,6 +113,7 @@ response.sendRedirect("signin.jsp");
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="silhouette">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="${pageContext.request.contextPath}/logout" method="post">

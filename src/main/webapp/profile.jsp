@@ -86,7 +86,7 @@ response.sendRedirect("signin.jsp");
         <ul class="nav nav-pills flex-column mb-auto">
             <li><a href="index.jsp" class="nav-link"><i class="bi bi-house"></i><span>Home</span></a></li>
             <li><a href="#" class="nav-link active"><i class="bi bi-person"></i><span>Profile</span></a></li>
-            <li><a href="#" class="nav-link"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+            <li><a href="setting.jsp" class="nav-link"><i class="bi bi-gear"></i><span>Settings</span></a></li>
             <li>
                 <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline;">
                     <button type="submit" class="nav-link"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
@@ -112,7 +112,8 @@ response.sendRedirect("signin.jsp");
                             <span>${uname}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="profile.jsp">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="setting.jsp">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="${pageContext.request.contextPath}/logout" method="post">
