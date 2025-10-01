@@ -64,6 +64,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-banner {
+            position: relative;
+            background: url("assets/img/banner/profile.jpg") center/cover no-repeat;
+            height: 200px;
+            border-radius: .5rem;
+        }
+        .profile-avatar {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid #fff;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+        .profile-section {
+            margin-top: 70px; /* leave space for avatar */
+        }
+    </style>
 </head>
 <body>
 
