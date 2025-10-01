@@ -31,8 +31,10 @@
 
 package com.aerosimo.ominet.sentinel.web.controllers;
 
+import com.aerosimo.ominet.sentinel.dao.impl.CountryDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.SilhouetteResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.SilhouetteDAO;
+import com.aerosimo.ominet.sentinel.models.utils.Country;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -42,6 +44,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "silhouette",
         description = "A simple servlet to populate person, contacts and profile information",
@@ -65,10 +68,12 @@ public class Silhouette extends HttpServlet {
         log.info("Fetching Silhouette for email: {}", email);
         // ✅ Fetch horoscope directly via DAO
         SilhouetteResponseDTO silhouette = SilhouetteDAO.GetSilhouette(email);
+        List<CountryDTO> countries = Country.getCountries();
         log.info("Fetching Silhouette: {}", silhouette);
         if (silhouette != null) {
             log.info("Loaded silhouette for {}",email);
             req.setAttribute("silhouette", silhouette);
+            req.setAttribute("countries", countries);
         } else {
             log.warn("No silhouette found for email: {}", email);
             req.setAttribute("silhouette", null);

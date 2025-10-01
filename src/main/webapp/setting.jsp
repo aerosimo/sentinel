@@ -188,36 +188,54 @@ response.sendRedirect("signin.jsp");
                         <input class="form-control mb-2" type="text" name="city" value="${silhouette.address.city}" placeholder="City">
                         <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
                         <input class="form-control mb-2" type="text" name="country" value="${silhouette.address.country}" placeholder="Country">
+                        <div class="mb-2">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" name="country">
+                                <c:forEach var="c" items="${countries}">
+                                    <option value="${c.code}" ${silhouette.address.country == c.code ? 'selected' : ''}>
+                                        ${c.name}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
                         <button class="btn btn-primary" type="submit">Save Address</button>
                     </form>
                 </div>
 
                 <!-- Right Column -->
                 <div class="col-md-6 d-flex flex-column gap-3">
-                    <!-- Contacts -->
-                    <form action="saveContact" method="post" class="card dashboard-card p-3">
-                        <h6 class="mb-3">Contact Info</h6>
-                        <input type="hidden" name="email" value="${sessionScope.email}">
-                        <c:forEach var="c" items="${silhouette.contacts}">
-                            <div class="mb-2"><label class="form-label">Channel</label>
-                                <select class="form-select" name="channel">
-                                    <option ${c.channel=='Phone' ? 'selected':''}>Phone</option>
-                                    <option ${c.channel=='Email' ? 'selected':''}>Email</option>
-                                    <option ${c.channel=='Fax' ? 'selected':''}>Fax</option>
-                                    <option ${c.channel=='Twitter' ? 'selected':''}>Twitter</option>
-                                    <option ${c.channel=='Facebook' ? 'selected':''}>Facebook</option>
-                                    <option ${c.channel=='LinkedIn' ? 'selected':''}>LinkedIn</option>
-                                    <option ${c.channel=='Snapchat' ? 'selected':''}>Snapchat</option>
-                                    <option ${c.channel=='Website' ? 'selected':''}>Website</option>
-                                </select>
-                            </div>
-                            <div class="mb-2">
-                                <label class="form-label">Value</label>
-                                <input class="form-control" type="text" name="${c.channel}" value="${c.address}">
-                            </div>
-                        </c:forEach>
-                        <button class="btn btn-primary" type="submit">Save Contacts</button>
-                    </form>
+                <!-- Contacts -->
+                <form action="saveContact" method="post" class="card dashboard-card p-3">
+                    <h6 class="mb-3">Contact Info</h6>
+                    <input type="hidden" name="email" value="${sessionScope.email}">
+
+                    <c:forEach var="c" items="${silhouette.contacts}" varStatus="loop">
+                        <div class="mb-2">
+                            <label class="form-label">Channel</label>
+                            <select class="form-select" name="channel[${loop.index}]">
+                                <option value="Phone"    ${c.channel=='Phone' ? 'selected' : ''}>Phone</option>
+                                <option value="Email"    ${c.channel=='Email' ? 'selected' : ''}>Email</option>
+                                <option value="Fax"      ${c.channel=='Fax' ? 'selected' : ''}>Fax</option>
+                                <option value="Twitter"  ${c.channel=='Twitter' ? 'selected' : ''}>Twitter</option>
+                                <option value="Facebook" ${c.channel=='Facebook' ? 'selected' : ''}>Facebook</option>
+                                <option value="LinkedIn" ${c.channel=='LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+                                <option value="Snapchat" ${c.channel=='Snapchat' ? 'selected' : ''}>Snapchat</option>
+                                <option value="Website"  ${c.channel=='Website' ? 'selected' : ''}>Website</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Value</label>
+                            <input class="form-control"
+                                   type="text"
+                                   name="address[${loop.index}]"
+                                   value="${c.address}">
+                        </div>
+                        <hr/>
+                    </c:forEach>
+
+                    <button class="btn btn-primary" type="submit">Save Contacts</button>
+                </form>
+
 
                     <!-- Profile -->
                     <form action="saveProfile" method="post" class="card dashboard-card p-3">
@@ -311,6 +329,13 @@ response.sendRedirect("signin.jsp");
             </div>
         </main>
 
+		<pre>
+        ${silhouette}
+        </pre>
+        <br>
+		<pre>
+        ${countries}
+        </pre>
         <!-- Footer -->
         <footer>
             <div class="copy">&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>
