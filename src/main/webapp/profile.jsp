@@ -295,6 +295,10 @@ response.sendRedirect("signin.jsp");
 
         </main>
 
+        		<pre>
+                ${silhouette}
+                </pre>
+
         <!-- Footer -->
         <footer>
             <div class='copy'>&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>
