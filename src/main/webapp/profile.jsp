@@ -271,7 +271,7 @@ response.sendRedirect("signin.jsp");
                                     alt="${rawSign}"
                                     class="img-fluid rounded"
                                     style="max-height:200px; width:auto;"
-                                    onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/zodiac/placeholder.jpg'; console.warn('Zodiac image not found:', '${signFile}.jpg');"
+                                    onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/zodiac/aries.jpg'; console.warn('Zodiac image not found:', '${signFile}.jpg');"
                                     data-zodiac="${rawSign}"
                                 >
 
