@@ -259,7 +259,7 @@ response.sendRedirect("signin.jsp");
                     <!-- Horoscope Section -->
                     <c:if test="${not empty silhouette and not empty silhouette.horoscope}">
                         <%-- normalize and create a safe filename: trim -> lower -> replace spaces with hyphens (or remove) --%>
-                        <c:set var="rawSign" value="${silhouette.horoscope.zodiacSign}" />
+                        <c:set var="rawSign" value="${silhouette.person.zodiacSign}" />
                         <c:set var="signTrim" value="${fn:trim(rawSign)}" />
                         <c:set var="signFile" value="${fn:toLowerCase(fn:replace(signTrim,' ','-'))}" />
 
