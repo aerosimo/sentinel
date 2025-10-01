@@ -68,7 +68,7 @@
     <style>
         .profile-banner {
             position: relative;
-            background: url("assets/img/banner/user.jpg") center/cover no-repeat;
+            background: url("assets/img/banner/profile.jpg") center/cover no-repeat;
             height: 200px;
             border-radius: .5rem;
         }
