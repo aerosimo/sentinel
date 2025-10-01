@@ -223,9 +223,19 @@ footer {
   overflow-y: auto;
 }
 
+/* Horoscope card sizing / narrative scroll */
+.horoscope-card {
+  height: auto;          /* do NOT force h-100 here */
+  min-height: 120px;
+}
+
+/* narrative box: scroll if very long; preserves newlines */
 .horoscope-narrative {
-    max-height: 150px;
-    overflow-y: auto;
+  max-height: 220px;     /* adjust to taste */
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-right: 6px;    /* avoid scrollbar overlap */
 }
 
 document.addEventListener("DOMContentLoaded", function () {
