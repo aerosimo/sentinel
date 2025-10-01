@@ -242,7 +242,8 @@ response.sendRedirect("signin.jsp");
                 </div>
 
                 <!-- Right column -->
-                <div class="col-md-6">
+                <div class="col-md-6 d-flex flex-column gap-3">
+                    <!-- Profile Details Card -->
                     <div class="card dashboard-card p-3">
                         <h6 class="mb-3">Profile Details</h6>
                         <p class="mb-1"><span class="fw-bold">Marital Status:</span> ${silhouette.profile.maritalStatus}</p>
@@ -255,50 +256,35 @@ response.sendRedirect("signin.jsp");
                         <p class="mb-1"><span class="fw-bold">Genotype:</span> ${silhouette.profile.genotype}</p>
                         <p class="mb-1"><span class="fw-bold">Disability:</span> ${silhouette.profile.disability}</p>
                     </div>
-<br>
-<br>
-                    <!-- Horoscope Section -->
-                    <c:if test="${not empty silhouette and not empty silhouette.horoscope}">
-                        <%-- normalize and create a safe filename: trim -> lower -> replace spaces with hyphens (or remove) --%>
-                        <c:set var="rawSign" value="${silhouette.horoscope.zodiacSign}" />
-                        <c:set var="signTrim" value="${fn:trim(rawSign)}" />
-                        <c:set var="signFile" value="${fn:toLowerCase(fn:replace(signTrim,' ','-'))}" />
 
-                        <div class="card dashboard-card p-3 horoscope-card">
-                            <div class="d-flex align-items-start gap-3">
-                                <img
-                                    id="zodiacImg"
-                                    src="${pageContext.request.contextPath}/assets/img/zodiac/${signFile}.jpg"
-                                    alt="${rawSign}"
-                                    class="img-fluid rounded"
-                                    style="max-height:200px; width:auto;"
-                                    onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/img/zodiac/astrology.jpg'; console.warn('Zodiac image not found:', '${signFile}.jpg');"
-                                    data-zodiac="${rawSign}"
-                                >
-
-                                <div class="flex-grow-1">
-                                    <div class="mb-2">
-                                        <span class="badge bg-primary">${rawSign}</span>
-                                        <small class="text-muted ms-2">${silhouette.horoscope.currentDay}</small>
-                                    </div>
-
-                                    <div class="horoscope-narrative">
-                                        <c:out value="${silhouette.horoscope.narrative}" escapeXml="false" />
-                                    </div>
+                    <!-- Horoscope Card -->
+                    <c:if test="${not empty silhouette.horoscope}">
+                        <div class="card dashboard-card p-3">
+                            <div class="row g-3 align-items-center">
+                                <!-- Zodiac Image -->
+                                <div class="col-md-4 text-center">
+                                    <img src="assets/img/zodiac/${silhouette.horoscope.zodiacSign}.jpg"
+                                         alt="${silhouette.horoscope.zodiacSign}"
+                                         class="img-fluid rounded"
+                                         style="max-height: 150px;">
+                                </div>
+                                <!-- Horoscope Text -->
+                                <div class="col-md-8">
+                                    <h6 class="mb-1">${silhouette.horoscope.zodiacSign}</h6>
+                                    <small class="text-muted d-block mb-2">${silhouette.horoscope.currentDay}</small>
+                                    <p class="mb-0">${silhouette.horoscope.narrative}</p>
                                 </div>
                             </div>
                         </div>
                     </c:if>
 
-
+                    <c:if test="${empty silhouette.horoscope}">
+                        <div class="alert alert-warning">No horoscope available for this sign.</div>
+                    </c:if>
                 </div>
+
             </div>
-
         </main>
-
-        		<pre>
-                ${silhouette}
-                </pre>
 
         <!-- Footer -->
         <footer>
