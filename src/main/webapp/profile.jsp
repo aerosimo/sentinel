@@ -48,7 +48,7 @@
     <meta content="sentinel" name="apple-mobile-web-app-title">
     <meta content="Oracle, Java, Tomcat, Maven, Jenkins, Bitbucket, Github, MFT" name="keywords">
     <!-- Title -->
-    <title>Sentinel Dashboard | Aerosimo Ltd</title>
+    <title>Sentinel Profile | Aerosimo Ltd</title>
     <!-- Favicon -->
     <link href="assets/img/favicon/favicon.ico" rel="shortcut icon"/>
     <link href="assets/img/favicon/favicon.ico" rel="icon" type="image/x-icon">
@@ -64,28 +64,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .profile-banner {
-            position: relative;
-            background: url("assets/img/banner/profile.jpg") center/cover no-repeat;
-            height: 200px;
-            border-radius: .5rem;
-        }
-        .profile-avatar {
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 4px solid #fff;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-        }
-        .profile-section {
-            margin-top: 70px; /* leave space for avatar */
-        }
-    </style>
 </head>
 <body>
 
@@ -149,6 +127,7 @@ response.sendRedirect("signin.jsp");
 
         <!-- Banner + Avatar -->
         <div class="profile-banner">
+            <img src="assets/img/banner/profile.jpg" alt="Banner" class="profile-banner-img">
             <img src="assets/img/user/user.png" alt="Avatar" class="profile-avatar">
         </div>
 
