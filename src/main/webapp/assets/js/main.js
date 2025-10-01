@@ -128,3 +128,130 @@
 
     document.addEventListener('DOMContentLoaded', setInitialState);
 })();
+
+// assets/js/main.js
+
+// 1. Server Overview Poller
+async function refreshOverview() {
+    try {
+        const res = await fetch("overview");
+        const data = await res.json();
+
+        document.getElementById("uptime").textContent = data.uptime;
+        document.getElementById("load").textContent = data.load.toFixed(2);
+        document.getElementById("connections").textContent = data.connections;
+        const statusBadge = document.getElementById("status");
+        statusBadge.textContent = data.status;
+        statusBadge.className = "badge " + (data.status === "Running" ? "bg-success" : "bg-danger");
+    } catch (err) {
+        console.error("Overview fetch error:", err);
+    }
+}
+setInterval(refreshOverview, 10000);
+refreshOverview();
+
+// 2. Server Rack Poller
+async function fetchStatus() {
+    try {
+        const res = await fetch("serverStatus");
+        const data = await res.json();
+
+        Object.entries(data).forEach(([name, status]) => {
+            const row = document.getElementById("server-" + name);
+            const logo = row.querySelector(".server-logo");
+
+            if (status === "online") {
+                row.classList.remove("server-down");
+                logo.classList.remove("offline");
+            } else {
+                row.classList.add("server-down");
+                logo.classList.add("offline");
+            }
+        });
+    } catch (e) {
+        console.error("Error fetching server status:", e);
+    }
+}
+setInterval(fetchStatus, 5000);
+fetchStatus();
+
+// 3. System Metrics Poller
+let memoryChart, diskChart, cpuChart;
+async function fetchMetrics() {
+    try {
+        const res = await fetch("metrics");
+        const data = await res.json();
+
+        const memoryData = data.memory.map(v => parseFloat(v));
+        const diskData = data.disk.map(v => parseFloat(v));
+        const cpuStates = {};
+        for (let i = 0; i < data.cpu.length; i += 3) {
+            const state = data.cpu[i + 1];
+            cpuStates[state] = (cpuStates[state] || 0) + 1;
+        }
+
+        if (!memoryChart) {
+            memoryChart = new Chart(document.getElementById("memoryChart"), {
+                type: "pie",
+                data: { labels: ["Init", "Used", "Max", "Committed"], datasets: [{ data: memoryData, backgroundColor: ["#4d3b7a", "#64b5f6", "#81c784", "#ffb74d"] }] },
+                options: { responsive: true, plugins: { legend: { position: "bottom" }, title: { display: true, text: "Memory Usage" } } }
+            });
+        } else {
+            memoryChart.data.datasets[0].data = memoryData;
+            memoryChart.update();
+        }
+
+        if (!diskChart) {
+            diskChart = new Chart(document.getElementById("diskChart"), {
+                type: "doughnut",
+                data: { labels: ["Total", "Free", "Usable"], datasets: [{ data: diskData, backgroundColor: ["#9575cd", "#ffb74d", "#4db6ac"] }] },
+                options: { responsive: true, cutout: "70%", plugins: { legend: { position: "bottom" }, title: { display: true, text: "Disk Usage" } } }
+            });
+        } else {
+            diskChart.data.datasets[0].data = diskData;
+            diskChart.update();
+        }
+
+        if (!cpuChart) {
+            cpuChart = new Chart(document.getElementById("cpuChart"), {
+                type: "bar",
+                data: { labels: Object.keys(cpuStates), datasets: [{ label: "Threads", data: Object.values(cpuStates), backgroundColor: ["#4d3b7a", "#64b5f6", "#ff7043", "#81c784", "#ba68c8"] }] },
+                options: { responsive: true, plugins: { legend: { display: false }, title: { display: true, text: "CPU Threads" } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+        } else {
+            cpuChart.data.labels = Object.keys(cpuStates);
+            cpuChart.data.datasets[0].data = Object.values(cpuStates);
+            cpuChart.update();
+        }
+    } catch (err) {
+        console.error("Metrics fetch error:", err);
+    }
+}
+setInterval(fetchMetrics, 10000);
+fetchMetrics();
+
+// 4. Recent Errors Poller
+async function fetchRecentErrors() {
+    try {
+        const res = await fetch("spectreErrors?records=6");
+        const errors = await res.json();
+
+        const tbody = document.getElementById("errorsTableBody");
+        tbody.innerHTML = "";
+        if (!Array.isArray(errors)) return;
+
+        errors.forEach(err => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${err.errorRef ?? ""}</td>
+                <td>${(err.errorMessage ?? "").replace(/\n/g, "<br/>")}</td>
+                <td>${err.errorTime ?? ""}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error("Error fetching recent errors:", e);
+    }
+}
+setInterval(fetchRecentErrors, 15000);
+fetchRecentErrors();

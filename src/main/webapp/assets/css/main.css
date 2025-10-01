@@ -29,248 +29,112 @@
  *                                                                            *
  ******************************************************************************/
 
+/* === Global === */
 body {
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Sidebar */
+/* === Sidebar === */
 .sidebar {
-    min-width: 220px;
-    max-width: 220px;
-    background-color: #4d3b7a;
-    color: #fff;
-    min-height: 100vh;
-    transition: all 0.3s ease-in-out;
-    overflow-x: hidden;
-    white-space: nowrap;
+  min-width: 220px;
+  max-width: 220px;
+  background-color: #4d3b7a;
+  color: #fff;
+  min-height: 100vh;
+  transition: all 0.3s ease-in-out;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 .sidebar .nav-link {
-    color: #ddd;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .sidebar .nav-link i {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 .sidebar .nav-link.active,
 .sidebar .nav-link:hover {
-    background-color: rgba(255,255,255,.1);
-    color: #fff;
+  background-color: rgba(255,255,255,.1);
+  color: #fff;
 }
 
-/* 🔹 Desktop shrink mode (icons only) */
+/* Sidebar shrink (desktop only) */
 .sidebar.shrink {
-    min-width: 70px;   /* was 60px */
-    max-width: 70px;   /* was 60px */
+  min-width: 70px;
+  max-width: 70px;
 }
 .sidebar.shrink h4,
 .sidebar.shrink hr {
-    display: none;
+  display: none;
 }
-.sidebar.shrink .nav-link span {
-    display: none;
-}
-.sidebar.shrink .nav-link {
-    text-align: center;
-    padding: 0.75rem 0;
-}
-.sidebar.shrink .nav-link i {
-    margin-right: 0;
-    font-size: 1.3rem;  /* make icons bigger in shrink mode */
-}
+.sidebar.shrink .nav-link span { display: none; }
+.sidebar.shrink .nav-link { text-align: center; padding: 0.75rem 0; }
+.sidebar.shrink .nav-link i { margin-right: 0; font-size: 1.3rem; }
+.sidebar.shrink .sidebar-logo { max-width: 40px; }
 
-/* 🔹 Mobile collapsed (slide offscreen) */
+/* Mobile collapsed sidebar */
 .sidebar.sidebar-collapsed {
-    transform: translateX(-100%);
-    position: absolute;
-    z-index: 1050;
+  transform: translateX(-100%);
+  position: absolute;
+  z-index: 1050;
 }
-
-/* === Mobile-only: when collapsed on small screens, slide the sidebar off-canvas === */
-@media (max-width: 767.98px) {
-    .sidebar.sidebar-collapsed {
-        transform: translateX(-100%);   /* slide off screen */
-        position: absolute;
-        z-index: 1050;
-    }
-
-    /* When overlay active show it */
-    .sidebar-overlay {
-        display: none;
-    }
-    .sidebar-overlay.active {
-        display: block;
-    }
-
-    /* When sidebar is collapsed on mobile we *don't* need to hide labels globally,
-       so we avoid hiding spans here (desktop shrink uses .shrink class). */
-}
-
-/* Overlay when sidebar open on mobile */
 .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.5);
-    z-index: 1040;
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1040;
 }
-.sidebar-overlay.active {
-    display: block;
-}
+.sidebar-overlay.active { display: block; }
 
-/* Main Content Wrapper */
+/* === Content === */
 .content-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    transition: margin-left 0.3s ease-in-out;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: margin-left 0.3s ease-in-out;
 }
 @media (min-width: 768px) {
-    .content-wrapper.expanded {
-        margin-left: 220px; /* normal sidebar */
-    }
-    .content-wrapper.collapsed {
-        margin-left: 70px;  /* match shrink width */
-    }
+  .content-wrapper.expanded { margin-left: 220px; }
+  .content-wrapper.collapsed { margin-left: 70px; }
 }
 
-/* Header */
+/* === Navbar & Footer === */
 .navbar-custom {
-    background-color: #fff;
-    border-bottom: 1px solid #dee2e6;
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
 }
-
-/* Footer */
 footer {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-top: 1px solid #dee2e6;
-    text-align: center;
-    font-size: 0.9rem;
-}
-
-/* Cards */
-.dashboard-card {
-    border-radius: .75rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,.08);
-}
-
-/* Default logo size */
-.sidebar .sidebar-logo {
-  max-width: 120px;
-  transition: all 0.3s ease;
-}
-
-/* Shrink mode */
-.sidebar.shrink .sidebar-logo {
-  max-width: 40px;  /* smaller version */
-}
-
-.dashboard-card {
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboard-card canvas {
-    max-height: 200px; /* keeps charts compact */
-}
-
-.flip-card {
-  background-color: transparent;
-  perspective: 1000px;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 10px;
-}
-
-.flip-card-front {
   background: #f8f9fa;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* === Cards === */
+.dashboard-card {
+  border-radius: .75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
+.dashboard-card canvas { max-height: 200px; }
 
-.flip-card-back {
-  background: #4d3b7a;
-  color: white;
-  transform: rotateY(180deg);
-  padding: 20px;
-  overflow-y: auto;
-}
-
-/* Horoscope card sizing / narrative scroll */
+/* === Horoscope === */
 .horoscope-card {
-  height: auto;          /* do NOT force h-100 here */
   min-height: 120px;
 }
-
-/* narrative box: scroll if very long; preserves newlines */
 .horoscope-narrative {
-  max-height: 220px;     /* adjust to taste */
+  max-height: 220px;
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
-  padding-right: 6px;    /* avoid scrollbar overlap */
+  padding-right: 6px;
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Map servlet names to rack rows
-    const servers = {
-        tomee: document.getElementById("server-tomee"),
-        jenkins: document.getElementById("server-jenkins"),
-        oracle: document.getElementById("server-oracle"),
-        linux: document.getElementById("server-linux")
-    };
-
-    async function fetchStatus() {
-        try {
-            // Call your ServerStatus servlet (must return JSON like { tomee: "online", ... })
-            const res = await fetch("ServerStatus");
-            const data = await res.json();
-
-            Object.keys(servers).forEach(name => {
-                const row = servers[name];
-                const logo = row.querySelector(".server-logo");
-
-                if (data[name] === "online") {
-                    row.classList.remove("server-down");
-                    logo.classList.remove("offline");
-                } else {
-                    row.classList.add("server-down");
-                    logo.classList.add("offline");
-                }
-            });
-        } catch (e) {
-            console.error("Error fetching server status:", e);
-        }
-    }
-
-    // Initial + auto refresh every 10s
-    fetchStatus();
-    setInterval(fetchStatus, 10000);
-});
