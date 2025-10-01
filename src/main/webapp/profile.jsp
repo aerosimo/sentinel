@@ -263,7 +263,7 @@ response.sendRedirect("signin.jsp");
                             <div class="row g-3 align-items-center">
                                 <!-- Zodiac Image -->
                                 <div class="col-md-4 text-center">
-                                    <img src="assets/img/zodiac/${silhouette.horoscope.zodiacSign}.jpg"
+                                    <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
                                          alt="${silhouette.horoscope.zodiacSign}"
                                          class="img-fluid rounded"
                                          style="max-height: 150px;">
