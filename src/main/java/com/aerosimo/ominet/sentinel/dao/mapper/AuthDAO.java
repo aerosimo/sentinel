@@ -88,7 +88,7 @@ public class AuthDAO {
     }
 
     public static String verifyEmail(String email, String verificationToken, String modifiedBy) {
-        log.info("Preparing to new user email");
+        log.info("Preparing to verify new user email");
         String response = "Email verification error";
         String sql = "{call auth_pkg.confirm_email(?,?,?,?)}";
         Connection con = null;
