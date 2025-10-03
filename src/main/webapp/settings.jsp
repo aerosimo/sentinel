@@ -204,7 +204,7 @@ response.sendRedirect("signin.jsp");
                 <!-- Right Column -->
                 <div class="col-md-6 d-flex flex-column gap-3">
                 <!-- Contacts -->
-                    <form action="saveContact" method="post" class="card dashboard-card p-3">
+                    <form action="contact" method="post" class="card dashboard-card p-3">
                         <h6 class="mb-3">Contact Info</h6>
                         <input type="hidden" name="email" value="${sessionScope.email}">
 
