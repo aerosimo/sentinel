@@ -70,7 +70,7 @@ public class Silhouette extends HttpServlet {
         SilhouetteResponseDTO silhouette = SilhouetteDAO.GetSilhouette(email);
         log.info("Fetching Silhouette: {}", silhouette);
         List<CountryDTO> countryList = Country.getCountries();
-        req.setAttribute("countryList", countryList);
+        req.getSession().setAttribute("countryList", countryList);
         if (silhouette != null) {
             log.info("Loaded silhouette for {}",email);
             req.setAttribute("silhouette", silhouette);

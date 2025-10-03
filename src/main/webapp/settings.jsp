@@ -178,6 +178,13 @@ response.sendRedirect("signin.jsp");
                         <button class="btn btn-primary mt-2" type="submit">Save Personal Info</button>
                     </form>
 
+<c:if test="${empty sessionScope.countryList}">
+    <%
+        List<CountryDTO> countryList = com.aerosimo.ominet.sentinel.models.utils.Country.getCountries();
+        session.setAttribute("countryList", countryList);
+    %>
+</c:if>
+
                     <!-- Address -->
                     <form action="address" method="post" class="card dashboard-card p-3">
                         <h6 class="mb-3">Address</h6>
@@ -189,7 +196,7 @@ response.sendRedirect("signin.jsp");
                         <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
                         <div class="mb-2">
                             <select class="form-select" name="country">
-                              <c:forEach var="country" items="${countryList}">
+                              <c:forEach var="country" items="${sessionScope.countryList}">
                                 <option value="${country.name}" ${silhouette.profile.country == country.name ? 'selected' : ''}>
                                   ${country.name}
                                 </option>
@@ -199,10 +206,6 @@ response.sendRedirect("signin.jsp");
                         <button class="btn btn-primary" type="submit">Save Address</button>
                     </form>
                 </div>
-
-		<pre>
-        ${countryList}
-        </pre>
 
                 <!-- Right Column -->
                 <div class="col-md-6 d-flex flex-column gap-3">

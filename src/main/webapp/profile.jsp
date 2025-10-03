@@ -156,10 +156,6 @@ response.sendRedirect("signin.jsp");
                     </div>
                 </div>
 
-		<pre>
-        ${countryList}
-        </pre>
-
                 <!-- Right column -->
                 <div class="col-md-6 d-flex flex-column gap-3">
                     <!-- Profile Details Card -->
