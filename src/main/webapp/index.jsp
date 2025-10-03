@@ -87,7 +87,7 @@
         <ul class="nav nav-pills flex-column mb-auto">
             <li><a class="nav-link active" href="#"><i class="bi bi-house"></i><span>Home</span></a></li>
             <li><a class="nav-link" href="silhouette"><i class="bi bi-person"></i><span>Profile</span></a></li>
-            <li><a class="nav-link" href="setting.jsp"><i class="bi bi-gear"></i><span>Settings</span></a></li>
+            <li><a class="nav-link" href="settings.jsp"><i class="bi bi-gear"></i><span>Settings</span></a></li>
             <li>
                 <form action="${pageContext.request.contextPath}/logout" method="post" style="display:inline;">
                     <button type="submit" class="nav-link"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
@@ -114,7 +114,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="silhouette">Profile</a></li>
-                            <li><a class="dropdown-item" href="setting.jsp">Settings</a></li>
+                            <li><a class="dropdown-item" href="settings.jsp">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="${pageContext.request.contextPath}/logout" method="post" style="display: inline;">
