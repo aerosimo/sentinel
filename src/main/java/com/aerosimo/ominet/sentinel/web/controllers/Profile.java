@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Address.java                                                    *
- * Created:   03/10/2025, 01:18                                               *
- * Modified:  03/10/2025, 01:18                                               *
+ * File:      Profile.java                                                    *
+ * Created:   03/10/2025, 08:58                                               *
+ * Modified:  03/10/2025, 08:58                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -34,7 +34,6 @@ package com.aerosimo.ominet.sentinel.web.controllers;
 import com.aerosimo.ominet.sentinel.dao.mapper.SilhouetteDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -42,45 +41,51 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "address",
-        description = "A simple servlet to save address details",
-        value = "/address")
-public class Address extends HttpServlet {
+@WebServlet(name = "profile",
+        description = "A simple servlet to save profile details",
+        value = "/profile")
+public class Profile {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Address.class.getName());
+        log = LogManager.getLogger(Profile.class.getName());
     }
 
     static String email;
-    static String firstline;
-    static String secondline;
-    static String thirdline;
-    static String city;
-    static String postcode;
-    static String country;
+    static String maritalStatus;
+    static String height;
+    static String weight;
+    static String ethnicity;
+    static String religion;
+    static String eyeColour;
+    static String phenotype;
+    static String genotype;
+    static String disability;
     static String modifiedBy;
     static String response;
 
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         email = req.getParameter("email");
-        firstline = req.getParameter("firstline");
-        secondline = req.getParameter("secondline");
-        thirdline = req.getParameter("thirdline");
-        city = req.getParameter("city");
-        postcode = req.getParameter("postcode");
-        country = req.getParameter("country");
+        maritalStatus = req.getParameter("maritalStatus");
+        height = req.getParameter("height");
+        weight = req.getParameter("weight");
+        ethnicity = req.getParameter("ethnicity");
+        religion = req.getParameter("religion");
+        eyeColour = req.getParameter("eyeColour");
+        phenotype = req.getParameter("phenotype");
+        genotype = req.getParameter("genotype");
+        disability = req.getParameter("disability");
         modifiedBy = "Sentinel";
-        response = SilhouetteDAO.saveAddress(email,firstline,secondline,thirdline,city,postcode,country,modifiedBy);
-        log.info("Logging response of saveAddress {}", response);
+        response = SilhouetteDAO.saveProfile(email, maritalStatus, height, weight, ethnicity,
+                religion, eyeColour, phenotype, genotype, disability, modifiedBy);
+        log.info("Logging response of saveProfile {}", response);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         } else {
             // maybe show error back to user
-            req.setAttribute("error", "Failed to save address details");
+            req.setAttribute("error", "Failed to save profile details");
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }

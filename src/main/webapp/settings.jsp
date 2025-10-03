@@ -187,7 +187,6 @@ response.sendRedirect("signin.jsp");
                         <input class="form-control mb-2" type="text" name="thirdline" value="${silhouette.address.thirdline}" placeholder="Third Line">
                         <input class="form-control mb-2" type="text" name="city" value="${silhouette.address.city}" placeholder="City">
                         <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
-                        <input class="form-control mb-2" type="text" name="country" value="${silhouette.address.country}" placeholder="Country">
                         <div class="mb-2">
                             <label class="form-label">Country</label>
                             <select class="form-select" name="country">
@@ -238,11 +237,11 @@ response.sendRedirect("signin.jsp");
 
 
                     <!-- Profile -->
-                    <form action="saveProfile" method="post" class="card dashboard-card p-3">
+                    <form action="profile" method="post" class="card dashboard-card p-3">
                         <h6 class="mb-3">Profile Details</h6>
                         <input type="hidden" name="email" value="${sessionScope.email}">
                         <div class="mb-2"><label class="form-label">Marital Status</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="maritalStatus">
                                 <option ${silhouette.profile.maritalStatus=='Separated' ? 'selected':''}>Separated</option>
                                 <option ${silhouette.profile.maritalStatus=='Widowed' ? 'selected':''}>Widowed</option>
                                 <option ${silhouette.profile.maritalStatus=='Single' ? 'selected':''}>Single</option>
@@ -257,7 +256,7 @@ response.sendRedirect("signin.jsp");
                         <input class="form-control mb-2" type="text" name="height" value="${silhouette.profile.height}" placeholder="Height">
                         <input class="form-control mb-2" type="text" name="weight" value="${silhouette.profile.weight}" placeholder="Weight">
                         <div class="mb-2"><label class="form-label">Ethnicity</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="ethnicity">
                                 <option ${silhouette.profile.ethnicity=='African' ? 'selected':''}>African</option>
                                 <option ${silhouette.profile.ethnicity=='Bangladeshi' ? 'selected':''}>Bangladeshi</option>
                                 <option ${silhouette.profile.ethnicity=='Caribbean' ? 'selected':''}>Caribbean</option>
@@ -269,7 +268,7 @@ response.sendRedirect("signin.jsp");
                             </select>
                         </div>
                         <div class="mb-2"><label class="form-label">Religion</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="religion">
                                 <option ${silhouette.profile.religion=='Christianity' ? 'selected':''}>Christianity</option>
                                 <option ${silhouette.profile.religion=='Islam' ? 'selected':''}>Islam</option>
                                 <option ${silhouette.profile.religion=='Atheist' ? 'selected':''}>Atheist</option>
@@ -280,7 +279,7 @@ response.sendRedirect("signin.jsp");
                             </select>
                         </div>
                         <div class="mb-2"><label class="form-label">Eye Colour</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="eyeColour">
                                 <option ${silhouette.profile.eyeColour=='Amber' ? 'selected':''}>Amber</option>
                                 <option ${silhouette.profile.eyeColour=='Blue' ? 'selected':''}>Blue</option>
                                 <option ${silhouette.profile.eyeColour=='Brown' ? 'selected':''}>Brown</option>
@@ -292,7 +291,7 @@ response.sendRedirect("signin.jsp");
                             </select>
                         </div>
                         <div class="mb-2"><label class="form-label">Phenotype</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="phenotype">
                                 <option ${silhouette.profile.phenotype=='A+' ? 'selected':''}>A+</option>
                                 <option ${silhouette.profile.phenotype=='A-' ? 'selected':''}>A-</option>
                                 <option ${silhouette.profile.phenotype=='B+' ? 'selected':''}>B+</option>
@@ -304,7 +303,7 @@ response.sendRedirect("signin.jsp");
                             </select>
                         </div>
                         <div class="mb-2"><label class="form-label">Genotype</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="genotype">
                                 <option ${silhouette.profile.genotype=='AA' ? 'selected':''}>AA</option>
                                 <option ${silhouette.profile.genotype=='AS' ? 'selected':''}>AS</option>
                                 <option ${silhouette.profile.genotype=='SS' ? 'selected':''}>SS</option>
@@ -312,7 +311,7 @@ response.sendRedirect("signin.jsp");
                             </select>
                         </div>
                         <div class="mb-2"><label class="form-label">Disability</label>
-                            <select class="form-select" name="title">
+                            <select class="form-select" name="disability">
                                 <option ${silhouette.profile.disability=='None' ? 'selected':''}>None</option>
                                 <option ${silhouette.profile.disability=='Deafness' ? 'selected':''}>Deafness</option>
                                 <option ${silhouette.profile.disability=='Anxiety' ? 'selected':''}>Anxiety</option>
