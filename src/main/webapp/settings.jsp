@@ -178,13 +178,6 @@ response.sendRedirect("signin.jsp");
                         <button class="btn btn-primary mt-2" type="submit">Save Personal Info</button>
                     </form>
 
-<c:if test="${empty sessionScope.countryList}">
-    <%
-        List<CountryDTO> countryList = com.aerosimo.ominet.sentinel.models.utils.Country.getCountries();
-        session.setAttribute("countryList", countryList);
-    %>
-</c:if>
-
                     <!-- Address -->
                     <form action="address" method="post" class="card dashboard-card p-3">
                         <h6 class="mb-3">Address</h6>
