@@ -142,7 +142,7 @@ response.sendRedirect("signin.jsp");
                         <p class="mb-1"><span class="fw-bold">Name:</span> ${silhouette.person.firstName} ${silhouette.person.middleName} ${silhouette.person.lastName}</p>
                         <p class="mb-1"><span class="fw-bold">Email:</span> ${silhouette.person.email}</p>
                         <p class="mb-1"><span class="fw-bold">Gender:</span> ${silhouette.person.gender}</p>
-                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${fn:substring(silhouette.person.birthday,0,9)} (Age: ${silhouette.person.age})</p>
+                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${fn:substring(silhouette.person.birthday,0,10)} (Age: ${silhouette.person.age})</p>
                     </div>
 
                     <div class="card dashboard-card p-3 mt-3">
