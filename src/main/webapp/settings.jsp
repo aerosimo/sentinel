@@ -204,36 +204,86 @@ response.sendRedirect("signin.jsp");
                 <!-- Right Column -->
                 <div class="col-md-6 d-flex flex-column gap-3">
                 <!-- Contacts -->
-                <form action="saveContact" method="post" class="card dashboard-card p-3">
-                    <h6 class="mb-3">Contact Info</h6>
-                    <input type="hidden" name="email" value="${sessionScope.email}">
+                    <form action="saveContact" method="post" class="card dashboard-card p-3">
+                        <h6 class="mb-3">Contact Info</h6>
+                        <input type="hidden" name="email" value="${sessionScope.email}">
 
-                    <c:forEach var="c" items="${silhouette.contacts}" varStatus="loop">
-                        <div class="mb-2">
-                            <label class="form-label">Channel</label>
-                            <select class="form-select" name="channel[${loop.index}]">
-                                <option value="Phone"    ${c.channel=='Phone' ? 'selected' : ''}>Phone</option>
-                                <option value="Email"    ${c.channel=='Email' ? 'selected' : ''}>Email</option>
-                                <option value="Fax"      ${c.channel=='Fax' ? 'selected' : ''}>Fax</option>
-                                <option value="Twitter"  ${c.channel=='Twitter' ? 'selected' : ''}>Twitter</option>
-                                <option value="Facebook" ${c.channel=='Facebook' ? 'selected' : ''}>Facebook</option>
-                                <option value="LinkedIn" ${c.channel=='LinkedIn' ? 'selected' : ''}>LinkedIn</option>
-                                <option value="Snapchat" ${c.channel=='Snapchat' ? 'selected' : ''}>Snapchat</option>
-                                <option value="Website"  ${c.channel=='Website' ? 'selected' : ''}>Website</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Value</label>
-                            <input class="form-control"
-                                   type="text"
-                                   name="address[${loop.index}]"
-                                   value="${c.address}">
-                        </div>
-                        <hr/>
-                    </c:forEach>
+                        <!-- Contact rows wrapper -->
+                        <div id="contactsContainer">
+                            <c:forEach var="c" items="${silhouette.contacts}">
+                                <div class="contact-row mb-3 border p-2 rounded">
+                                    <div class="mb-2">
+                                        <label class="form-label">Channel</label>
+                                        <select class="form-select" name="channel">
+                                            <option value="Phone"    ${c.channel=='Phone' ? 'selected' : ''}>Phone</option>
+                                            <option value="Email"    ${c.channel=='Email' ? 'selected' : ''}>Email</option>
+                                            <option value="Fax"      ${c.channel=='Fax' ? 'selected' : ''}>Fax</option>
+                                            <option value="Twitter"  ${c.channel=='Twitter' ? 'selected' : ''}>Twitter</option>
+                                            <option value="Facebook" ${c.channel=='Facebook' ? 'selected' : ''}>Facebook</option>
+                                            <option value="LinkedIn" ${c.channel=='LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+                                            <option value="Snapchat" ${c.channel=='Snapchat' ? 'selected' : ''}>Snapchat</option>
+                                            <option value="Website"  ${c.channel=='Website' ? 'selected' : ''}>Website</option>
+                                        </select>
+                                    </div>
 
-                    <button class="btn btn-primary" type="submit">Save Contacts</button>
-                </form>
+                                    <div class="mb-2">
+                                        <label class="form-label">Value</label>
+                                        <input class="form-control" type="text" name="address" value="${c.address}">
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label">Consent</label>
+                                        <select class="form-select" name="consent">
+                                            <option value="YES" ${c.consent=='YES' ? 'selected' : ''}>YES</option>
+                                            <option value="NO"  ${c.consent=='NO'  ? 'selected' : ''}>NO</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-outline-danger removeContact">Remove</button>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <!-- Add Contact Button -->
+                        <button type="button" class="btn btn-sm btn-outline-success mb-3" id="addContactBtn">+ Add Another Contact</button>
+
+                        <button class="btn btn-primary" type="submit">Save Contacts</button>
+                    </form>
+
+                    <!-- Template for new contacts (hidden) -->
+                    <template id="contactTemplate">
+                        <div class="contact-row mb-3 border p-2 rounded">
+                            <div class="mb-2">
+                                <label class="form-label">Channel</label>
+                                <select class="form-select" name="channel">
+                                    <option value="Phone">Phone</option>
+                                    <option value="Email">Email</option>
+                                    <option value="Fax">Fax</option>
+                                    <option value="Twitter">Twitter</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="LinkedIn">LinkedIn</option>
+                                    <option value="Snapchat">Snapchat</option>
+                                    <option value="Website">Website</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Value</label>
+                                <input class="form-control" type="text" name="address" placeholder="Enter contact value">
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label">Consent</label>
+                                <select class="form-select" name="consent">
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger removeContact">Remove</button>
+                        </div>
+                    </template>
+
 
 
                     <!-- Profile -->
@@ -337,5 +387,27 @@ response.sendRedirect("signin.jsp");
 
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/main.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const addBtn = document.getElementById("addContactBtn");
+    const container = document.getElementById("contactsContainer");
+    const template = document.getElementById("contactTemplate");
+
+    // Add new contact row
+    addBtn.addEventListener("click", () => {
+        const clone = template.content.cloneNode(true);
+        container.appendChild(clone);
+    });
+
+    // Delegate remove button
+    container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("removeContact")) {
+            e.target.closest(".contact-row").remove();
+        }
+    });
+});
+</script>
+
 </body>
 </html>

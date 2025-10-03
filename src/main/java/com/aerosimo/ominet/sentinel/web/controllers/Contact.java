@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Profile.java                                                    *
- * Created:   03/10/2025, 08:58                                               *
- * Modified:  03/10/2025, 08:58                                               *
+ * File:      Contact.java                                                    *
+ * Created:   03/10/2025, 10:03                                               *
+ * Modified:  03/10/2025, 10:03                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -42,53 +42,59 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "profile",
-        description = "A simple servlet to save profile details",
-        value = "/profile")
-public class Profile extends HttpServlet {
+@WebServlet(name = "contact",
+        description = "Servlet to save user contact details",
+        value = "/contact")
+public class Contact extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Profile.class.getName());
+        log = LogManager.getLogger(Contact.class.getName());
     }
 
     static String email;
-    static String maritalStatus;
-    static String height;
-    static String weight;
-    static String ethnicity;
-    static String religion;
-    static String eyeColour;
-    static String phenotype;
-    static String genotype;
-    static String disability;
+    static String[] channels;
+    static String[] addresses;
+    static String[] consents;
     static String modifiedBy;
+    static String channel;
+    static String address;
+    static String consent;
     static String response;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         resp.setContentType("text/html; charset=UTF-8");
+
         email = req.getParameter("email");
-        maritalStatus = req.getParameter("maritalStatus");
-        height = req.getParameter("height");
-        weight = req.getParameter("weight");
-        ethnicity = req.getParameter("ethnicity");
-        religion = req.getParameter("religion");
-        eyeColour = req.getParameter("eyeColour");
-        phenotype = req.getParameter("phenotype");
-        genotype = req.getParameter("genotype");
-        disability = req.getParameter("disability");
         modifiedBy = "Sentinel";
-        response = SilhouetteDAO.saveProfile(email, maritalStatus, height, weight, ethnicity,
-                religion, eyeColour, phenotype, genotype, disability, modifiedBy);
-        log.info("Logging response of saveProfile {}", response);
-        if ("success".equalsIgnoreCase(response)) {
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+        // Multiple contacts - expects arrays from the form
+        channels = req.getParameterValues("channel");
+        addresses = req.getParameterValues("address");
+        consents = req.getParameterValues("consent");
+
+        if (channels != null && addresses != null) {
+            int total = channels.length;
+            log.info("Saving {} contact(s) for user {}", total, email);
+            for (int i = 0; i < channels.length; i++) {
+                channel = channels[i];
+                address = (i < addresses.length) ? addresses[i] : "";
+                consent = (consents != null && i < consents.length) ? consents[i] : "NO";
+                log.info("Saving contact: email={}, channel={}, address={}, consent={}",
+                        email, channel, address, consent);
+                response = SilhouetteDAO.saveContact(email, channel, address, consent, modifiedBy);
+                log.info("SaveContact response: {}", response);
+                if (!"success".equalsIgnoreCase(response)) {
+                    log.warn("Contact save failed for {} on channel {}: {}", email, channel, response);
+                }
+            }
         } else {
-            // maybe show error back to user
-            req.setAttribute("error", "Failed to save profile details");
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+            log.warn("No contact details provided for {}", email);
         }
+        // Redirect or forward back to settings.jsp
+        req.getRequestDispatcher("settings.jsp").forward(req, resp);
     }
 }
