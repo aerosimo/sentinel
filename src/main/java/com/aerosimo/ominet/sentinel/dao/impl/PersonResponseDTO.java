@@ -31,6 +31,8 @@
 
 package com.aerosimo.ominet.sentinel.dao.impl;
 
+import java.time.LocalDate;
+
 public class PersonResponseDTO {
 
     private String email;
@@ -40,7 +42,7 @@ public class PersonResponseDTO {
     private String lastName;
     private String zodiacSign;
     private String gender;
-    private String birthday;
+    private LocalDate birthday;
     private String age;
     private String modifiedBy;
     private String modifiedDate;
@@ -48,7 +50,7 @@ public class PersonResponseDTO {
     public PersonResponseDTO() {
     }
 
-    public PersonResponseDTO(String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, String birthday, String age, String modifiedBy, String modifiedDate) {
+    public PersonResponseDTO(String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, LocalDate birthday, String age, String modifiedBy, String modifiedDate) {
         this.email = email;
         this.title = title;
         this.firstName = firstName;
@@ -118,11 +120,11 @@ public class PersonResponseDTO {
         this.gender = gender;
     }
 
-    public String getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -160,7 +162,7 @@ public class PersonResponseDTO {
                 ", lastName='" + lastName + '\'' +
                 ", zodiacSign='" + zodiacSign + '\'' +
                 ", gender='" + gender + '\'' +
-                ", birthday='" + birthday + '\'' +
+                ", birthday=" + birthday +
                 ", age='" + age + '\'' +
                 ", modifiedBy='" + modifiedBy + '\'' +
                 ", modifiedDate='" + modifiedDate + '\'' +

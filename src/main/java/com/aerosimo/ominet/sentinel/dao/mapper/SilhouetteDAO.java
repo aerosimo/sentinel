@@ -39,6 +39,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +73,15 @@ public class SilhouetteDAO {
             if (personObj instanceof ResultSet rs) {
                 try (rs) {
                     if (rs.next()) {
+                        String birthdayStr = rs.getString(8);
+                        LocalDate birthday = null;
+                        if (birthdayStr != null && !birthdayStr.isBlank()) {
+                            try {
+                                birthday = LocalDate.parse(birthdayStr);
+                            } catch (DateTimeParseException e) {
+                                log.warn("Failed to parse birthday '{}': {}", birthdayStr, e.getMessage());
+                            }
+                        }
                         PersonResponseDTO person = new PersonResponseDTO(
                                 rs.getString(1),
                                 rs.getString(2),
@@ -79,7 +90,7 @@ public class SilhouetteDAO {
                                 rs.getString(5),
                                 rs.getString(6),
                                 rs.getString(7),
-                                rs.getString(8),
+                                birthday,
                                 rs.getString(9),
                                 rs.getString(10),
                                 rs.getString(11)
