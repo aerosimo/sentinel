@@ -200,6 +200,10 @@ response.sendRedirect("signin.jsp");
                     </form>
                 </div>
 
+		<pre>
+        ${countryList}
+        </pre>
+
                 <!-- Right Column -->
                 <div class="col-md-6 d-flex flex-column gap-3">
                 <!-- Contacts -->
