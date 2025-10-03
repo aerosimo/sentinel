@@ -68,12 +68,12 @@ public class Silhouette extends HttpServlet {
         log.info("Fetching Silhouette for email: {}", email);
         // ✅ Fetch horoscope directly via DAO
         SilhouetteResponseDTO silhouette = SilhouetteDAO.GetSilhouette(email);
-        List<CountryDTO> countries = Country.getCountries();
         log.info("Fetching Silhouette: {}", silhouette);
+        List<CountryDTO> countryList = Country.getCountries();
+        req.setAttribute("countryList", countryList);
         if (silhouette != null) {
             log.info("Loaded silhouette for {}",email);
             req.setAttribute("silhouette", silhouette);
-            req.setAttribute("countries", countries);
         } else {
             log.warn("No silhouette found for email: {}", email);
             req.setAttribute("silhouette", null);

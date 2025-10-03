@@ -188,13 +188,12 @@ response.sendRedirect("signin.jsp");
                         <input class="form-control mb-2" type="text" name="city" value="${silhouette.address.city}" placeholder="City">
                         <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
                         <div class="mb-2">
-                            <label class="form-label">Country</label>
                             <select class="form-select" name="country">
-                                <c:forEach var="c" items="${countries}">
-                                    <option value="${c.code}" ${silhouette.address.country == c.code ? 'selected' : ''}>
-                                        ${c.name}
-                                    </option>
-                                </c:forEach>
+                              <c:forEach var="country" items="${countryList}">
+                                <option value="${country.name}" ${silhouette.profile.country == country.name ? 'selected' : ''}>
+                                  ${country.name}
+                                </option>
+                              </c:forEach>
                             </select>
                         </div>
                         <button class="btn btn-primary" type="submit">Save Address</button>
