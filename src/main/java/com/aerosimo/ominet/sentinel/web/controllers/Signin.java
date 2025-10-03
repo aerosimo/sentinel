@@ -32,8 +32,10 @@
 package com.aerosimo.ominet.sentinel.web.controllers;
 
 import com.aerosimo.ominet.sentinel.com.mail.LoginMail;
+import com.aerosimo.ominet.sentinel.dao.impl.CountryDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import com.aerosimo.ominet.sentinel.models.utils.Country;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -43,6 +45,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @WebServlet(name = "signin",
@@ -85,6 +88,8 @@ public class Signin extends HttpServlet {
             req.getSession().setAttribute("host", req.getRemoteHost());
             req.getSession().setAttribute("uname", response.getUsername());
             req.getSession().setAttribute("userAgent", req.getHeader("user-agent"));
+            List<CountryDTO> countryList = Country.getCountries();
+            req.getSession().setAttribute("countryList", countryList);
             resp.sendRedirect("mfa.jsp");
         } else {
             log.error("Login request failed with the following: {}", response.getResponse());

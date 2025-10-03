@@ -42,7 +42,7 @@ public class PersonResponseDTO {
     private String lastName;
     private String zodiacSign;
     private String gender;
-    private LocalDate birthday;
+    private String birthday;
     private String age;
     private String modifiedBy;
     private String modifiedDate;
@@ -50,7 +50,7 @@ public class PersonResponseDTO {
     public PersonResponseDTO() {
     }
 
-    public PersonResponseDTO(String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, LocalDate birthday, String age, String modifiedBy, String modifiedDate) {
+    public PersonResponseDTO(String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, String birthday, String age, String modifiedBy, String modifiedDate) {
         this.email = email;
         this.title = title;
         this.firstName = firstName;
@@ -120,11 +120,11 @@ public class PersonResponseDTO {
         this.gender = gender;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
