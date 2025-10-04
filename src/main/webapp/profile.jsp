@@ -146,7 +146,7 @@ response.sendRedirect("signin.jsp");
 
                         <h4 class="mt-3 mb-0">${silhouette.person.firstName} ${silhouette.person.lastName}</h4>
                         <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> ${silhouette.address.city}, ${silhouette.address.country}</p>
-                        <p class="text-muted"><i class="bi bi-briefcase"></i> ${silhouette.profile.occupation != null ? silhouette.profile.occupation : '—'} </p>
+                        <!-- <p class="text-muted"><i class="bi bi-briefcase"></i> ${silhouette.profile.occupation != null ? silhouette.profile.occupation : '—'} </p> -->
 
                         <p class="mt-3 text-secondary">
                             An artist of considerable range, ${silhouette.person.firstName} is known for innovation and a creative edge.
@@ -156,7 +156,7 @@ response.sendRedirect("signin.jsp");
                         <!-- Stats Section -->
                         <div class="d-flex justify-content-center text-center mt-4">
                             <div class="px-3">
-                                <h6 class="mb-0">22</h6>
+                                <h6 class="mb-0">102</h6>
                                 <small class="text-muted">Friends</small>
                             </div>
                             <div class="px-3 border-start border-end">
