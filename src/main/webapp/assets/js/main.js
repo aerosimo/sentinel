@@ -275,3 +275,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// Avatar Upload Handler
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('avatarInput');
+    const form = document.getElementById('avatarUploadForm');
+
+    if (!dropZone || !fileInput) return;
+
+    // Click to open file picker
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Drag-over visuals
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    // Drop file
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            showAvatarPreview(files[0]);
+        }
+    });
+
+    // Change from file input (manual select)
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) showAvatarPreview(file);
+    });
+
+    // Preview function
+    function showAvatarPreview(file) {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            dropZone.innerHTML = `
+        <img src="${e.target.result}" alt="Preview" class="img-fluid rounded-circle shadow-sm mb-2" width="150">
+        <p class="text-muted small">Click or drag another file to replace</p>
+      `;
+        };
+        reader.readAsDataURL(file);
+        setTimeout(() => form.submit(), 1000);
+    }
+});

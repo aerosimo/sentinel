@@ -169,7 +169,6 @@ response.sendRedirect("signin.jsp");
                             </div>
                         </c:if>
 
-
                         <!-- Stats Section -->
                         <div class="d-flex justify-content-center text-center mt-4">
                             <div class="px-3">

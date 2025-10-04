@@ -126,18 +126,8 @@ response.sendRedirect("signin.jsp");
             </div>
         </nav>
 
-        <!-- Banner + Avatar -->
-        <div class="profile-banner" style="background: url('assets/img/banner/setting.jpg') center/cover no-repeat; height:200px;">
-            <form action="saveImage" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="email" value="${sessionScope.email}">
-                <label for="avatarUpload">
-                    <img src="${silhouette.image.avatar != null ? silhouette.image.avatar : 'assets/img/user/user.png'}"
-                         alt="Avatar"
-                         class="profile-avatar">
-                </label>
-                <input id="avatarUpload" type="file" name="avatar" accept="image/*" hidden onchange="this.form.submit()">
-            </form>
-        </div>
+        <!-- Banner -->
+        <div class="profile-banner" style="background: url('assets/img/banner/setting.jpg') center/cover no-repeat; height:200px;"></div>
 
         <!-- Tabs -->
         <main class="container-fluid my-4 profile-section">
@@ -299,8 +289,6 @@ response.sendRedirect("signin.jsp");
                                 </div>
                             </template>
 
-
-
                             <!-- Profile -->
                             <form action="profile" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Profile Details</h6>
@@ -395,27 +383,70 @@ response.sendRedirect("signin.jsp");
 
                 <!-- 🟡 ACCOUNT INFO TAB -->
                 <div class="tab-pane fade" id="account" role="tabpanel">
-                    <form action="account" method="post" class="card dashboard-card p-3 mt-3">
-                        <h6 class="mb-3">Account Settings</h6>
-                        <input type="hidden" name="email" value="${sessionScope.email}">
-                        <div class="mb-2">
-                            <label class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" value="${account.username}">
+                    <div class="row g-4">
+                        <!-- Avatar Upload -->
+                        <div class="col-md-6">
+                            <div class="card dashboard-card p-3">
+                                <h6 class="mb-3">Change Avatar</h6>
+                                <form id="avatarUploadForm" action="saveImage" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="email" value="${sessionScope.email}">
+                                    <div id="dropZone" class="drop-zone text-center p-4 border rounded">
+                                        <c:choose>
+                                            <c:when test="${not empty silhouette.image.avatar}">
+                                                <img src="${silhouette.image.avatar}" alt="Avatar Preview"
+                                                     class="img-fluid rounded-circle shadow-sm mb-2" width="150">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+                                                <p class="mt-2 mb-0 text-muted">Drag & drop image here or click to select file</p>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <input type="file" name="avatar" id="avatarInput" accept="image/*" hidden>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Upload Avatar</button>
+                                </form>
+                            </div>
+
+                            <!-- Delete Account (Danger Zone) -->
+                            <div class="card border-danger p-3 mt-3">
+                                <h6 class="text-danger mb-3"><i class="bi bi-exclamation-triangle"></i> Danger Zone</h6>
+                                <p class="text-muted">
+                                    Deleting your account is <strong>permanent</strong> and cannot be undone.
+                                    All your data will be permanently erased from the system.
+                                </p>
+                                <form action="deleteAccount" method="post"
+                                      onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
+                                    <input type="hidden" name="email" value="${sessionScope.email}">
+                                    <button type="submit" class="btn btn-danger w-100">Delete Account</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">Current Password</label>
-                            <input type="password" class="form-control" name="currentPassword">
+
+                        <!-- Account Credentials -->
+                        <div class="col-md-6">
+                            <form action="account" method="post" class="card dashboard-card p-3">
+                                <h6 class="mb-3">Account Settings</h6>
+                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <div class="mb-2">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" name="username" value="${account.username}">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" name="currentPassword">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-control" name="newPassword">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" name="confirmPassword">
+                                </div>
+                                <button class="btn btn-primary mt-2" type="submit">Update Account</button>
+                            </form>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">New Password</label>
-                            <input type="password" class="form-control" name="newPassword">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-control" name="confirmPassword">
-                        </div>
-                        <button class="btn btn-primary mt-2" type="submit">Update Account</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </main>
