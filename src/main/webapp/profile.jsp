@@ -146,12 +146,20 @@ response.sendRedirect("signin.jsp");
 
                         <h4 class="mt-3 mb-0">${silhouette.person.firstName} ${silhouette.person.lastName}</h4>
                         <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> ${silhouette.address.city}, ${silhouette.address.country}</p>
-                        <!-- <p class="text-muted"><i class="bi bi-briefcase"></i> ${silhouette.profile.occupation != null ? silhouette.profile.occupation : '—'} </p> -->
+                        <p class="text-muted"><i class="bi bi-briefcase"></i> Integration Specialist </p>
 
-                        <p class="mt-3 text-secondary">
-                            An artist of considerable range, ${silhouette.person.firstName} is known for innovation and a creative edge.
-                            ${silhouette.profile.ethnicity != null ? 'Belongs to ' + silhouette.profile.ethnicity + ' ethnicity.' : ''}
-                        </p>
+                        <!-- Horoscope Card -->
+                        <c:if test="${not empty silhouette.horoscope}">
+                            <div class="col-md-4 text-center">
+                                 <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
+                                      alt="${silhouette.horoscope.zodiacSign}"
+                                      class="img-fluid rounded"
+                                      style="max-height: 150px;">
+                            </div>
+                            <p class="mt-3 text-secondary">
+                                AS a person that belongs to ${silhouette.horoscope.zodiacSign} today is ${silhouette.horoscope.currentDay} and your daily horoscope is: ${silhouette.horoscope.narrative}
+                            </p>
+                        </c:if>
 
                         <!-- Stats Section -->
                         <div class="d-flex justify-content-center text-center mt-4">
