@@ -391,7 +391,6 @@ response.sendRedirect("signin.jsp");
                             </form>
                         </div>
                     </div>
-                    <jsp:include page="partials/personalInfo.jsp"/>
                 </div>
 
                 <!-- 🟡 ACCOUNT INFO TAB -->
