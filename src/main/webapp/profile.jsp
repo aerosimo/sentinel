@@ -150,15 +150,23 @@ response.sendRedirect("signin.jsp");
 
                         <!-- Horoscope Card -->
                         <c:if test="${not empty silhouette.horoscope}">
-                            <div class="col-md-4 text-center">
-                                 <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
-                                      alt="${silhouette.horoscope.zodiacSign}"
-                                      class="img-fluid rounded"
-                                      style="max-height: 150px;">
+                            <div class="card dashboard-card p-3 mt-4 text-center background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%);border: none;">
+                                <div class="row align-items-center justify-content-center">
+                                    <div class="col-md-4 mb-3">
+                                        <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
+                                             alt="${silhouette.horoscope.zodiacSign}"
+                                             class="img-fluid rounded shadow-sm"
+                                             style="max-height: 150px; object-fit: contain;">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="text-secondary text-wrap lh-base" style="word-break: break-word;">
+                                            As a person born under the <strong>${silhouette.horoscope.zodiacSign}</strong> sign,
+                                            today (<strong>${silhouette.horoscope.currentDay}</strong>) your horoscope says:
+                                            <em>${silhouette.horoscope.narrative}</em>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="mt-3 text-secondary">
-                                AS a person that belongs to ${silhouette.horoscope.zodiacSign} today is ${silhouette.horoscope.currentDay} and your daily horoscope is: ${silhouette.horoscope.narrative}
-                            </p>
                         </c:if>
 
                         <!-- Stats Section -->
