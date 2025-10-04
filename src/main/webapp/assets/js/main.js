@@ -255,3 +255,23 @@ async function fetchRecentErrors() {
 }
 setInterval(fetchRecentErrors, 15000);
 fetchRecentErrors();
+
+// Adding multiple contacts
+document.addEventListener("DOMContentLoaded", () => {
+    const addBtn = document.getElementById("addContactBtn");
+    const container = document.getElementById("contactsContainer");
+    const template = document.getElementById("contactTemplate");
+
+    // Add new contact row
+    addBtn.addEventListener("click", () => {
+        const clone = template.content.cloneNode(true);
+        container.appendChild(clone);
+    });
+
+    // Delegate remove button
+    container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("removeContact")) {
+            e.target.closest(".contact-row").remove();
+        }
+    });
+});

@@ -126,84 +126,88 @@ response.sendRedirect("signin.jsp");
             </div>
         </nav>
 
-        <!-- Banner + Avatar -->
-        <div class="profile-banner">
-            <img src="assets/img/banner/profile.jpg" alt="Banner" class="profile-banner-img">
-            <img src="assets/img/user/user.png" alt="Avatar" class="profile-avatar">
-        </div>
+        <!-- Hero Banner -->
+        <section class="position-relative" style="height: 300px;">
+            <img src="assets/img/banner/profile.jpg" alt="Banner" class="w-100 h-100" style="object-fit: cover;">
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0,0,0,0.35);"></div>
+        </section>
 
-        <!-- Page Content -->
-        <main class="container-fluid my-4 profile-section">
-            <div class="row g-4">
-                <!-- Left column -->
-                <div class="col-md-6">
-                    <div class="card dashboard-card p-3">
-                        <h6 class="mb-3">Personal Info</h6>
-                        <p class="mb-1"><span class="fw-bold">Name:</span> ${silhouette.person.firstName} ${silhouette.person.middleName} ${silhouette.person.lastName}</p>
-                        <p class="mb-1"><span class="fw-bold">Email:</span> ${silhouette.person.email}</p>
-                        <p class="mb-1"><span class="fw-bold">Gender:</span> ${silhouette.person.gender}</p>
-                        <p class="mb-1"><span class="fw-bold">DOB:</span> ${fn:substring(silhouette.person.birthday,0,10)} (Age: ${silhouette.person.age})</p>
-                    </div>
+        <!-- Profile Card -->
+        <main class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="card shadow-lg border-0 text-center p-4">
+                        <div class="position-relative">
+                            <img src="${silhouette.image.avatar != null ? silhouette.image.avatar : 'assets/img/user/user.png'}"
+                                 alt="Avatar"
+                                 class="rounded-circle border border-3 border-white shadow"
+                                 style="width:120px; height:120px; object-fit:cover; margin-top:-80px;">
+                        </div>
 
-                    <div class="card dashboard-card p-3 mt-3">
-                        <h6 class="mb-3">Contact Info</h6>
-                        <c:forEach var="c" items="${silhouette.contacts}">
-                           <p class="mb-1"><b>${c.channel}:</b> ${c.address}</p>
-                        </c:forEach>
-                        <p class="mb-1"><span class="fw-bold">Address:</span> ${silhouette.address.firstline} ${silhouette.address.secondline} ${silhouette.address.thirdline}</p>
-                        <p class="mb-1"><span class="fw-bold">City:</span> ${silhouette.address.city}</p>
-                        <p class="mb-1"><span class="fw-bold">Country:</span> ${silhouette.address.country}</p>
-                    </div>
-                </div>
+                        <h4 class="mt-3 mb-0">${silhouette.person.firstName} ${silhouette.person.lastName}</h4>
+                        <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> ${silhouette.address.city}, ${silhouette.address.country}</p>
+                        <p class="text-muted"><i class="bi bi-briefcase"></i> ${silhouette.profile.occupation != null ? silhouette.profile.occupation : '—'} </p>
 
-                <!-- Right column -->
-                <div class="col-md-6 d-flex flex-column gap-3">
-                    <!-- Profile Details Card -->
-                    <div class="card dashboard-card p-3">
-                        <h6 class="mb-3">Profile Details</h6>
-                        <p class="mb-1"><span class="fw-bold">Marital Status:</span> ${silhouette.profile.maritalStatus}</p>
-                        <p class="mb-1"><span class="fw-bold">Ethnicity:</span> ${silhouette.profile.ethnicity}</p>
-                        <p class="mb-1"><span class="fw-bold">Religion:</span> ${silhouette.profile.religion}</p>
-                        <p class="mb-1"><span class="fw-bold">Eye Colour:</span> ${silhouette.profile.eyeColour}</p>
-                        <p class="mb-1"><span class="fw-bold">Height:</span> ${silhouette.profile.height}</p>
-                        <p class="mb-1"><span class="fw-bold">Weight:</span> ${silhouette.profile.weight}</p>
-                        <p class="mb-1"><span class="fw-bold">Phenotype:</span> ${silhouette.profile.phenotype}</p>
-                        <p class="mb-1"><span class="fw-bold">Genotype:</span> ${silhouette.profile.genotype}</p>
-                        <p class="mb-1"><span class="fw-bold">Disability:</span> ${silhouette.profile.disability}</p>
-                    </div>
+                        <p class="mt-3 text-secondary">
+                            An artist of considerable range, ${silhouette.person.firstName} is known for innovation and a creative edge.
+                            ${silhouette.profile.ethnicity != null ? 'Belongs to ' + silhouette.profile.ethnicity + ' ethnicity.' : ''}
+                        </p>
 
-                    <!-- Horoscope Card -->
-                    <c:if test="${not empty silhouette.horoscope}">
-                        <div class="card dashboard-card p-3">
-                            <div class="row g-3 align-items-center">
-                                <!-- Zodiac Image -->
-                                <div class="col-md-4 text-center">
-                                    <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
-                                         alt="${silhouette.horoscope.zodiacSign}"
-                                         class="img-fluid rounded"
-                                         style="max-height: 150px;">
-                                </div>
-                                <!-- Horoscope Text -->
-                                <div class="col-md-8">
-                                    <h6 class="mb-1">${silhouette.horoscope.zodiacSign}</h6>
-                                    <small class="text-muted d-block mb-2">${silhouette.horoscope.currentDay}</small>
-                                    <p class="mb-0">${silhouette.horoscope.narrative}</p>
-                                </div>
+                        <!-- Stats Section -->
+                        <div class="d-flex justify-content-center text-center mt-4">
+                            <div class="px-3">
+                                <h6 class="mb-0">22</h6>
+                                <small class="text-muted">Friends</small>
+                            </div>
+                            <div class="px-3 border-start border-end">
+                                <h6 class="mb-0">10</h6>
+                                <small class="text-muted">Photos</small>
+                            </div>
+                            <div class="px-3">
+                                <h6 class="mb-0">89</h6>
+                                <small class="text-muted">Comments</small>
                             </div>
                         </div>
-                    </c:if>
-
-                    <c:if test="${empty silhouette.horoscope}">
-                        <div class="alert alert-warning">No horoscope available for this sign.</div>
-                    </c:if>
+                    </div>
                 </div>
+            </div>
 
+            <!-- About + Details -->
+            <div class="row justify-content-center mt-4">
+                <div class="col-lg-8 col-md-10">
+                    <div class="card p-4 mb-3 shadow-sm">
+                        <h6 class="fw-bold mb-3">Personal Information</h6>
+                        <p><b>Gender:</b> ${silhouette.person.gender}</p>
+                        <p><b>Date of Birth:</b> ${fn:substring(silhouette.person.birthday,0,10)} (Age: ${silhouette.person.age})</p>
+                        <p><b>Email:</b> ${silhouette.person.email}</p>
+                        <p><b>Marital Status:</b> ${silhouette.profile.maritalStatus}</p>
+                    </div>
+
+                    <div class="card p-4 mb-3 shadow-sm">
+                        <h6 class="fw-bold mb-3">Contacts</h6>
+                        <c:forEach var="c" items="${silhouette.contacts}">
+                            <p><b>${c.channel}:</b> ${c.address}</p>
+                        </c:forEach>
+                        <hr>
+                        <p><b>Address:</b> ${silhouette.address.firstline}, ${silhouette.address.city}, ${silhouette.address.country}</p>
+                    </div>
+
+                    <div class="card p-4 shadow-sm">
+                        <h6 class="fw-bold mb-3">Profile Details</h6>
+                        <p><b>Ethnicity:</b> ${silhouette.profile.ethnicity}</p>
+                        <p><b>Religion:</b> ${silhouette.profile.religion}</p>
+                        <p><b>Eye Colour:</b> ${silhouette.profile.eyeColour}</p>
+                        <p><b>Phenotype:</b> ${silhouette.profile.phenotype}</p>
+                        <p><b>Genotype:</b> ${silhouette.profile.genotype}</p>
+                        <p><b>Disability:</b> ${silhouette.profile.disability}</p>
+                    </div>
+                </div>
             </div>
         </main>
 
         <!-- Footer -->
         <footer>
-            <div class='copy'>&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>
+            <div class="copy">&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>
         </footer>
     </div>
 </div>

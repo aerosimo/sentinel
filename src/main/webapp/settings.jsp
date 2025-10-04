@@ -139,239 +139,283 @@ response.sendRedirect("signin.jsp");
             </form>
         </div>
 
-        <!-- Page Content -->
+        <!-- Tabs -->
         <main class="container-fluid my-4 profile-section">
-            <div class="row g-4">
-                <!-- Left Column -->
-                <div class="col-md-6 d-flex flex-column gap-3">
-                    <!-- Personal Info -->
-                    <form action="person" method="post" class="card dashboard-card p-3">
-                        <h6 class="mb-3">Personal Info</h6>
-                        <input type="hidden" name="email" value="${sessionScope.email}">
-                        <div class="mb-2"><label class="form-label">Title</label>
-                            <select class="form-select" name="title">
-                                <option ${silhouette.person.title=='Mr' ? 'selected':''}>Mr</option>
-                                <option ${silhouette.person.title=='Mrs' ? 'selected':''}>Mrs</option>
-                                <option ${silhouette.person.title=='Miss' ? 'selected':''}>Miss</option>
-                                <option ${silhouette.person.title=='Ms' ? 'selected':''}>Ms</option>
-                                <option ${silhouette.person.title=='Dr' ? 'selected':''}>Dr</option>
-                                <option ${silhouette.person.title=='Professor' ? 'selected':''}>Professor</option>
-                                <option ${silhouette.person.title=='Sir' ? 'selected':''}>Sir</option>
-                                <option ${silhouette.person.title=='Dame' ? 'selected':''}>Dame</option>
-                                <option ${silhouette.person.title=='Reverend' ? 'selected':''}>Reverend</option>
-                                <option ${silhouette.person.title=='Pastor' ? 'selected':''}>Pastor</option>
-                            </select>
+            <ul class="nav nav-tabs mb-3" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+                        Personal Information
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button" role="tab">
+                        Account Information
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="settingsTabsContent">
+                <!-- 🟣 PERSONAL INFO TAB -->
+                <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- Left Column -->
+                        <div class="col-md-6 d-flex flex-column gap-3">
+                            <!-- Personal Info -->
+                            <form action="person" method="post" class="card dashboard-card p-3">
+                                <h6 class="mb-3">Personal Info</h6>
+                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <div class="mb-2"><label class="form-label">Title</label>
+                                    <select class="form-select" name="title">
+                                        <option ${silhouette.person.title=='Mr' ? 'selected':''}>Mr</option>
+                                        <option ${silhouette.person.title=='Mrs' ? 'selected':''}>Mrs</option>
+                                        <option ${silhouette.person.title=='Miss' ? 'selected':''}>Miss</option>
+                                        <option ${silhouette.person.title=='Ms' ? 'selected':''}>Ms</option>
+                                        <option ${silhouette.person.title=='Dr' ? 'selected':''}>Dr</option>
+                                        <option ${silhouette.person.title=='Professor' ? 'selected':''}>Professor</option>
+                                        <option ${silhouette.person.title=='Sir' ? 'selected':''}>Sir</option>
+                                        <option ${silhouette.person.title=='Dame' ? 'selected':''}>Dame</option>
+                                        <option ${silhouette.person.title=='Reverend' ? 'selected':''}>Reverend</option>
+                                        <option ${silhouette.person.title=='Pastor' ? 'selected':''}>Pastor</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="firstName" value="${silhouette.person.firstName}"></div>
+                                <div class="mb-2"><label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" name="middleName" value="${silhouette.person.middleName}"></div>
+                                <div class="mb-2"><label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="lastName" value="${silhouette.person.lastName}"></div>
+                                <div class="mb-2"><label class="form-label">Gender</label>
+                                    <select class="form-select" name="gender">
+                                        <option ${silhouette.person.gender=='Male' ? 'selected':''}>Male</option>
+                                        <option ${silhouette.person.gender=='Female' ? 'selected':''}>Female</option>
+                                    </select></div>
+                                <div class="mb-2"><label class="form-label">Birthday</label>
+                                    <input type="date" class="form-control" name="birthday" value="${silhouette.person.birthday}"></div>
+                                <button class="btn btn-primary mt-2" type="submit">Save Personal Info</button>
+                            </form>
+
+                            <!-- Address -->
+                            <form action="address" method="post" class="card dashboard-card p-3">
+                                <h6 class="mb-3">Address</h6>
+                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input class="form-control mb-2" type="text" name="firstline" value="${silhouette.address.firstline}" placeholder="First Line">
+                                <input class="form-control mb-2" type="text" name="secondline" value="${silhouette.address.secondline}" placeholder="Second Line">
+                                <input class="form-control mb-2" type="text" name="thirdline" value="${silhouette.address.thirdline}" placeholder="Third Line">
+                                <input class="form-control mb-2" type="text" name="city" value="${silhouette.address.city}" placeholder="City">
+                                <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
+                                <div class="mb-2">
+                                    <select class="form-select" name="country">
+                                        <c:forEach var="country" items="${sessionScope.countryList}">
+                                            <option value="${country.name}" ${silhouette.profile.country == country.name ? 'selected' : ''}>
+                                            ${country.name}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Address</button>
+                            </form>
                         </div>
-                        <div class="mb-2"><label class="form-label">First Name</label>
-                            <input type="text" class="form-control" name="firstName" value="${silhouette.person.firstName}"></div>
-                        <div class="mb-2"><label class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" name="middleName" value="${silhouette.person.middleName}"></div>
-                        <div class="mb-2"><label class="form-label">Last Name</label>
-                            <input type="text" class="form-control" name="lastName" value="${silhouette.person.lastName}"></div>
-                        <div class="mb-2"><label class="form-label">Gender</label>
-                            <select class="form-select" name="gender">
-                                <option ${silhouette.person.gender=='Male' ? 'selected':''}>Male</option>
-                                <option ${silhouette.person.gender=='Female' ? 'selected':''}>Female</option>
-                            </select></div>
-                        <div class="mb-2"><label class="form-label">Birthday</label>
-                            <input type="date" class="form-control" name="birthday" value="${silhouette.person.birthday}"></div>
-                        <button class="btn btn-primary mt-2" type="submit">Save Personal Info</button>
-                    </form>
 
-                    <!-- Address -->
-                    <form action="address" method="post" class="card dashboard-card p-3">
-                        <h6 class="mb-3">Address</h6>
-                        <input type="hidden" name="email" value="${sessionScope.email}">
-                        <input class="form-control mb-2" type="text" name="firstline" value="${silhouette.address.firstline}" placeholder="First Line">
-                        <input class="form-control mb-2" type="text" name="secondline" value="${silhouette.address.secondline}" placeholder="Second Line">
-                        <input class="form-control mb-2" type="text" name="thirdline" value="${silhouette.address.thirdline}" placeholder="Third Line">
-                        <input class="form-control mb-2" type="text" name="city" value="${silhouette.address.city}" placeholder="City">
-                        <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
-                        <div class="mb-2">
-                            <select class="form-select" name="country">
-                              <c:forEach var="country" items="${sessionScope.countryList}">
-                                <option value="${country.name}" ${silhouette.profile.country == country.name ? 'selected' : ''}>
-                                  ${country.name}
-                                </option>
-                              </c:forEach>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary" type="submit">Save Address</button>
-                    </form>
-                </div>
+                        <!-- Right Column -->
+                        <div class="col-md-6 d-flex flex-column gap-3">
+                            <!-- Contacts -->
+                            <form action="contact" method="post" class="card dashboard-card p-3">
+                                <h6 class="mb-3">Contact Info</h6>
+                                <input type="hidden" name="email" value="${sessionScope.email}">
 
-                <!-- Right Column -->
-                <div class="col-md-6 d-flex flex-column gap-3">
-                <!-- Contacts -->
-                    <form action="contact" method="post" class="card dashboard-card p-3">
-                        <h6 class="mb-3">Contact Info</h6>
-                        <input type="hidden" name="email" value="${sessionScope.email}">
+                                <!-- Contact rows wrapper -->
+                                <div id="contactsContainer">
+                                    <c:forEach var="c" items="${silhouette.contacts}">
+                                        <div class="contact-row mb-3 border p-2 rounded">
+                                            <div class="mb-2">
+                                                <label class="form-label">Channel</label>
+                                                <select class="form-select" name="channel">
+                                                    <option value="Phone"    ${c.channel=='Phone' ? 'selected' : ''}>Phone</option>
+                                                    <option value="Email"    ${c.channel=='Email' ? 'selected' : ''}>Email</option>
+                                                    <option value="Fax"      ${c.channel=='Fax' ? 'selected' : ''}>Fax</option>
+                                                    <option value="Twitter"  ${c.channel=='Twitter' ? 'selected' : ''}>Twitter</option>
+                                                    <option value="Facebook" ${c.channel=='Facebook' ? 'selected' : ''}>Facebook</option>
+                                                    <option value="LinkedIn" ${c.channel=='LinkedIn' ? 'selected' : ''}>LinkedIn</option>
+                                                    <option value="Snapchat" ${c.channel=='Snapchat' ? 'selected' : ''}>Snapchat</option>
+                                                    <option value="Website"  ${c.channel=='Website' ? 'selected' : ''}>Website</option>
+                                                </select>
+                                            </div>
 
-                        <!-- Contact rows wrapper -->
-                        <div id="contactsContainer">
-                            <c:forEach var="c" items="${silhouette.contacts}">
+                                            <div class="mb-2">
+                                                <label class="form-label">Value</label>
+                                                <input class="form-control" type="text" name="address" value="${c.address}">
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <label class="form-label">Consent</label>
+                                                <select class="form-select" name="consent">
+                                                    <option value="YES" ${c.consent=='YES' ? 'selected' : ''}>YES</option>
+                                                    <option value="NO"  ${c.consent=='NO'  ? 'selected' : ''}>NO</option>
+                                                </select>
+                                            </div>
+
+                                            <button type="button" class="btn btn-sm btn-outline-danger removeContact">Remove</button>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+                                <!-- Add Contact Button -->
+                                <button type="button" class="btn btn-sm btn-outline-success mb-3" id="addContactBtn">+ Add Another Contact</button>
+
+                                <button class="btn btn-primary" type="submit">Save Contacts</button>
+                            </form>
+
+                            <!-- Template for new contacts (hidden) -->
+                            <template id="contactTemplate">
                                 <div class="contact-row mb-3 border p-2 rounded">
                                     <div class="mb-2">
                                         <label class="form-label">Channel</label>
                                         <select class="form-select" name="channel">
-                                            <option value="Phone"    ${c.channel=='Phone' ? 'selected' : ''}>Phone</option>
-                                            <option value="Email"    ${c.channel=='Email' ? 'selected' : ''}>Email</option>
-                                            <option value="Fax"      ${c.channel=='Fax' ? 'selected' : ''}>Fax</option>
-                                            <option value="Twitter"  ${c.channel=='Twitter' ? 'selected' : ''}>Twitter</option>
-                                            <option value="Facebook" ${c.channel=='Facebook' ? 'selected' : ''}>Facebook</option>
-                                            <option value="LinkedIn" ${c.channel=='LinkedIn' ? 'selected' : ''}>LinkedIn</option>
-                                            <option value="Snapchat" ${c.channel=='Snapchat' ? 'selected' : ''}>Snapchat</option>
-                                            <option value="Website"  ${c.channel=='Website' ? 'selected' : ''}>Website</option>
+                                            <option value="Phone">Phone</option>
+                                            <option value="Email">Email</option>
+                                            <option value="Fax">Fax</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="LinkedIn">LinkedIn</option>
+                                            <option value="Snapchat">Snapchat</option>
+                                            <option value="Website">Website</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-2">
                                         <label class="form-label">Value</label>
-                                        <input class="form-control" type="text" name="address" value="${c.address}">
+                                        <input class="form-control" type="text" name="address" placeholder="Enter contact value">
                                     </div>
 
                                     <div class="mb-2">
                                         <label class="form-label">Consent</label>
                                         <select class="form-select" name="consent">
-                                            <option value="YES" ${c.consent=='YES' ? 'selected' : ''}>YES</option>
-                                            <option value="NO"  ${c.consent=='NO'  ? 'selected' : ''}>NO</option>
+                                            <option value="YES">YES</option>
+                                            <option value="NO">NO</option>
                                         </select>
                                     </div>
 
                                     <button type="button" class="btn btn-sm btn-outline-danger removeContact">Remove</button>
                                 </div>
-                            </c:forEach>
+                            </template>
+
+
+
+                            <!-- Profile -->
+                            <form action="profile" method="post" class="card dashboard-card p-3">
+                                <h6 class="mb-3">Profile Details</h6>
+                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <div class="mb-2"><label class="form-label">Marital Status</label>
+                                    <select class="form-select" name="maritalStatus">
+                                        <option ${silhouette.profile.maritalStatus=='Separated' ? 'selected':''}>Separated</option>
+                                        <option ${silhouette.profile.maritalStatus=='Widowed' ? 'selected':''}>Widowed</option>
+                                        <option ${silhouette.profile.maritalStatus=='Single' ? 'selected':''}>Single</option>
+                                        <option ${silhouette.profile.maritalStatus=='Married' ? 'selected':''}>Married</option>
+                                        <option ${silhouette.profile.maritalStatus=='Lone' ? 'selected':''}>Lone</option>
+                                        <option ${silhouette.profile.maritalStatus=='Live-in' ? 'selected':''}>Live-in</option>
+                                        <option ${silhouette.profile.maritalStatus=='Estranged' ? 'selected':''}>Estranged</option>
+                                        <option ${silhouette.profile.maritalStatus=='Engaged' ? 'selected':''}>Engaged</option>
+                                        <option ${silhouette.profile.maritalStatus=='Divorced' ? 'selected':''}>Divorced</option>
+                                    </select>
+                                </div>
+                                <input class="form-control mb-2" type="text" name="height" value="${silhouette.profile.height}" placeholder="Height">
+                                <input class="form-control mb-2" type="text" name="weight" value="${silhouette.profile.weight}" placeholder="Weight">
+                                <div class="mb-2"><label class="form-label">Ethnicity</label>
+                                    <select class="form-select" name="ethnicity">
+                                        <option ${silhouette.profile.ethnicity=='African' ? 'selected':''}>African</option>
+                                        <option ${silhouette.profile.ethnicity=='Bangladeshi' ? 'selected':''}>Bangladeshi</option>
+                                        <option ${silhouette.profile.ethnicity=='Caribbean' ? 'selected':''}>Caribbean</option>
+                                        <option ${silhouette.profile.ethnicity=='Chinese' ? 'selected':''}>Chinese</option>
+                                        <option ${silhouette.profile.ethnicity=='Arab' ? 'selected':''}>Arab</option>
+                                        <option ${silhouette.profile.ethnicity=='Irish' ? 'selected':''}>Irish</option>
+                                        <option ${silhouette.profile.ethnicity=='Indian' ? 'selected':''}>Indian</option>
+                                        <option ${silhouette.profile.ethnicity=='Pakistani' ? 'selected':''}>Pakistani</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">Religion</label>
+                                    <select class="form-select" name="religion">
+                                        <option ${silhouette.profile.religion=='Christianity' ? 'selected':''}>Christianity</option>
+                                        <option ${silhouette.profile.religion=='Islam' ? 'selected':''}>Islam</option>
+                                        <option ${silhouette.profile.religion=='Atheist' ? 'selected':''}>Atheist</option>
+                                        <option ${silhouette.profile.religion=='Hinduism' ? 'selected':''}>Hinduism</option>
+                                        <option ${silhouette.profile.religion=='Buddhism' ? 'selected':''}>Buddhism</option>
+                                        <option ${silhouette.profile.religion=='Sikhism' ? 'selected':''}>Sikhism</option>
+                                        <option ${silhouette.profile.religion=='Judaism' ? 'selected':''}>Judaism</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">Eye Colour</label>
+                                    <select class="form-select" name="eyeColour">
+                                        <option ${silhouette.profile.eyeColour=='Amber' ? 'selected':''}>Amber</option>
+                                        <option ${silhouette.profile.eyeColour=='Blue' ? 'selected':''}>Blue</option>
+                                        <option ${silhouette.profile.eyeColour=='Brown' ? 'selected':''}>Brown</option>
+                                        <option ${silhouette.profile.eyeColour=='Grey' ? 'selected':''}>Grey</option>
+                                        <option ${silhouette.profile.eyeColour=='Green' ? 'selected':''}>Green</option>
+                                        <option ${silhouette.profile.eyeColour=='Hazel' ? 'selected':''}>Hazel</option>
+                                        <option ${silhouette.profile.eyeColour=='Red' ? 'selected':''}>Red</option>
+                                        <option ${silhouette.profile.eyeColour=='Violet' ? 'selected':''}>Violet</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">Phenotype</label>
+                                    <select class="form-select" name="phenotype">
+                                        <option ${silhouette.profile.phenotype=='A+' ? 'selected':''}>A+</option>
+                                        <option ${silhouette.profile.phenotype=='A-' ? 'selected':''}>A-</option>
+                                        <option ${silhouette.profile.phenotype=='B+' ? 'selected':''}>B+</option>
+                                        <option ${silhouette.profile.phenotype=='B-' ? 'selected':''}>B-</option>
+                                        <option ${silhouette.profile.phenotype=='O+' ? 'selected':''}>O+</option>
+                                        <option ${silhouette.profile.phenotype=='O-' ? 'selected':''}>O-</option>
+                                        <option ${silhouette.profile.phenotype=='AB+' ? 'selected':''}>AB+</option>
+                                        <option ${silhouette.profile.phenotype=='AB-' ? 'selected':''}>AB-</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">Genotype</label>
+                                    <select class="form-select" name="genotype">
+                                        <option ${silhouette.profile.genotype=='AA' ? 'selected':''}>AA</option>
+                                        <option ${silhouette.profile.genotype=='AS' ? 'selected':''}>AS</option>
+                                        <option ${silhouette.profile.genotype=='SS' ? 'selected':''}>SS</option>
+                                        <option ${silhouette.profile.genotype=='AC' ? 'selected':''}>AC</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2"><label class="form-label">Disability</label>
+                                    <select class="form-select" name="disability">
+                                        <option ${silhouette.profile.disability=='None' ? 'selected':''}>None</option>
+                                        <option ${silhouette.profile.disability=='Deafness' ? 'selected':''}>Deafness</option>
+                                        <option ${silhouette.profile.disability=='Anxiety' ? 'selected':''}>Anxiety</option>
+                                        <option ${silhouette.profile.disability=='Schizophrenia' ? 'selected':''}>Schizophrenia</option>
+                                        <option ${silhouette.profile.disability=='Depression' ? 'selected':''}>Depression</option>
+                                        <option ${silhouette.profile.disability=='Arthritis' ? 'selected':''}>Arthritis</option>
+                                        <option ${silhouette.profile.disability=='Diabetes' ? 'selected':''}>Diabetes</option>
+                                        <option ${silhouette.profile.disability=='Amputation' ? 'selected':''}>Amputation</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Profile</button>
+                            </form>
                         </div>
+                    </div>
+                    <jsp:include page="partials/personalInfo.jsp"/>
+                </div>
 
-                        <!-- Add Contact Button -->
-                        <button type="button" class="btn btn-sm btn-outline-success mb-3" id="addContactBtn">+ Add Another Contact</button>
-
-                        <button class="btn btn-primary" type="submit">Save Contacts</button>
-                    </form>
-
-                    <!-- Template for new contacts (hidden) -->
-                    <template id="contactTemplate">
-                        <div class="contact-row mb-3 border p-2 rounded">
-                            <div class="mb-2">
-                                <label class="form-label">Channel</label>
-                                <select class="form-select" name="channel">
-                                    <option value="Phone">Phone</option>
-                                    <option value="Email">Email</option>
-                                    <option value="Fax">Fax</option>
-                                    <option value="Twitter">Twitter</option>
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="LinkedIn">LinkedIn</option>
-                                    <option value="Snapchat">Snapchat</option>
-                                    <option value="Website">Website</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-2">
-                                <label class="form-label">Value</label>
-                                <input class="form-control" type="text" name="address" placeholder="Enter contact value">
-                            </div>
-
-                            <div class="mb-2">
-                                <label class="form-label">Consent</label>
-                                <select class="form-select" name="consent">
-                                    <option value="YES">YES</option>
-                                    <option value="NO">NO</option>
-                                </select>
-                            </div>
-
-                            <button type="button" class="btn btn-sm btn-outline-danger removeContact">Remove</button>
-                        </div>
-                    </template>
-
-
-
-                    <!-- Profile -->
-                    <form action="profile" method="post" class="card dashboard-card p-3">
-                        <h6 class="mb-3">Profile Details</h6>
+                <!-- 🟡 ACCOUNT INFO TAB -->
+                <div class="tab-pane fade" id="account" role="tabpanel">
+                    <form action="account" method="post" class="card dashboard-card p-3 mt-3">
+                        <h6 class="mb-3">Account Settings</h6>
                         <input type="hidden" name="email" value="${sessionScope.email}">
-                        <div class="mb-2"><label class="form-label">Marital Status</label>
-                            <select class="form-select" name="maritalStatus">
-                                <option ${silhouette.profile.maritalStatus=='Separated' ? 'selected':''}>Separated</option>
-                                <option ${silhouette.profile.maritalStatus=='Widowed' ? 'selected':''}>Widowed</option>
-                                <option ${silhouette.profile.maritalStatus=='Single' ? 'selected':''}>Single</option>
-                                <option ${silhouette.profile.maritalStatus=='Married' ? 'selected':''}>Married</option>
-                                <option ${silhouette.profile.maritalStatus=='Lone' ? 'selected':''}>Lone</option>
-                                <option ${silhouette.profile.maritalStatus=='Live-in' ? 'selected':''}>Live-in</option>
-                                <option ${silhouette.profile.maritalStatus=='Estranged' ? 'selected':''}>Estranged</option>
-                                <option ${silhouette.profile.maritalStatus=='Engaged' ? 'selected':''}>Engaged</option>
-                                <option ${silhouette.profile.maritalStatus=='Divorced' ? 'selected':''}>Divorced</option>
-                            </select>
+                        <div class="mb-2">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" value="${account.username}">
                         </div>
-                        <input class="form-control mb-2" type="text" name="height" value="${silhouette.profile.height}" placeholder="Height">
-                        <input class="form-control mb-2" type="text" name="weight" value="${silhouette.profile.weight}" placeholder="Weight">
-                        <div class="mb-2"><label class="form-label">Ethnicity</label>
-                            <select class="form-select" name="ethnicity">
-                                <option ${silhouette.profile.ethnicity=='African' ? 'selected':''}>African</option>
-                                <option ${silhouette.profile.ethnicity=='Bangladeshi' ? 'selected':''}>Bangladeshi</option>
-                                <option ${silhouette.profile.ethnicity=='Caribbean' ? 'selected':''}>Caribbean</option>
-                                <option ${silhouette.profile.ethnicity=='Chinese' ? 'selected':''}>Chinese</option>
-                                <option ${silhouette.profile.ethnicity=='Arab' ? 'selected':''}>Arab</option>
-                                <option ${silhouette.profile.ethnicity=='Irish' ? 'selected':''}>Irish</option>
-                                <option ${silhouette.profile.ethnicity=='Indian' ? 'selected':''}>Indian</option>
-                                <option ${silhouette.profile.ethnicity=='Pakistani' ? 'selected':''}>Pakistani</option>
-                            </select>
+                        <div class="mb-2">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control" name="currentPassword">
                         </div>
-                        <div class="mb-2"><label class="form-label">Religion</label>
-                            <select class="form-select" name="religion">
-                                <option ${silhouette.profile.religion=='Christianity' ? 'selected':''}>Christianity</option>
-                                <option ${silhouette.profile.religion=='Islam' ? 'selected':''}>Islam</option>
-                                <option ${silhouette.profile.religion=='Atheist' ? 'selected':''}>Atheist</option>
-                                <option ${silhouette.profile.religion=='Hinduism' ? 'selected':''}>Hinduism</option>
-                                <option ${silhouette.profile.religion=='Buddhism' ? 'selected':''}>Buddhism</option>
-                                <option ${silhouette.profile.religion=='Sikhism' ? 'selected':''}>Sikhism</option>
-                                <option ${silhouette.profile.religion=='Judaism' ? 'selected':''}>Judaism</option>
-                            </select>
+                        <div class="mb-2">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" name="newPassword">
                         </div>
-                        <div class="mb-2"><label class="form-label">Eye Colour</label>
-                            <select class="form-select" name="eyeColour">
-                                <option ${silhouette.profile.eyeColour=='Amber' ? 'selected':''}>Amber</option>
-                                <option ${silhouette.profile.eyeColour=='Blue' ? 'selected':''}>Blue</option>
-                                <option ${silhouette.profile.eyeColour=='Brown' ? 'selected':''}>Brown</option>
-                                <option ${silhouette.profile.eyeColour=='Grey' ? 'selected':''}>Grey</option>
-                                <option ${silhouette.profile.eyeColour=='Green' ? 'selected':''}>Green</option>
-                                <option ${silhouette.profile.eyeColour=='Hazel' ? 'selected':''}>Hazel</option>
-                                <option ${silhouette.profile.eyeColour=='Red' ? 'selected':''}>Red</option>
-                                <option ${silhouette.profile.eyeColour=='Violet' ? 'selected':''}>Violet</option>
-                            </select>
+                        <div class="mb-2">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" name="confirmPassword">
                         </div>
-                        <div class="mb-2"><label class="form-label">Phenotype</label>
-                            <select class="form-select" name="phenotype">
-                                <option ${silhouette.profile.phenotype=='A+' ? 'selected':''}>A+</option>
-                                <option ${silhouette.profile.phenotype=='A-' ? 'selected':''}>A-</option>
-                                <option ${silhouette.profile.phenotype=='B+' ? 'selected':''}>B+</option>
-                                <option ${silhouette.profile.phenotype=='B-' ? 'selected':''}>B-</option>
-                                <option ${silhouette.profile.phenotype=='O+' ? 'selected':''}>O+</option>
-                                <option ${silhouette.profile.phenotype=='O-' ? 'selected':''}>O-</option>
-                                <option ${silhouette.profile.phenotype=='AB+' ? 'selected':''}>AB+</option>
-                                <option ${silhouette.profile.phenotype=='AB-' ? 'selected':''}>AB-</option>
-                            </select>
-                        </div>
-                        <div class="mb-2"><label class="form-label">Genotype</label>
-                            <select class="form-select" name="genotype">
-                                <option ${silhouette.profile.genotype=='AA' ? 'selected':''}>AA</option>
-                                <option ${silhouette.profile.genotype=='AS' ? 'selected':''}>AS</option>
-                                <option ${silhouette.profile.genotype=='SS' ? 'selected':''}>SS</option>
-                                <option ${silhouette.profile.genotype=='AC' ? 'selected':''}>AC</option>
-                            </select>
-                        </div>
-                        <div class="mb-2"><label class="form-label">Disability</label>
-                            <select class="form-select" name="disability">
-                                <option ${silhouette.profile.disability=='None' ? 'selected':''}>None</option>
-                                <option ${silhouette.profile.disability=='Deafness' ? 'selected':''}>Deafness</option>
-                                <option ${silhouette.profile.disability=='Anxiety' ? 'selected':''}>Anxiety</option>
-                                <option ${silhouette.profile.disability=='Schizophrenia' ? 'selected':''}>Schizophrenia</option>
-                                <option ${silhouette.profile.disability=='Depression' ? 'selected':''}>Depression</option>
-                                <option ${silhouette.profile.disability=='Arthritis' ? 'selected':''}>Arthritis</option>
-                                <option ${silhouette.profile.disability=='Diabetes' ? 'selected':''}>Diabetes</option>
-                                <option ${silhouette.profile.disability=='Amputation' ? 'selected':''}>Amputation</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary" type="submit">Save Profile</button>
+                        <button class="btn btn-primary mt-2" type="submit">Update Account</button>
                     </form>
                 </div>
             </div>
@@ -386,27 +430,5 @@ response.sendRedirect("signin.jsp");
 
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/main.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const addBtn = document.getElementById("addContactBtn");
-    const container = document.getElementById("contactsContainer");
-    const template = document.getElementById("contactTemplate");
-
-    // Add new contact row
-    addBtn.addEventListener("click", () => {
-        const clone = template.content.cloneNode(true);
-        container.appendChild(clone);
-    });
-
-    // Delegate remove button
-    container.addEventListener("click", (e) => {
-        if (e.target.classList.contains("removeContact")) {
-            e.target.closest(".contact-row").remove();
-        }
-    });
-});
-</script>
-
 </body>
 </html>
