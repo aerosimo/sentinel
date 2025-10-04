@@ -150,7 +150,7 @@ response.sendRedirect("signin.jsp");
 
                         <!-- Horoscope Card -->
                         <c:if test="${not empty silhouette.horoscope}">
-                            <div class="card dashboard-card p-3 mt-4 text-center background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%);border: none;">
+                            <div class="card dashboard-card p-3 mt-4 text-center horoscope-card">
                                 <div class="row align-items-center justify-content-center">
                                     <div class="col-md-4 mb-3">
                                         <img src="assets/img/zodiac/${fn:toLowerCase(fn:trim(silhouette.horoscope.zodiacSign))}.jpg"
@@ -168,6 +168,7 @@ response.sendRedirect("signin.jsp");
                                 </div>
                             </div>
                         </c:if>
+
 
                         <!-- Stats Section -->
                         <div class="d-flex justify-content-center text-center mt-4">
