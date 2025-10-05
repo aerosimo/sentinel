@@ -319,23 +319,23 @@ public class AuthDAO {
         return response;
     }
 
-    public static String updateAccount(String email, String uname, String pword, String modifiedBy) {
+    public static String updateAccount(String email, String uname, String opword, String npword, String modifiedBy) {
         log.info("Preparing user password update");
-        String token = null;
         String response = "Update error";
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.update_account(?,?,?,?,?)}";
+        String sql = "{call auth_pkg.update_account(?,?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.setString(2, uname);
-            stmt.setString(3, pword);
-            stmt.setString(4, modifiedBy);
-            stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+            stmt.setString(3, opword);
+            stmt.setString(4, npword);
+            stmt.setString(5, modifiedBy);
+            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             stmt.execute();
-            response = stmt.getString(5);
+            response = stmt.getString(6);
             log.info("Successfully update user account details");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (UPDATE ACCOUNT)", err);

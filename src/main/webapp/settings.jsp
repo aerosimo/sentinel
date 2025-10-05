@@ -153,7 +153,7 @@ response.sendRedirect("signin.jsp");
                             <!-- Personal Info -->
                             <form action="person" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Personal Info</h6>
-                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input type="hidden" name="email" value="${email}">
                                 <div class="mb-2"><label class="form-label">Title</label>
                                     <select class="form-select" name="title">
                                         <option ${silhouette.person.title=='Mr' ? 'selected':''}>Mr</option>
@@ -187,7 +187,7 @@ response.sendRedirect("signin.jsp");
                             <!-- Address -->
                             <form action="address" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Address</h6>
-                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input type="hidden" name="email" value="${email}">
                                 <input class="form-control mb-2" type="text" name="firstline" value="${silhouette.address.firstline}" placeholder="First Line">
                                 <input class="form-control mb-2" type="text" name="secondline" value="${silhouette.address.secondline}" placeholder="Second Line">
                                 <input class="form-control mb-2" type="text" name="thirdline" value="${silhouette.address.thirdline}" placeholder="Third Line">
@@ -195,7 +195,7 @@ response.sendRedirect("signin.jsp");
                                 <input class="form-control mb-2" type="text" name="postcode" value="${silhouette.address.postcode}" placeholder="Postcode">
                                 <div class="mb-2">
                                     <select class="form-select" name="country">
-                                        <c:forEach var="country" items="${sessionScope.countryList}">
+                                        <c:forEach var="country" items="${countryList}">
                                             <option value="${country.name}" ${silhouette.profile.country == country.name ? 'selected' : ''}>
                                             ${country.name}
                                             </option>
@@ -211,7 +211,7 @@ response.sendRedirect("signin.jsp");
                             <!-- Contacts -->
                             <form action="contact" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Contact Info</h6>
-                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input type="hidden" name="email" value="${email}">
 
                                 <!-- Contact rows wrapper -->
                                 <div id="contactsContainer">
@@ -292,7 +292,7 @@ response.sendRedirect("signin.jsp");
                             <!-- Profile -->
                             <form action="profile" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Profile Details</h6>
-                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input type="hidden" name="email" value="${email}">
                                 <div class="mb-2"><label class="form-label">Marital Status</label>
                                     <select class="form-select" name="maritalStatus">
                                         <option ${silhouette.profile.maritalStatus=='Separated' ? 'selected':''}>Separated</option>
@@ -389,7 +389,7 @@ response.sendRedirect("signin.jsp");
                             <div class="card dashboard-card p-3">
                                 <h6 class="mb-3">Change Avatar</h6>
                                 <form id="avatarUploadForm" action="avatar" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="email" value="${sessionScope.email}">
+                                    <input type="hidden" name="email" value="${email}">
                                     <div id="dropZone" class="drop-zone text-center p-4 border rounded">
                                         <c:choose>
                                             <c:when test="${not empty silhouette.image.avatar}">
@@ -416,7 +416,7 @@ response.sendRedirect("signin.jsp");
                                 </p>
                                 <form action="delete" method="post"
                                       onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
-                                    <input type="hidden" name="email" value="${sessionScope.email}">
+                                    <input type="hidden" name="email" value="${email}">
                                     <button type="submit" class="btn btn-danger w-100">Delete Account</button>
                                 </form>
                             </div>
@@ -426,10 +426,10 @@ response.sendRedirect("signin.jsp");
                         <div class="col-md-6">
                             <form action="account" method="post" class="card dashboard-card p-3">
                                 <h6 class="mb-3">Account Settings</h6>
-                                <input type="hidden" name="email" value="${sessionScope.email}">
+                                <input type="hidden" name="email" value="${email}">
                                 <div class="mb-2">
                                     <label class="form-label">Username</label>
-                                    <input type="text" class="form-control" name="username" value="${account.username}">
+                                    <input type="text" class="form-control" name="username" value="${uname}">
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Current Password</label>

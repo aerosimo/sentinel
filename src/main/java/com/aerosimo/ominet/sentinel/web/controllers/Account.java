@@ -53,7 +53,8 @@ public class Account extends HttpServlet {
         log = LogManager.getLogger(Account.class.getName());
     }
 
-    static String password;
+    static String oldpassword;
+    static String newpassword;
     static String email;
     static String uname;
     static String modifiedBy;
@@ -62,12 +63,13 @@ public class Account extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        uname = req.getParameter("Username");
+        uname = req.getParameter("username");
         email = (String) req.getSession().getAttribute("email");
-        password = req.getParameter("password");
+        oldpassword = req.getParameter("currentPassword");
+        newpassword = req.getParameter("newPassword");
         modifiedBy = "Sentinel";
         log.info("Preparing to update user account for {}", email);
-        response = AuthDAO.updateAccount(uname, email, password, modifiedBy);
+        response = AuthDAO.updateAccount(uname, email, oldpassword, newpassword, modifiedBy);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         } else {
