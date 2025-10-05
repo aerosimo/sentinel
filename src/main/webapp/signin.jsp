@@ -2,7 +2,7 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      signin.html                                                    ~
+  ~ File:      signin.jsp                                                     ~
   ~ Created:   13/09/2025, 01:30                                              ~
   ~ Modified:  13/09/2025, 01:30                                              ~
   ~                                                                           ~
@@ -62,7 +62,7 @@
     <div class="row g-0 login-wrap w-100">
         <div class="col-md-6 left-pane d-flex flex-column justify-content-center">
             <div class="form text-center">
-                <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Your Logo" class="mb-3" style="max-width:120px;">
+                <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Aerosimo" class="mb-3" style="max-width:120px;">
             </div>
             <h1>Sign in</h1>
             <p>Please sign in and start the adventure. By login, you agree to the ridiculously long terms that you
@@ -109,7 +109,7 @@
 
                 <div class="form-actions text-center mt-3">
                     <a href="signup.jsp" class="d-block mb-2">Don’t have an account? <strong>Register</strong></a>
-                    <a href="forgot.html" class="d-block">Forgot your password?</a>
+                    <a href="forgot.jsp" class="d-block">Forgot your password?</a>
                 </div>
 
                 <div class="text-center">

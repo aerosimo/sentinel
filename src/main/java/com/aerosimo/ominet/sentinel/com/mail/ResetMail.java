@@ -103,8 +103,8 @@ public class ResetMail {
                     "      <p>Hi <strong>");
             memo.append(email);
             memo.append("</strong>,</p>\n" +
-                    "      <p>This is to notify you that your Sentinel account password has been changed successfully.</p>\n" +
-                    "      <p>If you did not initiate this change, please contact our support team immediately to secure your account.</p>\n" +
+                    "      <p>This is to notify you that your Sentinel Account password has been changed successfully.</p>\n" +
+                    "      <p>If you did not initiate this change, please contact our support team immediately to secure your Account.</p>\n" +
                     "      <p>Stay safe, and thank you for trusting <strong>Sentinel</strong> – your diligent and watchful server guardian.</p>\n" +
                     "    </div>\n" +
                     "    <div class=\"footer\">\n" +

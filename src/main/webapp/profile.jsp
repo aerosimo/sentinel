@@ -2,7 +2,7 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      profile.html                                                   ~
+  ~ File:      profile.jsp                                                    ~
   ~ Created:   24/09/2025, 13:24                                              ~
   ~ Modified:  24/09/2025, 13:24                                              ~
   ~                                                                           ~

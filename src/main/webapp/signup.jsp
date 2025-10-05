@@ -2,7 +2,7 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      signup.html                                                    ~
+  ~ File:      signup.jsp                                                     ~
   ~ Created:   13/09/2025, 01:28                                              ~
   ~ Modified:  14/09/2025, 17:59                                              ~
   ~                                                                           ~
@@ -119,8 +119,8 @@
                 </div>
 
                 <div class="form-actions text-center mt-3">
-                    <a href="signin.html" class="d-block mb-2">Already have an account? <strong>Sign in</strong></a>
-                    <a href="forgot.html" class="d-block">Forgot your password?</a>
+                    <a href="signin.jsp" class="d-block mb-2">Already have an account? <strong>Sign in</strong></a>
+                    <a href="forgot.jsp" class="d-block">Forgot your password?</a>
                 </div>
 
                 <div class="text-center">

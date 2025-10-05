@@ -388,7 +388,7 @@ response.sendRedirect("signin.jsp");
                         <div class="col-md-6">
                             <div class="card dashboard-card p-3">
                                 <h6 class="mb-3">Change Avatar</h6>
-                                <form id="avatarUploadForm" action="saveImage" method="post" enctype="multipart/form-data">
+                                <form id="avatarUploadForm" action="avatar" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="email" value="${sessionScope.email}">
                                     <div id="dropZone" class="drop-zone text-center p-4 border rounded">
                                         <c:choose>
@@ -414,7 +414,7 @@ response.sendRedirect("signin.jsp");
                                     Deleting your account is <strong>permanent</strong> and cannot be undone.
                                     All your data will be permanently erased from the system.
                                 </p>
-                                <form action="deleteAccount" method="post"
+                                <form action="delete" method="post"
                                       onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
                                     <input type="hidden" name="email" value="${sessionScope.email}">
                                     <button type="submit" class="btn btn-danger w-100">Delete Account</button>

@@ -2,7 +2,7 @@
   ~ This piece of work is to enhance sentinel project functionality.          ~
   ~                                                                           ~
   ~ Author:    eomisore                                                       ~
-  ~ File:      forgot.html                                                    ~
+  ~ File:      forgot.jsp                                                     ~
   ~ Created:   13/09/2025, 01:32                                              ~
   ~ Modified:  13/09/2025, 01:32                                              ~
   ~                                                                           ~
@@ -91,6 +91,11 @@
                            required
                            title="Must contain the Local Part (username), the @ symbol and domain name"
                            type="email">
+                </div>
+
+                <div class="form-actions text-center mt-3">
+                    <a href="signup.jsp" class="d-block mb-2">Don’t have an account? <strong>Register</strong></a>
+                    <a href="signin.jsp" class="d-block">Already have an account? <strong>Sign in</strong></a>
                 </div>
 
                 <div class="text-center">

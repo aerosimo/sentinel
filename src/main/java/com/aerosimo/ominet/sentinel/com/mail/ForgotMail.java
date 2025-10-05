@@ -113,7 +113,7 @@ public class ForgotMail {
                     "      <p>Hi <strong>");
             memo.append(email);
             memo.append("</strong>,</p>\n" +
-                    "      <p>We received a request to reset your password for your Sentinel account.</p>\n" +
+                    "      <p>We received a request to reset your password for your Sentinel Account.</p>\n" +
                     "      <p>If you did not make this request, please contact our support team immediately.</p>\n" +
                     "      \n" +
                     "      <p>Otherwise, please use the verification token below to confirm your password reset:</p>\n" +

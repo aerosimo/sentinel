@@ -68,7 +68,7 @@ public class Reset extends HttpServlet {
         password = req.getParameter("password");
         token = req.getParameter("token");
         modifiedBy = "Sentinel";
-        log.info("Preparing to register new user account for {}", email);
+        log.info("Preparing to register new user Account for {}", email);
         // Call DAO method
         result = AuthDAO.resetPassword(email, password, modifiedBy, token.toUpperCase(Locale.ROOT));
         // Check response and redirect

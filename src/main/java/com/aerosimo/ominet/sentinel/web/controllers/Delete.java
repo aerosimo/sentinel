@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Signup.java                                                     *
- * Created:   12/09/2025, 21:51                                               *
- * Modified:  12/09/2025, 21:51                                               *
+ * File:      Delete.java                                                     *
+ * Created:   05/10/2025, 18:16                                               *
+ * Modified:  05/10/2025, 18:16                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,8 +31,6 @@
 
 package com.aerosimo.ominet.sentinel.web.controllers;
 
-import com.aerosimo.ominet.sentinel.com.mail.WelcomeMail;
-import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,50 +42,39 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "signup",
-        description = "A simple registration servlet to capture the information from registration form",
-        value = "/signup")
-public class Signup extends HttpServlet {
-
+@WebServlet(name = "delete",
+        description = "A simple servlet to delete user",
+        value = "/delete")
+public class Delete extends HttpServlet {
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Signup.class.getName());
+        log = LogManager.getLogger(Account.class.getName());
     }
 
-    static String password;
     static String email;
-    static String uname;
-    static String modifiedBy;
-    static String result;
-    static SignupResponseDTO response;
+    static String response;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        uname = req.getParameter("Username");
-        email = req.getParameter("email");
-        password = req.getParameter("password");
-        modifiedBy = "Sentinel";
-        log.info("Preparing to register new user Account for {}", email);
-        // Call DAO method
-        response = AuthDAO.signup(uname, email, password, modifiedBy);
-        log.info("Logging response of Account registration {}", response.getResponse());
-        // Check response and redirect
-        if ("success".equalsIgnoreCase(response.getResponse())) {
-            log.info("New user is now successfully created and now sending welcome email");
-            log.info("verification code is: {}", response.getVerificationCode());
-            // Send welcome email to the new user
-            result = WelcomeMail.sendMail(uname,email,response.getVerificationCode());
-            log.info("Welcome email response is : {}", result);
-            // Store data in session
-            req.getSession().setAttribute("email", email);
-            resp.sendRedirect("verify.jsp");
+        email = (String) req.getSession().getAttribute("email");
+        log.info("Preparing to delete user account for {}", email);
+        response = AuthDAO.deleteAccount(email);
+        if ("success".equalsIgnoreCase(response)) {
+            req.getSession().removeAttribute("inet");
+            req.getSession().removeAttribute("host");
+            req.getSession().removeAttribute("user");
+            req.getSession().removeAttribute("email");
+            req.getSession().removeAttribute("userAgent");
+            req.getSession().removeAttribute("SessionToken");
+            req.getSession().removeAttribute("countryList");
+            req.getSession().invalidate();
+            resp.sendRedirect("signup.jsp");
         } else {
-            log.error("New user registration failed with the following: {}", response.getResponse());
-            // Stay on signup page, optionally show error message
-            req.setAttribute("errorMessage", response.getResponse());
-            req.getRequestDispatcher("signup.jsp").forward(req, resp);
+            log.error("Account delete request failed with the following: {}", response);
+            req.setAttribute("error", "Failed to delete account");
+            req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }
 }

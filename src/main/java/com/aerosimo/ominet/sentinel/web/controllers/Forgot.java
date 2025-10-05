@@ -35,6 +35,7 @@ import com.aerosimo.ominet.sentinel.com.mail.ForgotMail;
 import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +46,7 @@ import java.io.IOException;
 @WebServlet(name = "forgot",
         description = "A simple servlet to recover password for the application user",
         value = "/forgot")
-public class Forgot {
+public class Forgot extends HttpServlet {
 
     private static final Logger log;
 

@@ -130,7 +130,7 @@ public class LoginMail {
                     "      <h1>Hi, <strong>");
             memo.append(uname);
             memo.append("</strong></h1>\n" +
-                    "      <p>We detected a login attempt on your account. Please confirm it's you by entering the code below.</p>\n" +
+                    "      <p>We detected a login attempt on your Account. Please confirm it's you by entering the code below.</p>\n" +
                     "\n" +
                     "      <div class=\"token-box\">\n" +
                     "        <div class=\"token\">");
@@ -146,7 +146,7 @@ public class LoginMail {
             memo.append(device);
             memo.append("</p>\n" +
                     "\n" +
-                    "      <p>If this was you, enter the code to continue. If not, please secure your account immediately.</p>\n" +
+                    "      <p>If this was you, enter the code to continue. If not, please secure your Account immediately.</p>\n" +
                     "    </div>\n" +
                     "\n" +
                     "    <!-- Footer -->\n" +
