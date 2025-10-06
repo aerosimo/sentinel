@@ -207,6 +207,7 @@ response.sendRedirect("signin.jsp");
                         <p><b>Address:</b> ${silhouette.address.firstline}, ${silhouette.address.city}, ${silhouette.address.country}</p>
                     </div>
 
+
                 </div>
             </div>
         </main>
