@@ -321,7 +321,7 @@ public class AuthDAO {
 
     public static String updateAccount(String email, String uname, String opword, String npword, String modifiedBy) {
         log.info("Preparing user password update");
-        String response = "Update error";
+        String response;
         Connection con = null;
         CallableStatement stmt = null;
         String sql = "{call auth_pkg.update_account(?,?,?,?,?,?)}";
@@ -339,6 +339,7 @@ public class AuthDAO {
             log.info("Successfully update user account details");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (UPDATE ACCOUNT)", err);
+            response = "Update Account error %s".formatted(err.getMessage());
             try {
                 Spectre.recordError("DB-20013", err.getMessage(), AuthDAO.class.getName());
             } catch (Exception e) {
@@ -359,11 +360,10 @@ public class AuthDAO {
 
     public static String deleteAccount(String email) {
         log.info("Preparing user account delete");
-        String token = null;
-        String response = "Update error";
+        String response;
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.update_account(?,?,?,?,?)}";
+        String sql = "{call auth_pkg.delete_account(?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
@@ -374,6 +374,7 @@ public class AuthDAO {
             log.info("Successfully delete user account");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (DELETE ACCOUNT)", err);
+            response = "Delete Account error %s".formatted(err.getMessage());
             try {
                 Spectre.recordError("DB-20014", err.getMessage(), AuthDAO.class.getName());
             } catch (Exception e) {
