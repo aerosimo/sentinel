@@ -71,9 +71,9 @@ public class Account extends HttpServlet {
         log.info("Preparing to update user account for {}", email);
         response = AuthDAO.updateAccount(uname, email, oldpassword, newpassword, modifiedBy);
         if ("success".equalsIgnoreCase(response)) {
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+            req.getRequestDispatcher("signup.jsp").forward(req, resp);
         } else {
-            req.setAttribute("error", "Failed to save address details");
+            req.setAttribute("errorMessage", response);
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }

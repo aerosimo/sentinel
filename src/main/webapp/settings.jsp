@@ -451,6 +451,16 @@ response.sendRedirect("signin.jsp");
             </div>
         </main>
 
+            <!-- Display error message if present -->
+            <%
+                String errorMessage = (String) request.getAttribute("errorMessage");
+                if (errorMessage != null && !errorMessage.isEmpty()) {
+            %>
+                <div class="alert alert-danger text-center" role="alert">
+                    <%= errorMessage %>
+                </div>
+            <% } %>
+
         <!-- Footer -->
         <footer>
             <div class="copy">&copy; <script>document.write(new Date().getFullYear());</script> Sentinel by Aerosimo Ltd. All rights reserved.</div>

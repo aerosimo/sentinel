@@ -80,7 +80,7 @@ public class Address extends HttpServlet {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         } else {
             // maybe show error back to user
-            req.setAttribute("error", "Failed to save address details");
+            req.setAttribute("errorMessage", response);
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }

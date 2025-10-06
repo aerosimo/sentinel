@@ -73,7 +73,7 @@ public class Delete extends HttpServlet {
             resp.sendRedirect("signup.jsp");
         } else {
             log.error("Account delete request failed with the following: {}", response);
-            req.setAttribute("error", "Failed to delete account");
+            req.setAttribute("errorMessage", response);
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }
