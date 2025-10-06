@@ -144,7 +144,7 @@ response.sendRedirect("signin.jsp");
                                  style="width:120px; height:120px; object-fit:cover; margin-top:-80px;">
                         </div>
 
-                        <h4 class="mt-3 mb-0">${silhouette.person.firstName} ${silhouette.person.lastName}</h4>
+                        <h4 class="mt-3 mb-0">${silhouette.person.title} ${silhouette.person.firstName} ${silhouette.person.middleName} ${silhouette.person.lastName}</h4>
                         <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> ${silhouette.address.city}, ${silhouette.address.country}</p>
                         <p class="text-muted"><i class="bi bi-briefcase"></i> Integration Specialist </p>
 
@@ -195,7 +195,6 @@ response.sendRedirect("signin.jsp");
                         <h6 class="fw-bold mb-3">Personal Information</h6>
                         <p><b>Gender:</b> ${silhouette.person.gender}</p>
                         <p><b>Date of Birth:</b> ${fn:substring(silhouette.person.birthday,0,10)} (Age: ${silhouette.person.age})</p>
-                        <p><b>Email:</b> ${silhouette.person.email}</p>
                         <p><b>Marital Status:</b> ${silhouette.profile.maritalStatus}</p>
                     </div>
 
@@ -208,15 +207,6 @@ response.sendRedirect("signin.jsp");
                         <p><b>Address:</b> ${silhouette.address.firstline}, ${silhouette.address.city}, ${silhouette.address.country}</p>
                     </div>
 
-                    <div class="card p-4 shadow-sm">
-                        <h6 class="fw-bold mb-3">Profile Details</h6>
-                        <p><b>Ethnicity:</b> ${silhouette.profile.ethnicity}</p>
-                        <p><b>Religion:</b> ${silhouette.profile.religion}</p>
-                        <p><b>Eye Colour:</b> ${silhouette.profile.eyeColour}</p>
-                        <p><b>Phenotype:</b> ${silhouette.profile.phenotype}</p>
-                        <p><b>Genotype:</b> ${silhouette.profile.genotype}</p>
-                        <p><b>Disability:</b> ${silhouette.profile.disability}</p>
-                    </div>
                 </div>
             </div>
         </main>
