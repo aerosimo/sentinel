@@ -106,8 +106,8 @@
         <maven.install.version>3.1.4</maven.install.version>
         <maven.deploy.version>3.1.4</maven.deploy.version>
         <maven.antrun.version>3.1.0</maven.antrun.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <maven.clean.version>3.5.0</maven.clean.version>
         <maven.jar.version>3.4.2</maven.jar.version>
