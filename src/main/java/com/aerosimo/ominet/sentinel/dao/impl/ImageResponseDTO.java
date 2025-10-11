@@ -84,7 +84,7 @@ public class ImageResponseDTO {
     public String toString() {
         return "ImageResponseDTO{" +
                 "email='" + email + '\'' +
-                ", avatar='" + avatar + '\'' +
+                ", Avatar='" + avatar + '\'' +
                 ", modifiedBy='" + modifiedBy + '\'' +
                 ", modifiedDate='" + modifiedDate + '\'' +
                 '}';

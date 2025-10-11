@@ -67,7 +67,7 @@ public class Account extends HttpServlet {
         email = (String) req.getSession().getAttribute("email");
         oldpassword = req.getParameter("currentPassword");
         newpassword = req.getParameter("newPassword");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         log.info("Preparing to update user account for {}", email);
         response = AccountDAO.updateAccount(uname, email, oldpassword, newpassword, modifiedBy);
         if ("success".equalsIgnoreCase(response)) {

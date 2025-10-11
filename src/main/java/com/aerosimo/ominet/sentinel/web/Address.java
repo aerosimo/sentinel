@@ -73,7 +73,7 @@ public class Address extends HttpServlet {
         city = req.getParameter("city");
         postcode = req.getParameter("postcode");
         country = req.getParameter("country");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         response = ProfileDAO.saveAddress(email,firstline,secondline,thirdline,city,postcode,country,modifiedBy);
         log.info("Logging response of saveAddress {}", response);
         if ("success".equalsIgnoreCase(response)) {

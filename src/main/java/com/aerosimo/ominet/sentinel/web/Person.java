@@ -75,7 +75,7 @@ public class Person extends HttpServlet {
         lastName = req.getParameter("lastName");
         gender = req.getParameter("gender");
         birthdayStr = req.getParameter("birthday");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         birthday = null;
         if (birthdayStr != null && !birthdayStr.isEmpty()) {
             try {

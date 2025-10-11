@@ -79,7 +79,7 @@ public class Profile extends HttpServlet {
         phenotype = req.getParameter("phenotype");
         genotype = req.getParameter("genotype");
         disability = req.getParameter("disability");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         response = ProfileDAO.saveProfile(email, maritalStatus, height, weight, ethnicity,
                 religion, eyeColour, phenotype, genotype, disability, modifiedBy);
         log.info("Logging response of saveProfile {}", response);

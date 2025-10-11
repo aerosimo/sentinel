@@ -58,7 +58,7 @@ public class Signout extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         // Call DAO method
         response = AuthDAO.logout((String) req.getSession().getAttribute("email"), (String) req.getSession().getAttribute("SessionToken"), modifiedBy);
         if ("success".equalsIgnoreCase(response)) {

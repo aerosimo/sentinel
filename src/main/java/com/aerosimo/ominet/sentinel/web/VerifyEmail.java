@@ -62,7 +62,7 @@ public class VerifyEmail extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         verifyToken = req.getParameter("verifyToken");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");
         log.info("Preparing to verify new user email address");
         // Call DAO method
         result = AuthDAO.verifyEmail((String) req.getSession().getAttribute("email"), verifyToken.toUpperCase(Locale.ROOT), modifiedBy);

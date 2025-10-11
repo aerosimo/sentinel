@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Contact.java                                                    *
- * Created:   06/10/2025, 22:36                                               *
- * Modified:  10/10/2025, 16:04                                               *
+ * File:      Image.java                                                      *
+ * Created:   11/10/2025, 14:11                                               *
+ * Modified:  11/10/2025, 14:11                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -33,68 +33,38 @@ package com.aerosimo.ominet.sentinel.web;
 
 import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-@WebServlet(name = "contact",
-        description = "Servlet to save user contact details",
-        value = "/contact")
-public class Contact extends HttpServlet {
+@WebServlet("/image")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // 5 MB
+public class Image extends HttpServlet {
 
-    private static final Logger log;
-
-    static {
-        log = LogManager.getLogger(Contact.class.getName());
-    }
-
-    static String email;
-    static String[] channels;
-    static String[] addresses;
-    static String[] consents;
-    static String modifiedBy;
-    static String channel;
-    static String address;
-    static String consent;
-    static String response;
+    private static final Logger log = LogManager.getLogger(Image.class.getName());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        resp.setContentType("text/html; charset=UTF-8");
-
-        email = req.getParameter("email");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
-        // Multiple contacts - expects arrays from the form
-        channels = req.getParameterValues("channel");
-        addresses = req.getParameterValues("address");
-        consents = req.getParameterValues("consent");
-
-        if (channels != null && addresses != null) {
-            int total = channels.length;
-            log.info("Saving {} contact(s) for user {}", total, email);
-            for (int i = 0; i < channels.length; i++) {
-                channel = channels[i];
-                address = (i < addresses.length) ? addresses[i] : "";
-                consent = (consents != null && i < consents.length) ? consents[i] : "NO";
-                log.info("Saving contact: email={}, channel={}, address={}, consent={}",
-                        email, channel, address, consent);
-                response = ProfileDAO.saveContact(email, channel, address, consent, modifiedBy);
-                log.info("SaveContact response: {}", response);
-                if (!"success".equalsIgnoreCase(response)) {
-                    log.warn("Contact save failed for {} on channel {}: {}", email, channel, response);
-                }
+        String email = (String) req.getSession().getAttribute("email");
+        String modifiedBy = (String) req.getSession().getAttribute("uname");
+        Part filePart = req.getPart("Avatar");
+        if (filePart != null && filePart.getSize() > 0) {
+            try (InputStream avatarStream = filePart.getInputStream()) {
+                String dbResponse = ProfileDAO.saveImage(email, avatarStream, modifiedBy);
+                log.info("SaveImage response: {}", dbResponse);
             }
-        } else {
-            log.warn("No contact details provided for {}", email);
         }
-        // Redirect or forward back to settings.jsp
-        req.getRequestDispatcher("settings.jsp").forward(req, resp);
+
+        resp.sendRedirect("settings.jsp?msg=avatar_updated");
     }
 }

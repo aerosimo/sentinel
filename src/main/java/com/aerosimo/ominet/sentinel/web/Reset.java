@@ -69,7 +69,7 @@ public class Reset extends HttpServlet {
         uname = (String) req.getSession().getAttribute("uname");
         password = req.getParameter("password");
         token = req.getParameter("token");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         log.info("Preparing to reset user password for {}", email);
         // Call DAO method
         result = AuthDAO.resetPassword(email, token.toUpperCase(Locale.ROOT), password, modifiedBy);

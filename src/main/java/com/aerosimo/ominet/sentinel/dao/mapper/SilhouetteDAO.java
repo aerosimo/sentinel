@@ -58,7 +58,7 @@ public class SilhouetteDAO {
             stmt = con.prepareCall(sql);
             stmt.setString(1, email);
             stmt.registerOutParameter(2, OracleTypes.CURSOR); // person
-            stmt.registerOutParameter(3, OracleTypes.CURSOR); // avatar
+            stmt.registerOutParameter(3, OracleTypes.CURSOR); // Avatar
             stmt.registerOutParameter(4, OracleTypes.CURSOR); // address
             stmt.registerOutParameter(5, OracleTypes.CURSOR); // contact
             stmt.registerOutParameter(6, OracleTypes.CURSOR); // profile

@@ -36,6 +36,7 @@ import com.aerosimo.ominet.sentinel.core.model.Spectre;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -44,6 +45,44 @@ import java.sql.SQLException;
 public class ProfileDAO {
 
     private static final Logger log = LogManager.getLogger(ProfileDAO.class.getName());
+
+    public static String saveImage(String email, InputStream avatarStream, String modifiedBy) {
+        log.info("Preparing to save user Avatar");
+        String response = "";
+        String sql = "{call profile_pkg.SaveImage(?,?,?,?)}";
+        Connection con = null;
+        CallableStatement stmt = null;
+
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, email);
+            stmt.setBlob(2, avatarStream); // 👈 Pass BLOB stream
+            stmt.setString(3, modifiedBy);
+            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+            stmt.execute();
+
+            response = stmt.getString(4);
+            log.info("Successfully saved image for user {}", email);
+        } catch (SQLException err) {
+            log.error("Error saving image", err);
+            try {
+                Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                log.error("Failed closing resources in SaveImage", e);
+            }
+            log.info("DB Connection for (SaveImage) Closed....");
+        }
+        return response;
+    }
+
 
     public static String savePerson(String email, String title, String firstName, String middleName, String lastName,
                                     String gender, Date birthday, String modifiedBy) {

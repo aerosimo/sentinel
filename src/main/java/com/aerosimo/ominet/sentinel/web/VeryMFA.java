@@ -62,7 +62,7 @@ public class VeryMFA extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         mfaToken = req.getParameter("mfaToken");
-        modifiedBy = "Sentinel";
+        modifiedBy = (String) req.getSession().getAttribute("uname");;
         log.info("Preparing to confirm login token");
         // Call DAO method
         result = AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),
