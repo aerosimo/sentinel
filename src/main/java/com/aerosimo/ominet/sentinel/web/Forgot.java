@@ -56,17 +56,15 @@ public class Forgot extends HttpServlet {
     }
 
     static String email;
-    static String modifiedBy;
     static String result;
     static ForgotResponseDTO response;
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
         email = req.getParameter("email");
-        modifiedBy = "Sentinel";
         log.info("Preparing to find user via email address {}", email);
         // Call DAO method
-        response = AuthDAO.forgotPassword(email, modifiedBy);
+        response = AuthDAO.forgotPassword(email);
         log.info("Logging response of sign in {}", response.getResponse());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {

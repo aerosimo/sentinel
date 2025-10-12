@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.dao.mapper;
 
 import com.aerosimo.ominet.sentinel.core.config.Connect;
 import com.aerosimo.ominet.sentinel.core.model.Spectre;
+import oracle.jdbc.OracleTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,12 +45,12 @@ public class AccountDAO {
 
     private static final Logger log = LogManager.getLogger(AccountDAO.class.getName());
 
-    public static String updateAccount(String uname, String email, String oldpassword, String newpassword, String modifiedBy) {
+    public static String updateAccount(String uname, String email, String oldpassword, String newpassword) {
         log.info("Preparing user password update");
         String response;
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.update_account(?,?,?,?,?,?)}";
+        String sql = "{call auth_pkg.updateAccount(?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
@@ -57,10 +58,9 @@ public class AccountDAO {
             stmt.setString(2, uname);
             stmt.setString(3, oldpassword);
             stmt.setString(4, newpassword);
-            stmt.setString(5, modifiedBy);
-            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(5, OracleTypes.VARCHAR);
             stmt.execute();
-            response = stmt.getString(6);
+            response = stmt.getString(5);
             log.info("Successfully update user account details");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (UPDATE ACCOUNT)", err);
@@ -83,19 +83,20 @@ public class AccountDAO {
         return response;
     }
 
-    public static String deleteAccount(String email) {
+    public static String deleteAccount(String uname, String email) {
         log.info("Preparing user account delete");
         String response;
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.delete_account(?,?)}";
+        String sql = "{call auth_pkg.deleteAccount(?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.registerOutParameter(2, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.registerOutParameter(3, OracleTypes.VARCHAR);
             stmt.execute();
-            response = stmt.getString(2);
+            response = stmt.getString(3);
             log.info("Successfully delete user account");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (DELETE ACCOUNT)", err);

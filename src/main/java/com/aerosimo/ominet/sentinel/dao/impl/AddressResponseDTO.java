@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.dao.impl;
 
 public class AddressResponseDTO {
 
+    private String username;
     private String email;
     private String firstline;
     private String secondline;
@@ -46,7 +47,8 @@ public class AddressResponseDTO {
     public AddressResponseDTO() {
     }
 
-    public AddressResponseDTO(String email, String firstline, String secondline, String thirdline, String city, String postcode, String country, String modifiedBy, String modifiedDate) {
+    public AddressResponseDTO(String username, String email, String firstline, String secondline, String thirdline, String city, String postcode, String country, String modifiedBy, String modifiedDate) {
+        this.username = username;
         this.email = email;
         this.firstline = firstline;
         this.secondline = secondline;
@@ -56,6 +58,14 @@ public class AddressResponseDTO {
         this.country = country;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -133,7 +143,8 @@ public class AddressResponseDTO {
     @Override
     public String toString() {
         return "AddressResponseDTO{" +
-                "email='" + email + '\'' +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", firstline='" + firstline + '\'' +
                 ", secondline='" + secondline + '\'' +
                 ", thirdline='" + thirdline + '\'' +

@@ -31,10 +31,9 @@
 
 package com.aerosimo.ominet.sentinel.dao.impl;
 
-import java.time.LocalDate;
-
 public class PersonResponseDTO {
 
+    private String username;
     private String email;
     private String title;
     private String firstName;
@@ -50,7 +49,8 @@ public class PersonResponseDTO {
     public PersonResponseDTO() {
     }
 
-    public PersonResponseDTO(String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, String birthday, String age, String modifiedBy, String modifiedDate) {
+    public PersonResponseDTO(String username, String email, String title, String firstName, String middleName, String lastName, String zodiacSign, String gender, String birthday, String age, String modifiedBy, String modifiedDate) {
+        this.username = username;
         this.email = email;
         this.title = title;
         this.firstName = firstName;
@@ -62,6 +62,14 @@ public class PersonResponseDTO {
         this.age = age;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -155,14 +163,15 @@ public class PersonResponseDTO {
     @Override
     public String toString() {
         return "PersonResponseDTO{" +
-                "email='" + email + '\'' +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", title='" + title + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", zodiacSign='" + zodiacSign + '\'' +
                 ", gender='" + gender + '\'' +
-                ", birthday=" + birthday +
+                ", birthday='" + birthday + '\'' +
                 ", age='" + age + '\'' +
                 ", modifiedBy='" + modifiedBy + '\'' +
                 ", modifiedDate='" + modifiedDate + '\'' +

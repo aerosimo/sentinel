@@ -51,7 +51,10 @@ public class VeryMFA extends HttpServlet {
 
     private static final Logger log;
     static String mfaToken;
-    static String modifiedBy;
+    static String email;
+    static String uname;
+    static String inet;
+    static String device;
     static MFAResponseDTO result;
 
     static {
@@ -62,13 +65,13 @@ public class VeryMFA extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         mfaToken = req.getParameter("mfaToken");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
+        uname = (String) req.getSession().getAttribute("uname");
+        email = (String) req.getSession().getAttribute("email");
+        inet = (String) req.getSession().getAttribute("inet");
+        device = (String) req.getSession().getAttribute("userAgent");
         log.info("Preparing to confirm login token");
         // Call DAO method
-        result = AuthDAO.confirmMFA((String) req.getSession().getAttribute("email"),
-                mfaToken.toUpperCase(Locale.ROOT), (String) req.getSession().getAttribute("inet"),
-                (String) req.getSession().getAttribute("userAgent"),
-                modifiedBy);
+        result = AuthDAO.confirmMFA(uname,email,mfaToken.toUpperCase(Locale.ROOT),inet,device);
         log.info("Logging response of login confirmation email {}", result.getResponse());
         // Check response and redirect
         if ("success".equalsIgnoreCase(result.getResponse())) {

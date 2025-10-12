@@ -60,7 +60,7 @@ public class Address extends HttpServlet {
     static String city;
     static String postcode;
     static String country;
-    static String modifiedBy;
+    static String uname;
     static String response;
 
     @Override
@@ -73,8 +73,8 @@ public class Address extends HttpServlet {
         city = req.getParameter("city");
         postcode = req.getParameter("postcode");
         country = req.getParameter("country");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
-        response = ProfileDAO.saveAddress(email,firstline,secondline,thirdline,city,postcode,country,modifiedBy);
+        uname = (String) req.getSession().getAttribute("uname");;
+        response = ProfileDAO.saveAddress(uname,email,firstline,secondline,thirdline,city,postcode,country);
         log.info("Logging response of saveAddress {}", response);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);

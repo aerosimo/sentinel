@@ -55,23 +55,23 @@ public class VerifyEmail extends HttpServlet {
     }
 
     static String verifyToken;
-    static String modifiedBy;
+    static String uname;
+    static String email;
     static String result;
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         verifyToken = req.getParameter("verifyToken");
-        modifiedBy = (String) req.getSession().getAttribute("uname");
+        uname = (String) req.getSession().getAttribute("uname");
+        email = (String) req.getSession().getAttribute("email");
         log.info("Preparing to verify new user email address");
         // Call DAO method
-        result = AuthDAO.verifyEmail((String) req.getSession().getAttribute("email"), verifyToken.toUpperCase(Locale.ROOT), modifiedBy);
+        result = AuthDAO.verifyEmail(uname, email, verifyToken.toUpperCase(Locale.ROOT));
         log.info("Logging response of verification email {}", result);
         // Check response and redirect
         if ("success".equalsIgnoreCase(result)) {
             log.info("Email verified successfully");
-            // Remove stored data in session
-            req.getSession().removeAttribute("email");
             resp.sendRedirect("signin.jsp");
         } else {
             log.error("email verification failed with the following: {}", result);

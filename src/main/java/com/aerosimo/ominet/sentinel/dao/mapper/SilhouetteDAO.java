@@ -46,9 +46,9 @@ public class SilhouetteDAO {
 
     private static final Logger log = LogManager.getLogger(SilhouetteDAO.class.getName());
 
-    public static SilhouetteResponseDTO GetSilhouette(String email) {
+    public static SilhouetteResponseDTO getSilhouette(String email) {
         log.info("Fetching silhouette profile for user: {}", email);
-        String sql = "{call profile_pkg.GetSilhouette(?,?,?,?,?,?,?)}";
+        String sql = "{call profile_pkg.getSilhouette(?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         SilhouetteResponseDTO silhouette = new SilhouetteResponseDTO();
@@ -82,7 +82,8 @@ public class SilhouetteDAO {
                                 rs.getString(8),
                                 rs.getString(9),
                                 rs.getString(10),
-                                rs.getString(11)
+                                rs.getString(11),
+                                rs.getString(12)
                         );
                         silhouette.setPerson(person);
                         log.info("DAO call person = '{}'", person.toString());
@@ -99,7 +100,8 @@ public class SilhouetteDAO {
                                 rs.getString(1),
                                 rs.getString(2),
                                 rs.getString(3),
-                                rs.getString(4)
+                                rs.getString(4),
+                                rs.getString(5)
                         );
                         silhouette.setImage(image);
                         log.info("DAO call image = '{}'", image.toString());
@@ -121,7 +123,8 @@ public class SilhouetteDAO {
                                 rs.getString(6),
                                 rs.getString(7),
                                 rs.getString(8),
-                                rs.getString(9)
+                                rs.getString(9),
+                                rs.getString(10)
                         );
                         silhouette.setAddress(address);
                         log.info("DAO call address = '{}'", address.toString());
@@ -141,7 +144,8 @@ public class SilhouetteDAO {
                                 rs.getString(3),
                                 rs.getString(4),
                                 rs.getString(5),
-                                rs.getString(6)
+                                rs.getString(6),
+                                rs.getString(7)
                         );
                         contacts.add(contact);
                     }
@@ -167,7 +171,8 @@ public class SilhouetteDAO {
                                 rs.getString(9),
                                 rs.getString(10),
                                 rs.getString(11),
-                                rs.getString(12)
+                                rs.getString(12),
+                                rs.getString(13)
                         );
                         silhouette.setProfile(profile);
                         log.info("DAO call profile = '{}'", profile.toString());

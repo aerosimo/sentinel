@@ -58,7 +58,6 @@ public class Signup extends HttpServlet {
     static String password;
     static String email;
     static String uname;
-    static String modifiedBy;
     static String result;
     static SignupResponseDTO response;
 
@@ -68,10 +67,9 @@ public class Signup extends HttpServlet {
         uname = req.getParameter("Username");
         email = req.getParameter("email");
         password = req.getParameter("password");
-        modifiedBy = "Sentinel";
         log.info("Preparing to register new user Account for {}", email);
         // Call DAO method
-        response = AuthDAO.signup(uname, email, password, modifiedBy);
+        response = AuthDAO.signup(uname, email, password);
         log.info("Logging response of Account registration {}", response.getResponse());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {

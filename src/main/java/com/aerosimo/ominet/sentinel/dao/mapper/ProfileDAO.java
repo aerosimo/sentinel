@@ -33,37 +33,36 @@ package com.aerosimo.ominet.sentinel.dao.mapper;
 
 import com.aerosimo.ominet.sentinel.core.config.Connect;
 import com.aerosimo.ominet.sentinel.core.model.Spectre;
+import com.aerosimo.ominet.sentinel.dao.impl.ImageResponseDTO;
+import oracle.jdbc.OracleTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Base64;
 
 public class ProfileDAO {
 
     private static final Logger log = LogManager.getLogger(ProfileDAO.class.getName());
 
-    public static String saveImage(String email, InputStream avatarStream, String modifiedBy) {
+    public static String saveImage(String uname, String email, InputStream avatarStream) {
         log.info("Preparing to save user Avatar");
         String response = "";
-        String sql = "{call profile_pkg.SaveImage(?,?,?,?)}";
+        String sql = "{call profile_pkg.saveImage(?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
 
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setBlob(2, avatarStream); // 👈 Pass BLOB stream
-            stmt.setString(3, modifiedBy);
-            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setBlob(3, avatarStream);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
             stmt.execute();
-
             response = stmt.getString(4);
-            log.info("Successfully saved image for user {}", email);
+            log.info("Successfully save user image {}", email);
         } catch (SQLException err) {
             log.error("Error saving image", err);
             try {
@@ -78,31 +77,80 @@ public class ProfileDAO {
             } catch (SQLException e) {
                 log.error("Failed closing resources in SaveImage", e);
             }
-            log.info("DB Connection for (SaveImage) Closed....");
+            log.info("DB Connection for (saveImage) Closed....");
+        }
+        return response;
+    }
+
+    public static ImageResponseDTO getImage(String uname, String email) {
+        log.info("Preparing to retrieve user Avatar");
+        ImageResponseDTO response = null;
+        String sql = "{call profile_pkg.getImage(?,?,?)}";
+        Connection con = null;
+        CallableStatement stmt = null;
+        ResultSet rs;
+
+        try {
+            con = Connect.dbase();
+            stmt = con.prepareCall(sql);
+
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.registerOutParameter(3, OracleTypes.CURSOR);
+            stmt.execute();
+            rs = (ResultSet) stmt.getObject(3);
+            if (rs.next()) {
+                response = new ImageResponseDTO();
+                response.setUsername(rs.getString("username"));
+                response.setEmail(rs.getString("email"));
+                response.setModifiedBy(rs.getString("modifiedBy"));
+                response.setModifiedDate(rs.getString("modifiedDate"));
+                Blob blob = rs.getBlob("avatar");
+                if (blob != null) {
+                    byte[] bytes = blob.getBytes(1, (int) blob.length());
+                    String base64 = Base64.getEncoder().encodeToString(bytes);
+                    response.setAvatar("data:image/png;base64," + base64);
+                }
+            }
+        } catch (SQLException err) {
+            log.error("Error retrieving avatar for {}", email, err);
+            try {
+                Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                log.error("Failed closing resources in SaveImage", e);
+            }
+            log.info("DB Connection for (getImage) Closed....");
         }
         return response;
     }
 
 
-    public static String savePerson(String email, String title, String firstName, String middleName, String lastName,
-                                    String gender, Date birthday, String modifiedBy) {
+    public static String savePerson(String uname, String email, String title, String firstName, String middleName, String lastName,
+                                    String gender, Date birthday) {
         log.info("Preparing to save user personal record");
         String response = "";
-        String sql = "{call profile_pkg.SavePerson(?,?,?,?,?,?,?,?,?)}";
+        String sql = "{call profile_pkg.savePerson(?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, title);
-            stmt.setString(3, firstName);
-            stmt.setString(4, middleName);
-            stmt.setString(5, lastName);
-            stmt.setString(6, gender);
-            stmt.setDate(7, birthday);
-            stmt.setString(8, modifiedBy);
-            stmt.registerOutParameter(9, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, title);
+            stmt.setString(4, firstName);
+            stmt.setString(5, middleName);
+            stmt.setString(6, lastName);
+            stmt.setString(7, gender);
+            stmt.setDate(8, birthday);
+            stmt.registerOutParameter(9, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(9);
             log.info("Successfully save person record");
@@ -126,25 +174,24 @@ public class ProfileDAO {
         return response;
     }
 
-    public static String saveAddress(String email, String firstline, String secondline, String thirdline, String city,
-                                     String postcode, String country, String modifiedBy) {
+    public static String saveAddress(String uname, String email, String firstline, String secondline, String thirdline, String city, String postcode, String country) {
         log.info("Preparing to save user address record");
         String response = "";
-        String sql = "{call profile_pkg.SaveAddress(?,?,?,?,?,?,?,?,?)}";
+        String sql = "{call profile_pkg.saveAddress(?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, firstline);
-            stmt.setString(3, secondline);
-            stmt.setString(4, thirdline);
-            stmt.setString(5, city);
-            stmt.setString(6, postcode);
-            stmt.setString(7, country);
-            stmt.setString(8, modifiedBy);
-            stmt.registerOutParameter(9, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, firstline);
+            stmt.setString(4, secondline);
+            stmt.setString(5, thirdline);
+            stmt.setString(6, city);
+            stmt.setString(7, postcode);
+            stmt.setString(8, country);
+            stmt.registerOutParameter(9, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(9);
             log.info("Successfully save address record");
@@ -168,21 +215,21 @@ public class ProfileDAO {
         return response;
     }
 
-    public static String saveContact(String email, String channel, String address, String consent, String modifiedBy) {
+    public static String saveContact(String uname, String email, String channel, String address, String consent) {
         log.info("Preparing to save user contact record");
         String response = "";
-        String sql = "{call profile_pkg.SaveContact(?,?,?,?,?,?)}";
+        String sql = "{call profile_pkg.saveContact(?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, channel);
-            stmt.setString(3, address);
-            stmt.setString(4, consent);
-            stmt.setString(5, modifiedBy);
-            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, channel);
+            stmt.setString(4, address);
+            stmt.setString(5, consent);
+            stmt.registerOutParameter(6, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(6);
             log.info("Successfully save contacts record");
@@ -206,28 +253,28 @@ public class ProfileDAO {
         return response;
     }
 
-    public static String saveProfile(String email, String maritalstatus, String height, String weight, String ethnicity,
-                                     String religion, String eyecolour, String phenotype, String genotype, String disability, String modifiedBy) {
+    public static String saveProfile(String uname, String email, String maritalstatus, String height, String weight, String ethnicity,
+                                     String religion, String eyecolour, String phenotype, String genotype, String disability) {
         log.info("Preparing to save user profile record");
         String response = "";
-        String sql = "{call profile_pkg.SaveProfile(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        String sql = "{call profile_pkg.saveProfile(?,?,?,?,?,?,?,?,?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, maritalstatus);
-            stmt.setString(3, height);
-            stmt.setString(4, weight);
-            stmt.setString(5, ethnicity);
-            stmt.setString(6, religion);
-            stmt.setString(7, eyecolour);
-            stmt.setString(8, phenotype);
-            stmt.setString(9, genotype);
-            stmt.setString(10, disability);
-            stmt.setString(11, modifiedBy);
-            stmt.registerOutParameter(12, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, maritalstatus);
+            stmt.setString(4, height);
+            stmt.setString(5, weight);
+            stmt.setString(6, ethnicity);
+            stmt.setString(7, religion);
+            stmt.setString(8, eyecolour);
+            stmt.setString(9, phenotype);
+            stmt.setString(10, genotype);
+            stmt.setString(11, disability);
+            stmt.registerOutParameter(12, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(12);
             log.info("Successfully save profile record");

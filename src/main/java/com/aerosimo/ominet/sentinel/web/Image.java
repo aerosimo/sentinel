@@ -56,15 +56,14 @@ public class Image extends HttpServlet {
             throws ServletException, IOException {
 
         String email = (String) req.getSession().getAttribute("email");
-        String modifiedBy = (String) req.getSession().getAttribute("uname");
+        String uname = (String) req.getSession().getAttribute("uname");
         Part filePart = req.getPart("Avatar");
         if (filePart != null && filePart.getSize() > 0) {
             try (InputStream avatarStream = filePart.getInputStream()) {
-                String dbResponse = ProfileDAO.saveImage(email, avatarStream, modifiedBy);
+                String dbResponse = ProfileDAO.saveImage(uname, email, avatarStream);
                 log.info("SaveImage response: {}", dbResponse);
             }
         }
-
         resp.sendRedirect("settings.jsp?msg=avatar_updated");
     }
 }

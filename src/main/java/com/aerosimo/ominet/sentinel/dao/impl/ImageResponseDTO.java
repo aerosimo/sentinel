@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.dao.impl;
 
 public class ImageResponseDTO {
 
+    private String username;
     private String email;
     private String avatar;
     private String modifiedBy;
@@ -41,11 +42,20 @@ public class ImageResponseDTO {
     public ImageResponseDTO() {
     }
 
-    public ImageResponseDTO(String email, String avatar, String modifiedBy, String modifiedDate) {
+    public ImageResponseDTO(String username, String email, String avatar, String modifiedBy, String modifiedDate) {
+        this.username = username;
         this.email = email;
         this.avatar = avatar;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -83,8 +93,9 @@ public class ImageResponseDTO {
     @Override
     public String toString() {
         return "ImageResponseDTO{" +
-                "email='" + email + '\'' +
-                ", Avatar='" + avatar + '\'' +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", modifiedBy='" + modifiedBy + '\'' +
                 ", modifiedDate='" + modifiedDate + '\'' +
                 '}';

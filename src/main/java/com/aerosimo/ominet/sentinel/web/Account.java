@@ -57,7 +57,6 @@ public class Account extends HttpServlet {
     static String newpassword;
     static String email;
     static String uname;
-    static String modifiedBy;
     static String response;
 
     @Override
@@ -67,9 +66,8 @@ public class Account extends HttpServlet {
         email = (String) req.getSession().getAttribute("email");
         oldpassword = req.getParameter("currentPassword");
         newpassword = req.getParameter("newPassword");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
         log.info("Preparing to update user account for {}", email);
-        response = AccountDAO.updateAccount(uname, email, oldpassword, newpassword, modifiedBy);
+        response = AccountDAO.updateAccount(uname, email, oldpassword, newpassword);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("logout").forward(req, resp);
         } else {

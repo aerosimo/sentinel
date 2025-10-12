@@ -63,7 +63,7 @@ public class Profile extends HttpServlet {
     static String phenotype;
     static String genotype;
     static String disability;
-    static String modifiedBy;
+    static String uname;
     static String response;
 
     @Override
@@ -79,9 +79,9 @@ public class Profile extends HttpServlet {
         phenotype = req.getParameter("phenotype");
         genotype = req.getParameter("genotype");
         disability = req.getParameter("disability");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
-        response = ProfileDAO.saveProfile(email, maritalStatus, height, weight, ethnicity,
-                religion, eyeColour, phenotype, genotype, disability, modifiedBy);
+        uname = (String) req.getSession().getAttribute("uname");;
+        response = ProfileDAO.saveProfile(uname, email, maritalStatus, height, weight, ethnicity,
+                religion, eyeColour, phenotype, genotype, disability);
         log.info("Logging response of saveProfile {}", response);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);

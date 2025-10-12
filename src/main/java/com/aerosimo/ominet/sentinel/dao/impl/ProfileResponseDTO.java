@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.dao.impl;
 
 public class ProfileResponseDTO {
 
+    private String username;
     private String email;
     private String maritalStatus;
     private String height;
@@ -49,7 +50,8 @@ public class ProfileResponseDTO {
     public ProfileResponseDTO() {
     }
 
-    public ProfileResponseDTO(String email, String maritalStatus, String height, String weight, String ethnicity, String religion, String eyeColour, String phenotype, String genotype, String disability, String modifiedBy, String modifiedDate) {
+    public ProfileResponseDTO(String username, String email, String maritalStatus, String height, String weight, String ethnicity, String religion, String eyeColour, String phenotype, String genotype, String disability, String modifiedBy, String modifiedDate) {
+        this.username = username;
         this.email = email;
         this.maritalStatus = maritalStatus;
         this.height = height;
@@ -62,6 +64,14 @@ public class ProfileResponseDTO {
         this.disability = disability;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -163,7 +173,8 @@ public class ProfileResponseDTO {
     @Override
     public String toString() {
         return "ProfileResponseDTO{" +
-                "email='" + email + '\'' +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", maritalStatus='" + maritalStatus + '\'' +
                 ", height='" + height + '\'' +
                 ", weight='" + weight + '\'' +

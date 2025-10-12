@@ -109,7 +109,8 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
-                            <img alt="User" class="rounded-circle me-2" height="40" src="assets/img/user/user.png" width="40"/>
+                            <img alt="User" class="rounded-circle me-2" height="40" src="${silhouette.image.avatar != null ? silhouette.image.avatar : 'assets/img/user/user.png'}"
+                            width="40"/>
                             <span>${uname}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">

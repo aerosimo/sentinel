@@ -61,7 +61,7 @@ public class Person extends HttpServlet {
     static String lastName;
     static String gender;
     static Date birthday;
-    static String modifiedBy;
+    static String uname;
     static String birthdayStr;
     static String response;
 
@@ -75,7 +75,7 @@ public class Person extends HttpServlet {
         lastName = req.getParameter("lastName");
         gender = req.getParameter("gender");
         birthdayStr = req.getParameter("birthday");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
+        uname = (String) req.getSession().getAttribute("uname");;
         birthday = null;
         if (birthdayStr != null && !birthdayStr.isEmpty()) {
             try {
@@ -84,7 +84,7 @@ public class Person extends HttpServlet {
                 log.error("Invalid date format for birthday: {}", birthdayStr, e);
             }
         }
-        response = ProfileDAO.savePerson(email, title, firstName, middleName, lastName, gender, birthday, modifiedBy);
+        response = ProfileDAO.savePerson(uname, email, title, firstName, middleName, lastName, gender, birthday);
         log.info("Logging response of savePerson {}", response);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);

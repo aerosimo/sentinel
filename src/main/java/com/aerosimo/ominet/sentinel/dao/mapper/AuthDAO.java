@@ -37,6 +37,7 @@ import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.MFAResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.core.model.Spectre;
+import oracle.jdbc.OracleTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,25 +50,24 @@ public class AuthDAO {
 
     private static final Logger log = LogManager.getLogger(AuthDAO.class.getName());
 
-    public static SignupResponseDTO signup(String uname, String email, String pword, String modifiedBy) {
+    public static SignupResponseDTO signup(String uname, String email, String pword) {
         log.info("Preparing to register new user");
         String token = null;
         String response = "Signup error";
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
+        String sql = "{call auth_pkg.signup(?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
             stmt.setString(1, uname);
             stmt.setString(2, email);
             stmt.setString(3, pword);
-            stmt.setString(4, modifiedBy);
-            stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(5, OracleTypes.VARCHAR);
             stmt.execute();
-            token = stmt.getString(5);
-            response = stmt.getString(6);
+            token = stmt.getString(4);
+            response = stmt.getString(5);
             log.info("Successfully registered new user");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (SIGNUP)", err);
@@ -89,19 +89,19 @@ public class AuthDAO {
         return new SignupResponseDTO(token, response);
     }
 
-    public static String verifyEmail(String email, String verificationToken, String modifiedBy) {
+    public static String verifyEmail(String uname, String email, String verificationToken) {
         log.info("Preparing to verify new user email");
         String response = "Email verification error";
-        String sql = "{call auth_pkg.confirm_email(?,?,?,?)}";
+        String sql = "{call auth_pkg.confirmEmail(?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, verificationToken);
-            stmt.setString(3, modifiedBy);
-            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, verificationToken);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(4);
             log.info("Successfully verified email");
@@ -125,14 +125,14 @@ public class AuthDAO {
         return response;
     }
 
-    public static LoginResponseDTO login(String email, String pword, String inet, String device, String modifiedBy) {
+    public static LoginResponseDTO login(String email, String pword, String inet, String device) {
         log.info("Preparing to authenticate user");
         String token = null;
         String uname = null;
         String response = "Login error";
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.login(?,?,?,?,?,?,?,?)}";
+        String sql = "{call auth_pkg.signin(?,?,?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
@@ -140,14 +140,13 @@ public class AuthDAO {
             stmt.setString(2, pword);
             stmt.setString(3, inet);
             stmt.setString(4, device);
-            stmt.setString(5, modifiedBy);
-            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(8, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(5, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(6, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(7, OracleTypes.VARCHAR);
             stmt.execute();
-            token = stmt.getString(6);
-            uname = stmt.getString(7);
-            response = stmt.getString(8);
+            token = stmt.getString(5);
+            uname = stmt.getString(6);
+            response = stmt.getString(7);
             log.info("Successfully logged in");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (LOGIN)", err);
@@ -169,23 +168,23 @@ public class AuthDAO {
         return new LoginResponseDTO(uname, token, response);
     }
 
-    public static MFAResponseDTO confirmMFA(String email, String mfaCode, String inet, String device, String modifiedBy) {
+    public static MFAResponseDTO confirmMFA(String uname, String email, String mfaCode, String inet, String device) {
         log.info("Preparing to confirm mfa code");
         String token = null;
         String response = "Confirm MFA error";
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.confirm_mfa(?,?,?,?,?,?,?)}";
+        String sql = "{call auth_pkg.confirmMfa(?,?,?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, mfaCode);
-            stmt.setString(3, inet);
-            stmt.setString(4, device);
-            stmt.setString(5, modifiedBy);
-            stmt.registerOutParameter(6, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(7, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, mfaCode);
+            stmt.setString(4, inet);
+            stmt.setString(5, device);
+            stmt.registerOutParameter(6, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(7, OracleTypes.VARCHAR);
             stmt.execute();
             token = stmt.getString(6);
             response = stmt.getString(7);
@@ -210,19 +209,19 @@ public class AuthDAO {
         return new MFAResponseDTO(token, response);
     }
 
-    public static String logout(String email, String sessionToken, String modifiedBy) {
+    public static String logout(String uname, String email, String sessionToken) {
         log.info("Preparing to logout user");
         String response = "Logout error";
-        String sql = "{call auth_pkg.logout(?,?,?,?)}";
+        String sql = "{call auth_pkg.signout(?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-            stmt.setString(1, email);
-            stmt.setString(2, sessionToken);
-            stmt.setString(3, modifiedBy);
-            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+            stmt.setString(1, uname);
+            stmt.setString(2, email);
+            stmt.setString(3, sessionToken);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(4);
             log.info("Successfully logged out");
@@ -246,26 +245,25 @@ public class AuthDAO {
         return response;
     }
 
-    public static ForgotResponseDTO forgotPassword(String email, String modifiedBy) {
+    public static ForgotResponseDTO forgotPassword(String email) {
         log.info("Preparing to start forgot Password");
         String token = null;
         String uname = null;
         String response = "Forgot password error";
-        String sql = "{call auth_pkg.forgot_password(?,?,?,?,?)}";
+        String sql = "{call auth_pkg.forgotPassword(?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
             stmt.setString(1, email);
-            stmt.setString(2, modifiedBy);
-            stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
-            stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(2, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(3, OracleTypes.VARCHAR);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
             stmt.execute();
-            token = stmt.getString(3);
-            uname = stmt.getString(4);
-            response = stmt.getString(5);
+            token = stmt.getString(2);
+            uname = stmt.getString(3);
+            response = stmt.getString(4);
             log.info("Successfully generated new verification code");
         } catch (SQLException err) {
             log.error("Error in auth_pkg (FORGOT PASSWORD)", err);
@@ -287,10 +285,10 @@ public class AuthDAO {
         return new ForgotResponseDTO(token, uname, response);
     }
 
-    public static String resetPassword(String email, String verificationToken, String pword, String modifiedBy) {
+    public static String resetPassword(String email, String verificationToken, String pword) {
         log.info("Preparing to start reset Password");
         String response = "Reset password error";
-        String sql = "{call auth_pkg.reset_password(?,?,?,?,?)}";
+        String sql = "{call auth_pkg.resetPassword(?,?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
         try {
@@ -299,10 +297,9 @@ public class AuthDAO {
             stmt.setString(1, email);
             stmt.setString(2, verificationToken);
             stmt.setString(3, pword);
-            stmt.setString(4, modifiedBy);
-            stmt.registerOutParameter(5, java.sql.Types.VARCHAR);
+            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
             stmt.execute();
-            response = stmt.getString(5);
+            response = stmt.getString(4);
             log.info("Successfully reset password");
             log.info("Reset Password response is : {}", response);
         } catch (SQLException err) {

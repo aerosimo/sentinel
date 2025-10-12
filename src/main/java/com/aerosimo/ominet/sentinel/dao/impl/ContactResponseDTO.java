@@ -33,6 +33,7 @@ package com.aerosimo.ominet.sentinel.dao.impl;
 
 public class ContactResponseDTO {
 
+    private String username;
     private String email;
     private String channel;
     private String address;
@@ -43,13 +44,22 @@ public class ContactResponseDTO {
     public ContactResponseDTO() {
     }
 
-    public ContactResponseDTO(String email, String channel, String address, String consent, String modifiedBy, String modifiedDate) {
+    public ContactResponseDTO(String username, String email, String channel, String address, String consent, String modifiedBy, String modifiedDate) {
+        this.username = username;
         this.email = email;
         this.channel = channel;
         this.address = address;
         this.consent = consent;
         this.modifiedBy = modifiedBy;
         this.modifiedDate = modifiedDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -103,7 +113,8 @@ public class ContactResponseDTO {
     @Override
     public String toString() {
         return "ContactResponseDTO{" +
-                "email='" + email + '\'' +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", channel='" + channel + '\'' +
                 ", address='" + address + '\'' +
                 ", consent='" + consent + '\'' +

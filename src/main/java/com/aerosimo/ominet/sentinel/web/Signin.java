@@ -61,7 +61,8 @@ public class Signin extends HttpServlet {
 
     static String password;
     static String email;
-    static String modifiedBy;
+    static String inet;
+    static String device;
     static String result;
     static LoginResponseDTO response;
 
@@ -70,24 +71,25 @@ public class Signin extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         email = req.getParameter("email");
         password = req.getParameter("password");
-        modifiedBy = "Sentinel";
+        device = req.getHeader("user-agent");
+        inet =  req.getRemoteAddr();
         log.info("Preparing to sign in user with email {}", email);
         // Call DAO method
-        response = AuthDAO.login(email, password,req.getRemoteAddr(),req.getHeader("user-agent"), modifiedBy);
+        response = AuthDAO.login(email, password,inet,device);
         log.info("Logging response of sign in {}", response.getResponse());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {
             log.info("Sign in successful");
             log.info("Multi-factor token is: {}", response.getMfaToken());
             // Send login email to the new user
-            result = LoginMail.sendMail(response.getUsername(), email,response.getMfaToken(),req.getRemoteAddr(),req.getHeader("user-agent"));
+            result = LoginMail.sendMail(response.getUsername(), email,response.getMfaToken(),inet,device);
             log.info("Login email response is : {}", result);
             // Store data in session
             req.getSession().setAttribute("email", email);
-            req.getSession().setAttribute("inet", req.getRemoteAddr());
+            req.getSession().setAttribute("inet", inet);
             req.getSession().setAttribute("host", req.getRemoteHost());
             req.getSession().setAttribute("uname", response.getUsername());
-            req.getSession().setAttribute("userAgent", req.getHeader("user-agent"));
+            req.getSession().setAttribute("device", device);
             List<CountryDTO> countryList = Country.getCountries();
             req.getSession().setAttribute("countryList", countryList);
             resp.sendRedirect("mfa.jsp");

@@ -53,22 +53,26 @@ public class Signout extends HttpServlet {
     }
 
     static String response;
-    static String modifiedBy;
+    static String uname;
+    static String email;
+    static String SessionToken;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
+        uname = (String) req.getSession().getAttribute("uname");
+        email = (String) req.getSession().getAttribute("email");
+        SessionToken = (String) req.getSession().getAttribute("SessionToken");
         // Call DAO method
-        response = AuthDAO.logout((String) req.getSession().getAttribute("email"), (String) req.getSession().getAttribute("SessionToken"), modifiedBy);
+        response = AuthDAO.logout(uname, email, SessionToken);
         if ("success".equalsIgnoreCase(response)) {
-            log.info("Sign out successful with the session: {}", req.getSession().getAttribute("email"));
+            log.info("Sign out successful with the session: {}", email);
             // Remove all stored session attributes
             req.getSession().removeAttribute("inet");
             req.getSession().removeAttribute("host");
             req.getSession().removeAttribute("user");
             req.getSession().removeAttribute("email");
-            req.getSession().removeAttribute("userAgent");
+            req.getSession().removeAttribute("device");
             req.getSession().removeAttribute("SessionToken");
             req.getSession().invalidate();
             resp.sendRedirect("signin.jsp");

@@ -57,7 +57,7 @@ public class Contact extends HttpServlet {
     static String[] channels;
     static String[] addresses;
     static String[] consents;
-    static String modifiedBy;
+    static String uname;
     static String channel;
     static String address;
     static String consent;
@@ -70,7 +70,7 @@ public class Contact extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         email = req.getParameter("email");
-        modifiedBy = (String) req.getSession().getAttribute("uname");;
+        uname = (String) req.getSession().getAttribute("uname");;
         // Multiple contacts - expects arrays from the form
         channels = req.getParameterValues("channel");
         addresses = req.getParameterValues("address");
@@ -85,7 +85,7 @@ public class Contact extends HttpServlet {
                 consent = (consents != null && i < consents.length) ? consents[i] : "NO";
                 log.info("Saving contact: email={}, channel={}, address={}, consent={}",
                         email, channel, address, consent);
-                response = ProfileDAO.saveContact(email, channel, address, consent, modifiedBy);
+                response = ProfileDAO.saveContact(uname, email, channel, address, consent);
                 log.info("SaveContact response: {}", response);
                 if (!"success".equalsIgnoreCase(response)) {
                     log.warn("Contact save failed for {} on channel {}: {}", email, channel, response);

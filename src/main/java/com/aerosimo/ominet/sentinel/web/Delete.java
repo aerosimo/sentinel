@@ -64,7 +64,7 @@ public class Delete extends HttpServlet {
         email = (String) req.getSession().getAttribute("email");
         uname = (String) req.getSession().getAttribute("uname");
         log.info("Preparing to delete user account for {}", email);
-        response = AccountDAO.deleteAccount(email);
+        response = AccountDAO.deleteAccount(uname,email);
         if ("success".equalsIgnoreCase(response)) {
             result = FarewellMail.sendMail(uname,email);
             log.info("Account Deletion Confirmation Email response is : {}", result);
