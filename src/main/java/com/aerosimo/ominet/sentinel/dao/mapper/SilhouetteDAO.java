@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class SilhouetteDAO {
@@ -96,18 +97,28 @@ public class SilhouetteDAO {
             if (imageObj instanceof ResultSet rs) {
                 try (rs) {
                     if (rs.next()) {
-                        ImageResponseDTO image = new ImageResponseDTO(
-                                rs.getString(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getString(4),
-                                rs.getString(5)
-                        );
+                        ImageResponseDTO image = new ImageResponseDTO();
+                        image.setUsername(rs.getString(1));
+                        image.setEmail(rs.getString(2));
+                        image.setModifiedBy(rs.getString(4));
+                        image.setModifiedDate(rs.getString(5));
+
+                        // ✅ Handle BLOB (avatar)
+                        Blob blob = rs.getBlob(3);
+                        if (blob != null) {
+                            byte[] bytes = blob.getBytes(1, (int) blob.length());
+                            blob.free(); // release memory after use
+                            String base64 = Base64.getEncoder().encodeToString(bytes);
+                            image.setAvatar("data:image/png;base64," + base64);
+                        } else {
+                            image.setAvatar(null);
+                        }
                         silhouette.setImage(image);
-                        log.info("DAO call image = '{}'", image.toString());
+                        log.info("DAO call image successfully fetched for {}", image.getEmail());
                     }
                 }
             }
+
 
             // Address
             Object addressObj = stmt.getObject(4);

@@ -61,6 +61,7 @@ public class Signin extends HttpServlet {
 
     static String password;
     static String email;
+    static String uname;
     static String inet;
     static String device;
     static String result;
@@ -77,6 +78,7 @@ public class Signin extends HttpServlet {
         // Call DAO method
         response = AuthDAO.login(email, password,inet,device);
         log.info("Logging response of sign in {}", response.getResponse());
+        log.info("Logging response of sign for user: {}", response.getUsername());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {
             log.info("Sign in successful");

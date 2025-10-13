@@ -87,7 +87,7 @@
                            class="form-control"
                            id="verifyToken"
                            name="verifyToken"
-                           placeholder="XXXXXX"
+                           placeholder="XXXXXXXXX"
                            maxlength="10"
                            pattern="[A-Za-z0-9]{10}"
                            required

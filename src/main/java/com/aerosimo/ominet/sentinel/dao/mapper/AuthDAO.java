@@ -188,7 +188,7 @@ public class AuthDAO {
             stmt.execute();
             token = stmt.getString(6);
             response = stmt.getString(7);
-            log.info("Successfully verified MFA token");
+            log.info("Successfully verified MFA token with response: {}", response);
         } catch (SQLException err) {
             log.error("Error in auth_pkg (CONFIRM MFA)", err);
             try {

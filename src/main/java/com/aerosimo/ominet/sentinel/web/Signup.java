@@ -79,6 +79,7 @@ public class Signup extends HttpServlet {
             result = WelcomeMail.sendMail(uname,email,response.getVerificationCode());
             log.info("Welcome email response is : {}", result);
             // Store data in session
+            req.getSession().setAttribute("uname", uname);
             req.getSession().setAttribute("email", email);
             resp.sendRedirect("verify.jsp");
         } else {

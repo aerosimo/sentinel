@@ -389,23 +389,23 @@ response.sendRedirect("signin.jsp");
                         <div class="col-md-6">
                             <div class="card dashboard-card p-3">
                                 <h6 class="mb-3">Change Avatar</h6>
-                                <form id="avatarUploadForm" action="avatar" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="email" value="${email}">
-                                    <div id="dropZone" class="drop-zone text-center p-4 border rounded">
-                                        <c:choose>
-                                            <c:when test="${not empty silhouette.image.avatar}">
-                                                <img src="${silhouette.image.avatar}" alt="Avatar Preview"
-                                                     class="img-fluid rounded-circle shadow-sm mb-2" width="150">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
-                                                <p class="mt-2 mb-0 text-muted">Drag & drop image here or click to select file</p>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <input type="file" name="avatar" id="avatarInput" accept="image/*" hidden>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mt-3">Upload Avatar</button>
-                                </form>
+                                    <form id="avatarUploadForm" action="image" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="email" value="${sessionScope.email}">
+                                        <div id="dropZone" class="drop-zone text-center p-4 border rounded">
+                                            <c:choose>
+                                                <c:when test="${not empty silhouette.image.avatar}">
+                                                    <img src="${silhouette.image.avatar}" alt="Avatar Preview"
+                                                         class="img-fluid rounded-circle shadow-sm mb-2" width="150">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+                                                    <p class="mt-2 mb-0 text-muted">Drag & drop image here or click to select file</p>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <input type="file" name="avatar" id="avatarInput" accept="image/*" hidden>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">Upload Avatar</button>
+                                    </form>
                             </div>
 
                             <!-- Delete Account (Danger Zone) -->

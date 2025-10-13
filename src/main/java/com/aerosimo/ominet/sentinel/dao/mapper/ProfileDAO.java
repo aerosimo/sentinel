@@ -88,28 +88,32 @@ public class ProfileDAO {
         String sql = "{call profile_pkg.getImage(?,?,?)}";
         Connection con = null;
         CallableStatement stmt = null;
-        ResultSet rs;
 
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
-
             stmt.setString(1, uname);
             stmt.setString(2, email);
             stmt.registerOutParameter(3, OracleTypes.CURSOR);
             stmt.execute();
-            rs = (ResultSet) stmt.getObject(3);
-            if (rs.next()) {
-                response = new ImageResponseDTO();
-                response.setUsername(rs.getString("username"));
-                response.setEmail(rs.getString("email"));
-                response.setModifiedBy(rs.getString("modifiedBy"));
-                response.setModifiedDate(rs.getString("modifiedDate"));
-                Blob blob = rs.getBlob("avatar");
-                if (blob != null) {
-                    byte[] bytes = blob.getBytes(1, (int) blob.length());
-                    String base64 = Base64.getEncoder().encodeToString(bytes);
-                    response.setAvatar("data:image/png;base64," + base64);
+            try (ResultSet rs = (ResultSet) stmt.getObject(3)) {
+                if (rs != null && rs.next()) {
+                    response = new ImageResponseDTO();
+                    response.setUsername(rs.getString("username"));
+                    response.setEmail(rs.getString("email"));
+                    response.setModifiedBy(rs.getString("modifiedBy"));
+                    response.setModifiedDate(rs.getString("modifiedDate"));
+
+                    // ✅ Correct way to handle BLOB
+                    Blob blob = rs.getBlob("avatar");
+                    if (blob != null) {
+                        byte[] bytes = blob.getBytes(1, (int) blob.length());
+                        blob.free(); // Always free the BLOB after use
+                        String base64 = Base64.getEncoder().encodeToString(bytes);
+                        response.setAvatar("data:image/png;base64," + base64);
+                    } else {
+                        response.setAvatar(null);
+                    }
                 }
             }
         } catch (SQLException err) {
@@ -153,7 +157,7 @@ public class ProfileDAO {
             stmt.registerOutParameter(9, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(9);
-            log.info("Successfully save person record");
+            log.info("Successfully save person record with response: {}", response);
         } catch (SQLException err) {
             log.error("Error in saving person record", err);
             try {

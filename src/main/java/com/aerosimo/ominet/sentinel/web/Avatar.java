@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Image.java                                                      *
- * Created:   11/10/2025, 14:11                                               *
- * Modified:  11/10/2025, 14:11                                               *
+ * File:      Avatar.java                                                     *
+ * Created:   13/10/2025, 03:42                                               *
+ * Modified:  13/10/2025, 03:42                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,59 +31,71 @@
 
 package com.aerosimo.ominet.sentinel.web;
 
+import com.aerosimo.ominet.sentinel.dao.impl.ImageResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-@WebServlet("/image")
-@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // 5 MB
-public class Image extends HttpServlet {
+@WebServlet("/avatar")
+public class Avatar extends HttpServlet {
 
-    private static final Logger log = LogManager.getLogger(Image.class.getName());
+    private static final Logger log = LogManager.getLogger(Avatar.class.getName());
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
+        resp.setContentType("application/json; charset=UTF-8");
         String email = (String) req.getSession().getAttribute("email");
         String uname = (String) req.getSession().getAttribute("uname");
-        Part filePart = req.getPart("avatar"); // ✅ must match form name exactly
 
-        if (filePart == null || filePart.getSize() == 0) {
-            log.warn("No file uploaded in avatar field.");
-            resp.sendRedirect("settings.jsp?error=no_file");
+        if (email == null || email.isBlank()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"error\": \"Missing email parameter\"}");
             return;
         }
 
-        if (email == null || uname == null) {
-            log.error("Session attributes missing (email/uname). Cannot save image.");
-            resp.sendRedirect("signin.jsp");
-            return;
-        }
+        try {
+            log.info("Retrieving avatar for user: {}", email);
+            ImageResponseDTO imageResponse = ProfileDAO.getImage(uname != null ? uname : "system", email);
 
-        try (InputStream avatarStream = filePart.getInputStream()) {
-            String dbResponse = ProfileDAO.saveImage(uname, email, avatarStream);
-            log.info("SaveImage response from DB: {}", dbResponse);
-
-            if ("success".equalsIgnoreCase(dbResponse)) {
-                resp.sendRedirect("settings.jsp?msg=avatar_updated");
-            } else {
-                resp.sendRedirect("settings.jsp?error=db_error");
+            if (imageResponse == null || imageResponse.getAvatar() == null) {
+                log.warn("No avatar found for {}", email);
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                resp.getWriter().write("{\"error\": \"No avatar found for this user\"}");
+                return;
             }
 
+            // ✅ Option 1: Return JSON with Base64 inline image
+            String json = String.format(
+                    "{\"username\": \"%s\", \"email\": \"%s\", \"avatar\": \"%s\", \"modifiedBy\": \"%s\", \"modifiedDate\": \"%s\"}",
+                    safeJson(imageResponse.getUsername()),
+                    safeJson(imageResponse.getEmail()),
+                    imageResponse.getAvatar(),  // already has "data:image/png;base64," prefix
+                    safeJson(imageResponse.getModifiedBy()),
+                    safeJson(imageResponse.getModifiedDate())
+            );
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+
         } catch (Exception e) {
-            log.error("Exception while saving avatar for user {}", email, e);
-            resp.sendRedirect("settings.jsp?error=exception");
+            log.error("Error retrieving avatar for {}", email, e);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("{\"error\": \"Internal server error occurred\"}");
         }
+    }
+
+    /**
+     * Utility method for safe JSON escaping.
+     */
+    private String safeJson(String input) {
+        return input == null ? "" : input.replace("\"", "\\\"");
     }
 }
