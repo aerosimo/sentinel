@@ -50,7 +50,7 @@ public class AccountDAO {
         String response;
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.updateAccount(?,?,?,?,?)}";
+        String sql = "{call account_pkg.updateAccount(?,?,?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
@@ -61,9 +61,9 @@ public class AccountDAO {
             stmt.registerOutParameter(5, OracleTypes.VARCHAR);
             stmt.execute();
             response = stmt.getString(5);
-            log.info("Successfully update user account details");
+            log.info("Successfully update user account details with the following response: {}", response);
         } catch (SQLException err) {
-            log.error("Error in auth_pkg (UPDATE ACCOUNT)", err);
+            log.error("Error in account_pkg (UPDATE ACCOUNT)", err);
             response = "Update Account error %s".formatted(err.getMessage());
             try {
                 Spectre.recordError("DB-20013", err.getMessage(), AccountDAO.class.getName());
@@ -88,7 +88,7 @@ public class AccountDAO {
         String response;
         Connection con = null;
         CallableStatement stmt = null;
-        String sql = "{call auth_pkg.deleteAccount(?,?,?)}";
+        String sql = "{call account_pkg.deleteAccount(?,?,?)}";
         try {
             con = Connect.dbase();
             stmt = con.prepareCall(sql);
@@ -99,7 +99,7 @@ public class AccountDAO {
             response = stmt.getString(3);
             log.info("Successfully delete user account");
         } catch (SQLException err) {
-            log.error("Error in auth_pkg (DELETE ACCOUNT)", err);
+            log.error("Error in account_pkg (DELETE ACCOUNT)", err);
             response = "Delete Account error %s".formatted(err.getMessage());
             try {
                 Spectre.recordError("DB-20014", err.getMessage(), AccountDAO.class.getName());

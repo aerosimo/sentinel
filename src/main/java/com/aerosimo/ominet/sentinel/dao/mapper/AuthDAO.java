@@ -68,7 +68,7 @@ public class AuthDAO {
             stmt.execute();
             token = stmt.getString(4);
             response = stmt.getString(5);
-            log.info("Successfully registered new user");
+            log.info("Successfully complete registering new user steps with the following: {}",response);
         } catch (SQLException err) {
             log.error("Error in auth_pkg (SIGNUP)", err);
             try {

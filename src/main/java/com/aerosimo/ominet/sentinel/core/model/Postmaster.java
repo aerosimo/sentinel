@@ -51,7 +51,7 @@ public class Postmaster {
     }
 
     // REST endpoint instead of SOAP
-    private static final String ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postmaster/api/postmaster";
+    private static final String ENDPOINT_URL = "http://ominet.aerosimo.com:8081/postmaster/api/sendemail";
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
