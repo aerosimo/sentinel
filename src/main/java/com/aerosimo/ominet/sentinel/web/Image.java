@@ -57,42 +57,31 @@ public class Image extends HttpServlet {
 
         String email = (String) req.getSession().getAttribute("email");
         String uname = (String) req.getSession().getAttribute("uname");
-        Part filePart = req.getPart("avatar");
 
-        req.getSession().removeAttribute("lastUploadedFile");
-
-        String lastFile = (String) req.getSession().getAttribute("lastUploadedFile");
-        if (lastFile != null && lastFile.equals(filePart.getSubmittedFileName())) {
-            log.info("Same file uploaded again; proceeding with re-upload.");
+        if (email == null || uname == null) {
+            log.error("Session expired or invalid; email or uname is null");
+            resp.sendRedirect("login.jsp?error=session_expired");
+            return;
         }
-        req.getSession().setAttribute("lastUploadedFile", filePart.getSubmittedFileName());
 
+        Part filePart = null;
         try {
-            filePart = req.getPart("avatar");
-        }catch (IllegalStateException | ServletException err) {
-            log.error("Error reading multipart part: ", err);
+            filePart = req.getPart("avatar"); // must match JSP input name
+        } catch (IllegalStateException | ServletException err) {
+            log.error("Error accessing multipart data: ", err);
+            resp.sendRedirect("settings.jsp?error=upload_error");
+            return;
         }
 
         if (filePart == null) {
-            log.warn("Avatar part missing in request.");
-            resp.sendRedirect("settings.jsp?error=no_part");
+            log.warn("No file part found for 'avatar'. Check form name and enctype.");
+            resp.sendRedirect("settings.jsp?error=no_file");
             return;
         }
+
         if (filePart.getSize() == 0) {
-            log.warn("Avatar file empty or same file re-uploaded.");
+            log.warn("Empty or same image re-upload detected.");
             resp.sendRedirect("settings.jsp?error=empty_file");
-            return;
-        }
-
-        // if (filePart == null || filePart.getSize() == 0) {
-            // log.warn("No file uploaded in avatar field.");
-            // resp.sendRedirect("settings.jsp?error=no_file");
-            // return;
-        // }
-
-        if (email == null || uname == null) {
-            log.error("Session attributes missing (email/uname). Cannot save image.");
-            resp.sendRedirect("signin.jsp");
             return;
         }
 
@@ -100,13 +89,8 @@ public class Image extends HttpServlet {
             String dbResponse = ProfileDAO.saveImage(uname, email, avatarStream);
             log.info("ProfileDAO.saveImage returned: {}", dbResponse);
             resp.sendRedirect("settings.jsp?msg=" + dbResponse);
-            //if ("success".equalsIgnoreCase(dbResponse)) {
-               // resp.sendRedirect("settings.jsp?msg=" + dbResponse);
-           // } else {
-                // resp.sendRedirect("settings.jsp?error=upload_failed");
-           // }
         } catch (Exception err) {
-            log.error("Exception while saving avatar for user -> {}", email, err);
+            log.error("Error saving avatar for {}: {}", email, err.getMessage(), err);
             resp.sendRedirect("settings.jsp?error=upload_failed");
         }
     }
