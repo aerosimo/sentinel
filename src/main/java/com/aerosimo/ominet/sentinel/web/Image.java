@@ -57,7 +57,7 @@ public class Image extends HttpServlet {
 
         String email = (String) req.getSession().getAttribute("email");
         String uname = (String) req.getSession().getAttribute("uname");
-        Part filePart = req.getPart("avatar"); // ✅ must match form name exactly
+        Part filePart = req.getPart("avatar");
 
         if (filePart == null || filePart.getSize() == 0) {
             log.warn("No file uploaded in avatar field.");
@@ -73,16 +73,15 @@ public class Image extends HttpServlet {
 
         try (InputStream avatarStream = filePart.getInputStream()) {
             String dbResponse = ProfileDAO.saveImage(uname, email, avatarStream);
-            log.info("SaveImage response from DB: {}", dbResponse);
-
+            log.info("ProfileDAO.saveImage -> {}", dbResponse);
             if ("success".equalsIgnoreCase(dbResponse)) {
                 resp.sendRedirect("settings.jsp?msg=avatar_updated");
             } else {
-                resp.sendRedirect("settings.jsp?error=db_error");
+                resp.sendRedirect("settings.jsp?error=upload_failed");
             }
 
-        } catch (Exception e) {
-            log.error("Exception while saving avatar for user {}", email, e);
+        } catch (Exception err) {
+            log.error("Exception while saving avatar for user -> {}", email, err);
             resp.sendRedirect("settings.jsp?error=exception");
         }
     }

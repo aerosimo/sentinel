@@ -50,33 +50,24 @@ public class ProfileDAO {
         log.info("Preparing to save user Avatar");
         String response = "";
         String sql = "{call profile_pkg.saveImage(?,?,?,?)}";
-        Connection con = null;
-        CallableStatement stmt = null;
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
 
-        try {
-            con = Connect.dbase();
-            stmt = con.prepareCall(sql);
-            stmt.setString(1, uname);
-            stmt.setString(2, email);
-            stmt.setBlob(3, avatarStream);
-            stmt.registerOutParameter(4, OracleTypes.VARCHAR);
-            stmt.execute();
-            response = stmt.getString(4);
-            log.info("Successfully save user image {}", email);
-        } catch (SQLException err) {
-            log.error("Error saving image", err);
-            try {
-                Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                log.error("Failed closing resources in SaveImage", e);
-            }
+                stmt.setString(1, uname);
+                stmt.setString(2, email);
+                stmt.setBlob(3, avatarStream);
+                stmt.registerOutParameter(4, OracleTypes.VARCHAR);
+                stmt.execute();
+                response = stmt.getString(4);
+            log.info("Image saved for user {} -> {}", email, response);
+            } catch (SQLException err) {
+                log.error("Error saving image for {}", email,err);
+                try {
+                    Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } finally {
             log.info("DB Connection for (saveImage) Closed....");
         }
         return response;
@@ -86,50 +77,39 @@ public class ProfileDAO {
         log.info("Preparing to retrieve user Avatar");
         ImageResponseDTO response = null;
         String sql = "{call profile_pkg.getImage(?,?,?)}";
-        Connection con = null;
-        CallableStatement stmt = null;
 
-        try {
-            con = Connect.dbase();
-            stmt = con.prepareCall(sql);
-            stmt.setString(1, uname);
-            stmt.setString(2, email);
-            stmt.registerOutParameter(3, OracleTypes.CURSOR);
-            stmt.execute();
-            try (ResultSet rs = (ResultSet) stmt.getObject(3)) {
-                if (rs != null && rs.next()) {
-                    response = new ImageResponseDTO();
-                    response.setUsername(rs.getString("username"));
-                    response.setEmail(rs.getString("email"));
-                    response.setModifiedBy(rs.getString("modifiedBy"));
-                    response.setModifiedDate(rs.getString("modifiedDate"));
-
-                    // ✅ Correct way to handle BLOB
-                    Blob blob = rs.getBlob("avatar");
-                    if (blob != null) {
-                        byte[] bytes = blob.getBytes(1, (int) blob.length());
-                        blob.free(); // Always free the BLOB after use
-                        String base64 = Base64.getEncoder().encodeToString(bytes);
-                        response.setAvatar("data:image/png;base64," + base64);
-                    } else {
-                        response.setAvatar(null);
+        try (Connection con = Connect.dbase();
+             CallableStatement stmt = con.prepareCall(sql)) {
+                stmt.setString(1, uname);
+                stmt.setString(2, email);
+                stmt.registerOutParameter(3, OracleTypes.CURSOR);
+                stmt.execute();
+                try (ResultSet rs = (ResultSet) stmt.getObject(3)) {
+                    if (rs != null && rs.next()) {
+                        response = new ImageResponseDTO();
+                        response.setUsername(rs.getString("username"));
+                        response.setEmail(rs.getString("email"));
+                        response.setModifiedBy(rs.getString("modifiedBy"));
+                        response.setModifiedDate(rs.getString("modifiedDate"));
+                        Blob blob = rs.getBlob("avatar");
+                        if (blob != null) {
+                            byte[] bytes = blob.getBytes(1, (int) blob.length());
+                            blob.free();
+                            String base64 = Base64.getEncoder().encodeToString(bytes);
+                            response.setAvatar("data:image/png;base64," + base64);
+                        } else {
+                            response.setAvatar(null);
+                        }
                     }
                 }
-            }
-        } catch (SQLException err) {
-            log.error("Error retrieving avatar for {}", email, err);
-            try {
-                Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } finally {
-            try {
-                if (stmt != null) stmt.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                log.error("Failed closing resources in SaveImage", e);
-            }
+            } catch (SQLException err) {
+                log.error("Error retrieving avatar for {}", email, err);
+                try {
+                    Spectre.recordError("DB-20008", err.getMessage(), SilhouetteDAO.class.getName());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } finally {
             log.info("DB Connection for (getImage) Closed....");
         }
         return response;
