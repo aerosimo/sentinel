@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Account.java                                                    *
- * Created:   06/10/2025, 23:01                                               *
+ * File:      SpectreErrors.java                                              *
+ * Created:   10/10/2025, 16:03                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,50 +29,40 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.AccountDAO;
-import jakarta.servlet.ServletException;
+import com.aerosimo.ominet.sentinel.core.model.Spectre; // Your SOAP client wrapper
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-@WebServlet(name = "account",
-        description = "A simple servlet to update user account security details",
-        value = "/account")
-public class Account extends HttpServlet {
+@WebServlet(name = "spectreErrors",
+        description = "Returns recent errors from Spectre",
+        value = "/spectreErrors")
+public class SpectreErrors extends HttpServlet {
 
-    private static final Logger log;
-
-    static {
-        log = LogManager.getLogger(Account.class.getName());
-    }
-
-    static String oldpassword;
-    static String newpassword;
-    static String email;
-    static String uname;
-    static String response;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
-        uname = req.getParameter("username");
-        email = (String) req.getSession().getAttribute("email");
-        oldpassword = req.getParameter("currentPassword");
-        newpassword = req.getParameter("newPassword");
-        log.info("Preparing to update user account for {}", email);
-        response = AccountDAO.updateAccount(uname, email, oldpassword, newpassword);
-        if ("success".equalsIgnoreCase(response)) {
-            req.getRequestDispatcher("logout").forward(req, resp);
-        } else {
-            req.setAttribute("errorMessage", response);
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+
+        String recordsParam = req.getParameter("records");
+        int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
+
+        try {
+            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
+            mapper.writeValue(resp.getWriter(), errors);
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            mapper.writeValue(resp.getWriter(),
+                    Map.of("error", "Failed to fetch errors", "details", e.getMessage()));
         }
     }
 }

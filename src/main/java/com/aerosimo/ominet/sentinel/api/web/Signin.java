@@ -2,7 +2,7 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Signup.java                                                     *
+ * File:      Signin.java                                                     *
  * Created:   10/10/2025, 16:03                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
@@ -29,11 +29,13 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.mail.WelcomeMail;
-import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
+import com.aerosimo.ominet.sentinel.mail.LoginMail;
+import com.aerosimo.ominet.sentinel.dao.impl.CountryDTO;
+import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import com.aerosimo.ominet.sentinel.core.model.Country;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -43,50 +45,61 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "signup",
-        description = "A simple registration servlet to capture the information from registration form",
-        value = "/signup")
-public class Signup extends HttpServlet {
+
+@WebServlet(name = "signin",
+        description = "A simple login servlet to validate user credentials",
+        value = "/signin")
+public class Signin extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Signup.class.getName());
+        log = LogManager.getLogger(Signin.class.getName());
     }
 
     static String password;
     static String email;
     static String uname;
+    static String inet;
+    static String device;
     static String result;
-    static SignupResponseDTO response;
+    static LoginResponseDTO response;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        uname = req.getParameter("Username");
         email = req.getParameter("email");
         password = req.getParameter("password");
-        log.info("Preparing to register new user Account for {}", email);
+        device = req.getHeader("user-agent");
+        inet =  req.getRemoteAddr();
+        log.info("Preparing to sign in user with email {}", email);
         // Call DAO method
-        response = AuthDAO.signup(uname, email, password);
-        log.info("Logging response of Account registration {}", response.getResponse());
+        response = AuthDAO.login(email, password,inet,device);
+        log.info("Logging response of sign in {}", response.getResponse());
+        log.info("Logging response of sign for user: {}", response.getUsername());
         // Check response and redirect
         if ("success".equalsIgnoreCase(response.getResponse())) {
-            log.info("New user is now successfully created and now sending welcome email");
-            log.info("verification code is: {}", response.getVerificationCode());
-            // Send welcome email to the new user
-            result = WelcomeMail.sendMail(uname,email,response.getVerificationCode());
-            log.info("Welcome email response is : {}", result);
+            log.info("Sign in successful");
+            log.info("Multi-factor token is: {}", response.getMfaToken());
+            // Send login email to the new user
+            result = LoginMail.sendMail(response.getUsername(), email,response.getMfaToken(),inet,device);
+            log.info("Login email response is : {}", result);
             // Store data in session
-            req.getSession().setAttribute("uname", uname);
             req.getSession().setAttribute("email", email);
-            resp.sendRedirect("verify.jsp");
+            req.getSession().setAttribute("inet", inet);
+            req.getSession().setAttribute("host", req.getRemoteHost());
+            req.getSession().setAttribute("uname", response.getUsername());
+            req.getSession().setAttribute("device", device);
+            List<CountryDTO> countryList = Country.getCountries();
+            req.getSession().setAttribute("countryList", countryList);
+            resp.sendRedirect("mfa.jsp");
         } else {
-            log.error("New user registration failed with the following: {}", response.getResponse());
-            // Stay on signup page, optionally show error message
+            log.error("Login request failed with the following: {}", response.getResponse());
+            // Stay on login page, optionally show error message
             req.setAttribute("errorMessage", response.getResponse());
-            req.getRequestDispatcher("signup.jsp").forward(req, resp);
+            req.getRequestDispatcher("signin.jsp").forward(req, resp);
         }
     }
 }

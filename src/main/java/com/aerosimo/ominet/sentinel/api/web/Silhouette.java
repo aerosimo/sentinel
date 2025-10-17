@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Address.java                                                    *
- * Created:   06/10/2025, 22:36                                               *
+ * File:      Silhouette.java                                                 *
+ * Created:   05/10/2025, 18:28                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,9 +29,10 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
+import com.aerosimo.ominet.sentinel.dao.impl.SilhouetteResponseDTO;
+import com.aerosimo.ominet.sentinel.dao.mapper.SilhouetteDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -42,46 +43,36 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "address",
-        description = "A simple servlet to save address details",
-        value = "/address")
-public class Address extends HttpServlet {
+@WebServlet(name = "silhouette",
+        description = "A simple servlet to populate person, contacts and profile information",
+        value = "/silhouette")
+public class Silhouette extends HttpServlet {
 
-    private static final Logger log;
-
-    static {
-        log = LogManager.getLogger(Address.class.getName());
-    }
-
-    static String email;
-    static String firstline;
-    static String secondline;
-    static String thirdline;
-    static String city;
-    static String postcode;
-    static String country;
-    static String uname;
-    static String response;
+    private static final Logger log = LogManager.getLogger(Silhouette.class.getName());
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
-        email = req.getParameter("email");
-        firstline = req.getParameter("firstline");
-        secondline = req.getParameter("secondline");
-        thirdline = req.getParameter("thirdline");
-        city = req.getParameter("city");
-        postcode = req.getParameter("postcode");
-        country = req.getParameter("country");
-        uname = (String) req.getSession().getAttribute("uname");;
-        response = ProfileDAO.saveAddress(uname,email,firstline,secondline,thirdline,city,postcode,country);
-        log.info("Logging response of saveAddress {}", response);
-        if ("success".equalsIgnoreCase(response)) {
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
-        } else {
-            // maybe show error back to user
-            req.setAttribute("errorMessage", response);
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        // ✅ Get logged-in user's email from session
+        String email = (String) req.getSession().getAttribute("email");
+
+        if (email == null) {
+            log.warn("User not logged in, redirecting to login.");
+            resp.sendRedirect("login.jsp");
+            return;
         }
+        log.info("Fetching Silhouette for email: {}", email);
+        // ✅ Fetch horoscope directly via DAO
+        SilhouetteResponseDTO silhouette = SilhouetteDAO.getSilhouette(email);
+        log.info("Fetching Silhouette: {}", silhouette);
+        if (silhouette != null) {
+            log.info("Loaded silhouette for {}",email);
+            req.setAttribute("silhouette", silhouette);
+        } else {
+            log.warn("No silhouette found for email: {}", email);
+            req.setAttribute("silhouette", null);
+        }
+        req.getRequestDispatcher("/profile.jsp").forward(req, resp);
     }
 }

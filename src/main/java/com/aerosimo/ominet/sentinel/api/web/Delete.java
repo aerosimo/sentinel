@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      ServerStatus.java                                               *
- * Created:   10/10/2025, 16:03                                               *
+ * File:      Delete.java                                                     *
+ * Created:   06/10/2025, 22:33                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,42 +29,58 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.core.model.PingServer;
+import com.aerosimo.ominet.sentinel.dao.mapper.AccountDAO;
+import com.aerosimo.ominet.sentinel.mail.FarewellMail;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "serverStatus",
-        description = "Returns current server availability as JSON",
-        value = "/serverStatus")
-public class ServerStatus extends HttpServlet {
+@WebServlet(name = "delete",
+        description = "A simple servlet to delete user",
+        value = "/delete")
+public class Delete extends HttpServlet {
+    private static final Logger log;
+
+    static {
+        log = LogManager.getLogger(Account.class.getName());
+    }
+
+    static String email;
+    static String uname;
+    static String response;
+    static String result;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json;charset=UTF-8");
-
-        // Ping application servers (HTTP endpoints)
-        boolean jenkins = PingServer.isAlive("ominet.aerosimo.com:8080");
-        boolean tomee   = PingServer.isAlive("http://ominet.aerosimo.com:8081");
-        boolean linux   = PingServer.isAlive("http://ominet.aerosimo.com:9090");
-
-        // ⚠️ Oracle DB cannot be pinged with HttpURLConnection (port 1521 is not HTTP).
-        // TODO: Replace with a JDBC-based check (e.g. try a lightweight SELECT 1).
-        boolean oracle = true;
-
-        // Return JSON response
-        String json = String.format(
-                "{ \"jenkins\": \"%s\", \"tomee\": \"%s\", \"linux\": \"%s\", \"oracle\": \"%s\" }",
-                jenkins ? "online" : "offline",
-                tomee   ? "online" : "offline",
-                linux   ? "online" : "offline",
-                oracle  ? "online" : "offline"
-        );
-        resp.getWriter().write(json);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        email = (String) req.getSession().getAttribute("email");
+        uname = (String) req.getSession().getAttribute("uname");
+        log.info("Preparing to delete user account for {}", email);
+        response = AccountDAO.deleteAccount(uname,email);
+        if ("success".equalsIgnoreCase(response)) {
+            result = FarewellMail.sendMail(uname,email);
+            log.info("Account Deletion Confirmation Email response is : {}", result);
+            req.getSession().removeAttribute("inet");
+            req.getSession().removeAttribute("host");
+            req.getSession().removeAttribute("user");
+            req.getSession().removeAttribute("email");
+            req.getSession().removeAttribute("userAgent");
+            req.getSession().removeAttribute("SessionToken");
+            req.getSession().removeAttribute("countryList");
+            req.getSession().invalidate();
+            req.getRequestDispatcher("logout").forward(req, resp);
+        } else {
+            log.error("Account delete request failed with the following: {}", response);
+            req.setAttribute("errorMessage", response);
+            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+        }
     }
 }

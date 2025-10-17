@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Contact.java                                                    *
- * Created:   06/10/2025, 22:36                                               *
+ * File:      Person.java                                                     *
+ * Created:   06/10/2025, 22:34                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,7 +29,7 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
 import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
 import jakarta.servlet.ServletException;
@@ -41,60 +41,57 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.sql.Date;
 
-@WebServlet(name = "contact",
-        description = "Servlet to save user contact details",
-        value = "/contact")
-public class Contact extends HttpServlet {
+@WebServlet(name = "person",
+        description = "A simple servlet to save person details",
+        value = "/person")
+public class Person extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Contact.class.getName());
+        log = LogManager.getLogger(Person.class.getName());
     }
 
     static String email;
-    static String[] channels;
-    static String[] addresses;
-    static String[] consents;
+    static String title;
+    static String firstName;
+    static String middleName;
+    static String lastName;
+    static String gender;
+    static Date birthday;
     static String uname;
-    static String channel;
-    static String address;
-    static String consent;
+    static String birthdayStr;
     static String response;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-
         email = req.getParameter("email");
+        title = req.getParameter("title");
+        firstName = req.getParameter("firstName");
+        middleName = req.getParameter("middleName");
+        lastName = req.getParameter("lastName");
+        gender = req.getParameter("gender");
+        birthdayStr = req.getParameter("birthday");
         uname = (String) req.getSession().getAttribute("uname");;
-        // Multiple contacts - expects arrays from the form
-        channels = req.getParameterValues("channel");
-        addresses = req.getParameterValues("address");
-        consents = req.getParameterValues("consent");
-
-        if (channels != null && addresses != null) {
-            int total = channels.length;
-            log.info("Saving {} contact(s) for user {}", total, email);
-            for (int i = 0; i < channels.length; i++) {
-                channel = channels[i];
-                address = (i < addresses.length) ? addresses[i] : "";
-                consent = (consents != null && i < consents.length) ? consents[i] : "NO";
-                log.info("Saving contact: email={}, channel={}, address={}, consent={}",
-                        email, channel, address, consent);
-                response = ProfileDAO.saveContact(uname, email, channel, address, consent);
-                log.info("SaveContact response: {}", response);
-                if (!"success".equalsIgnoreCase(response)) {
-                    log.warn("Contact save failed for {} on channel {}: {}", email, channel, response);
-                }
+        birthday = null;
+        if (birthdayStr != null && !birthdayStr.isEmpty()) {
+            try {
+                birthday = Date.valueOf(birthdayStr);  // ✅ safe conversion
+            } catch (IllegalArgumentException e) {
+                log.error("Invalid date format for birthday: {}", birthdayStr, e);
             }
-        } else {
-            log.warn("No contact details provided for {}", email);
         }
-        // Redirect or forward back to settings.jsp
-        req.getRequestDispatcher("settings.jsp").forward(req, resp);
+        response = ProfileDAO.savePerson(uname, email, title, firstName, middleName, lastName, gender, birthday);
+        log.info("Logging response of savePerson {}", response);
+        if ("success".equalsIgnoreCase(response)) {
+            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+        } else {
+            // maybe show error back to user
+            req.setAttribute("errorMessage", response);
+            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+        }
     }
 }

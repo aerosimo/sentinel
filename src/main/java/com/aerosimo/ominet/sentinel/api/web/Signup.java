@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      VerifyEmail.java                                                *
- * Created:   24/09/2025, 01:13                                               *
+ * File:      Signup.java                                                     *
+ * Created:   10/10/2025, 16:03                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,8 +29,10 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
+import com.aerosimo.ominet.sentinel.mail.WelcomeMail;
+import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,44 +43,50 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Locale;
 
-@WebServlet(name = "verify",
-        description = "A simple verification servlet to capture the information from email verification form",
-        value = "/verify")
-public class VerifyEmail extends HttpServlet {
+@WebServlet(name = "signup",
+        description = "A simple registration servlet to capture the information from registration form",
+        value = "/signup")
+public class Signup extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(VerifyEmail.class.getName());
+        log = LogManager.getLogger(Signup.class.getName());
     }
 
-    static String verifyToken;
-    static String uname;
+    static String password;
     static String email;
+    static String uname;
     static String result;
+    static SignupResponseDTO response;
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        verifyToken = req.getParameter("verifyToken");
-        uname = (String) req.getSession().getAttribute("uname");
-        email = (String) req.getSession().getAttribute("email");
-        log.info("Preparing to verify new user email address");
+        uname = req.getParameter("Username");
+        email = req.getParameter("email");
+        password = req.getParameter("password");
+        log.info("Preparing to register new user Account for {}", email);
         // Call DAO method
-        result = AuthDAO.verifyEmail(uname, email, verifyToken.toUpperCase(Locale.ROOT));
-        log.info("Logging response of verification email {}", result);
+        response = AuthDAO.signup(uname, email, password);
+        log.info("Logging response of Account registration {}", response.getResponse());
         // Check response and redirect
-        if ("success".equalsIgnoreCase(result)) {
-            log.info("Email verified successfully");
-            resp.sendRedirect("signin.jsp");
+        if ("success".equalsIgnoreCase(response.getResponse())) {
+            log.info("New user is now successfully created and now sending welcome email");
+            log.info("verification code is: {}", response.getVerificationCode());
+            // Send welcome email to the new user
+            result = WelcomeMail.sendMail(uname,email,response.getVerificationCode());
+            log.info("Welcome email response is : {}", result);
+            // Store data in session
+            req.getSession().setAttribute("uname", uname);
+            req.getSession().setAttribute("email", email);
+            resp.sendRedirect("verify.jsp");
         } else {
-            log.error("email verification failed with the following: {}", result);
+            log.error("New user registration failed with the following: {}", response.getResponse());
             // Stay on signup page, optionally show error message
-            req.setAttribute("errorMessage", result);
-            req.getRequestDispatcher("verify.jsp").forward(req, resp);
+            req.setAttribute("errorMessage", response.getResponse());
+            req.getRequestDispatcher("signup.jsp").forward(req, resp);
         }
-
     }
 }

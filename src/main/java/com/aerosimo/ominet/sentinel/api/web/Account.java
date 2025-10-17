@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Signin.java                                                     *
- * Created:   10/10/2025, 16:03                                               *
+ * File:      Account.java                                                    *
+ * Created:   06/10/2025, 23:01                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,13 +29,9 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.mail.LoginMail;
-import com.aerosimo.ominet.sentinel.dao.impl.CountryDTO;
-import com.aerosimo.ominet.sentinel.dao.impl.LoginResponseDTO;
-import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
-import com.aerosimo.ominet.sentinel.core.model.Country;
+import com.aerosimo.ominet.sentinel.dao.mapper.AccountDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -45,61 +41,38 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
 
-
-@WebServlet(name = "signin",
-        description = "A simple login servlet to validate user credentials",
-        value = "/signin")
-public class Signin extends HttpServlet {
+@WebServlet(name = "account",
+        description = "A simple servlet to update user account security details",
+        value = "/account")
+public class Account extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Signin.class.getName());
+        log = LogManager.getLogger(Account.class.getName());
     }
 
-    static String password;
+    static String oldpassword;
+    static String newpassword;
     static String email;
     static String uname;
-    static String inet;
-    static String device;
-    static String result;
-    static LoginResponseDTO response;
+    static String response;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        email = req.getParameter("email");
-        password = req.getParameter("password");
-        device = req.getHeader("user-agent");
-        inet =  req.getRemoteAddr();
-        log.info("Preparing to sign in user with email {}", email);
-        // Call DAO method
-        response = AuthDAO.login(email, password,inet,device);
-        log.info("Logging response of sign in {}", response.getResponse());
-        log.info("Logging response of sign for user: {}", response.getUsername());
-        // Check response and redirect
-        if ("success".equalsIgnoreCase(response.getResponse())) {
-            log.info("Sign in successful");
-            log.info("Multi-factor token is: {}", response.getMfaToken());
-            // Send login email to the new user
-            result = LoginMail.sendMail(response.getUsername(), email,response.getMfaToken(),inet,device);
-            log.info("Login email response is : {}", result);
-            // Store data in session
-            req.getSession().setAttribute("email", email);
-            req.getSession().setAttribute("inet", inet);
-            req.getSession().setAttribute("host", req.getRemoteHost());
-            req.getSession().setAttribute("uname", response.getUsername());
-            req.getSession().setAttribute("device", device);
-            List<CountryDTO> countryList = Country.getCountries();
-            req.getSession().setAttribute("countryList", countryList);
-            resp.sendRedirect("mfa.jsp");
+        uname = req.getParameter("username");
+        email = (String) req.getSession().getAttribute("email");
+        oldpassword = req.getParameter("currentPassword");
+        newpassword = req.getParameter("newPassword");
+        log.info("Preparing to update user account for {}", email);
+        response = AccountDAO.updateAccount(uname, email, oldpassword, newpassword);
+        if ("success".equalsIgnoreCase(response)) {
+            req.getRequestDispatcher("logout").forward(req, resp);
         } else {
-            log.error("Login request failed with the following: {}", response.getResponse());
-            // Stay on login page, optionally show error message
-            req.setAttribute("errorMessage", response.getResponse());
-            req.getRequestDispatcher("signin.jsp").forward(req, resp);
+            req.setAttribute("errorMessage", response);
+            req.getRequestDispatcher("settings.jsp").forward(req, resp);
         }
     }
 }

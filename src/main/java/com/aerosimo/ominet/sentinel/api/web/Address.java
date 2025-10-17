@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Profile.java                                                    *
- * Created:   06/10/2025, 22:34                                               *
+ * File:      Address.java                                                    *
+ * Created:   06/10/2025, 22:36                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,7 +29,7 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
 import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
 import jakarta.servlet.ServletException;
@@ -42,27 +42,24 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "profile",
-        description = "A simple servlet to save profile details",
-        value = "/profile")
-public class Profile extends HttpServlet {
+@WebServlet(name = "address",
+        description = "A simple servlet to save address details",
+        value = "/address")
+public class Address extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Profile.class.getName());
+        log = LogManager.getLogger(Address.class.getName());
     }
 
     static String email;
-    static String maritalStatus;
-    static String height;
-    static String weight;
-    static String ethnicity;
-    static String religion;
-    static String eyeColour;
-    static String phenotype;
-    static String genotype;
-    static String disability;
+    static String firstline;
+    static String secondline;
+    static String thirdline;
+    static String city;
+    static String postcode;
+    static String country;
     static String uname;
     static String response;
 
@@ -70,19 +67,15 @@ public class Profile extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
         email = req.getParameter("email");
-        maritalStatus = req.getParameter("maritalStatus");
-        height = req.getParameter("height");
-        weight = req.getParameter("weight");
-        ethnicity = req.getParameter("ethnicity");
-        religion = req.getParameter("religion");
-        eyeColour = req.getParameter("eyeColour");
-        phenotype = req.getParameter("phenotype");
-        genotype = req.getParameter("genotype");
-        disability = req.getParameter("disability");
+        firstline = req.getParameter("firstline");
+        secondline = req.getParameter("secondline");
+        thirdline = req.getParameter("thirdline");
+        city = req.getParameter("city");
+        postcode = req.getParameter("postcode");
+        country = req.getParameter("country");
         uname = (String) req.getSession().getAttribute("uname");;
-        response = ProfileDAO.saveProfile(uname, email, maritalStatus, height, weight, ethnicity,
-                religion, eyeColour, phenotype, genotype, disability);
-        log.info("Logging response of saveProfile {}", response);
+        response = ProfileDAO.saveAddress(uname,email,firstline,secondline,thirdline,city,postcode,country);
+        log.info("Logging response of saveAddress {}", response);
         if ("success".equalsIgnoreCase(response)) {
             req.getRequestDispatcher("settings.jsp").forward(req, resp);
         } else {

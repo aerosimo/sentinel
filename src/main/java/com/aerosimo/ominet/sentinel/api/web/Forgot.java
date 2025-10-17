@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Delete.java                                                     *
- * Created:   06/10/2025, 22:33                                               *
+ * File:      Forgot.java                                                     *
+ * Created:   10/10/2025, 16:03                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,11 +29,11 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.AccountDAO;
-import com.aerosimo.ominet.sentinel.mail.FarewellMail;
-import jakarta.servlet.ServletException;
+import com.aerosimo.ominet.sentinel.dao.impl.ForgotResponseDTO;
+import com.aerosimo.ominet.sentinel.mail.ForgotMail;
+import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,44 +43,41 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "delete",
-        description = "A simple servlet to delete user",
-        value = "/delete")
-public class Delete extends HttpServlet {
+@WebServlet(name = "forgot",
+        description = "A simple servlet to recover password for the application user",
+        value = "/forgot")
+public class Forgot extends HttpServlet {
+
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Account.class.getName());
+        log = LogManager.getLogger(Forgot.class.getName());
     }
 
     static String email;
-    static String uname;
-    static String response;
     static String result;
+    static ForgotResponseDTO response;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        email = (String) req.getSession().getAttribute("email");
-        uname = (String) req.getSession().getAttribute("uname");
-        log.info("Preparing to delete user account for {}", email);
-        response = AccountDAO.deleteAccount(uname,email);
-        if ("success".equalsIgnoreCase(response)) {
-            result = FarewellMail.sendMail(uname,email);
-            log.info("Account Deletion Confirmation Email response is : {}", result);
-            req.getSession().removeAttribute("inet");
-            req.getSession().removeAttribute("host");
-            req.getSession().removeAttribute("user");
-            req.getSession().removeAttribute("email");
-            req.getSession().removeAttribute("userAgent");
-            req.getSession().removeAttribute("SessionToken");
-            req.getSession().removeAttribute("countryList");
-            req.getSession().invalidate();
-            req.getRequestDispatcher("logout").forward(req, resp);
+        email = req.getParameter("email");
+        log.info("Preparing to find user via email address {}", email);
+        // Call DAO method
+        response = AuthDAO.forgotPassword(email);
+        log.info("Logging response of sign in {}", response.getResponse());
+        // Check response and redirect
+        if ("success".equalsIgnoreCase(response.getResponse())) {
+            log.info("Password forgot ran successfully for {}", email);
+            log.info("email verification code of password reset is: {}", response.getAuthcode());
+            // Send forgot email to the new user
+            result = ForgotMail.sendMail(email,response.getUname(),response.getAuthcode());
+            log.info("Forgot email response is : {}", result);
+            req.getSession().setAttribute("email", email);
+            req.getSession().setAttribute("uname", response.getUname());
+            resp.sendRedirect("reset.jsp");
         } else {
-            log.error("Account delete request failed with the following: {}", response);
-            req.setAttribute("errorMessage", response);
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
+            log.error("Forgot password request failed with the following: {}", response.getResponse());
+            resp.sendRedirect("index.jsp");
         }
     }
 }

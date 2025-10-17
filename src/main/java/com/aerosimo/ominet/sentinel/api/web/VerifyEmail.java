@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      SpectreErrors.java                                              *
- * Created:   10/10/2025, 16:03                                               *
+ * File:      VerifyEmail.java                                                *
+ * Created:   24/09/2025, 01:13                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,40 +29,56 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.core.model.Spectre; // Your SOAP client wrapper
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
-@WebServlet(name = "spectreErrors",
-        description = "Returns recent errors from Spectre",
-        value = "/spectreErrors")
-public class SpectreErrors extends HttpServlet {
+@WebServlet(name = "verify",
+        description = "A simple verification servlet to capture the information from email verification form",
+        value = "/verify")
+public class VerifyEmail extends HttpServlet {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger log;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("application/json");
+    static {
+        log = LogManager.getLogger(VerifyEmail.class.getName());
+    }
 
-        String recordsParam = req.getParameter("records");
-        int count = (recordsParam != null) ? Integer.parseInt(recordsParam) : 5;
+    static String verifyToken;
+    static String uname;
+    static String email;
+    static String result;
 
-        try {
-            List<Map<String, Object>> errors = Spectre.getTopErrors(count);
-            mapper.writeValue(resp.getWriter(), errors);
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            mapper.writeValue(resp.getWriter(),
-                    Map.of("error", "Failed to fetch errors", "details", e.getMessage()));
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        verifyToken = req.getParameter("verifyToken");
+        uname = (String) req.getSession().getAttribute("uname");
+        email = (String) req.getSession().getAttribute("email");
+        log.info("Preparing to verify new user email address");
+        // Call DAO method
+        result = AuthDAO.verifyEmail(uname, email, verifyToken.toUpperCase(Locale.ROOT));
+        log.info("Logging response of verification email {}", result);
+        // Check response and redirect
+        if ("success".equalsIgnoreCase(result)) {
+            log.info("Email verified successfully");
+            resp.sendRedirect("signin.jsp");
+        } else {
+            log.error("email verification failed with the following: {}", result);
+            // Stay on signup page, optionally show error message
+            req.setAttribute("errorMessage", result);
+            req.getRequestDispatcher("verify.jsp").forward(req, resp);
         }
+
     }
 }

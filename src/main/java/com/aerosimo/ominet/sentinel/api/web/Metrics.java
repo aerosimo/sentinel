@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Person.java                                                     *
- * Created:   06/10/2025, 22:34                                               *
+ * File:      Metrics.java                                                    *
+ * Created:   10/10/2025, 16:03                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,9 +29,10 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
+import com.aerosimo.ominet.sentinel.core.model.SystemMetrics;
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -41,57 +42,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@WebServlet(name = "person",
-        description = "A simple servlet to save person details",
-        value = "/person")
-public class Person extends HttpServlet {
+@WebServlet(name = "metrics",
+        description = "A simple servlet to populate server metrics",
+        value = "/metrics")
+public class Metrics extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Person.class.getName());
+        log = LogManager.getLogger(Metrics.class.getName());
     }
 
-    static String email;
-    static String title;
-    static String firstName;
-    static String middleName;
-    static String lastName;
-    static String gender;
-    static Date birthday;
-    static String uname;
-    static String birthdayStr;
-    static String response;
-
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html; charset=UTF-8");
-        email = req.getParameter("email");
-        title = req.getParameter("title");
-        firstName = req.getParameter("firstName");
-        middleName = req.getParameter("middleName");
-        lastName = req.getParameter("lastName");
-        gender = req.getParameter("gender");
-        birthdayStr = req.getParameter("birthday");
-        uname = (String) req.getSession().getAttribute("uname");;
-        birthday = null;
-        if (birthdayStr != null && !birthdayStr.isEmpty()) {
-            try {
-                birthday = Date.valueOf(birthdayStr);  // ✅ safe conversion
-            } catch (IllegalArgumentException e) {
-                log.error("Invalid date format for birthday: {}", birthdayStr, e);
-            }
-        }
-        response = ProfileDAO.savePerson(uname, email, title, firstName, middleName, lastName, gender, birthday);
-        log.info("Logging response of savePerson {}", response);
-        if ("success".equalsIgnoreCase(response)) {
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
-        } else {
-            // maybe show error back to user
-            req.setAttribute("errorMessage", response);
-            req.getRequestDispatcher("settings.jsp").forward(req, resp);
-        }
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json; charset=UTF-8");
+
+        Map<String, Object> metrics = new HashMap<>();
+        metrics.put("disk", SystemMetrics.getDisk());
+        metrics.put("memory", SystemMetrics.getMemory());
+        metrics.put("cpu", SystemMetrics.getCpu());
+
+        new Gson().toJson(metrics, resp.getWriter());
     }
 }

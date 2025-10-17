@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Reset.java                                                      *
- * Created:   10/10/2025, 16:03                                               *
+ * File:      VeryMFA.java                                                    *
+ * Created:   24/09/2025, 01:19                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,10 +29,11 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.mail.ResetMail;
+import com.aerosimo.ominet.sentinel.dao.impl.MFAResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,43 +44,47 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Locale;
 
-@WebServlet(name = "reset",
-        description = "A simple servlet to reset password for the application user",
-        value = "/reset")
-public class Reset extends HttpServlet {
+@WebServlet(name = "mfa",
+        description = "A simple servlet to capture the information from mfa email form",
+        value = "/mfa")
+public class VeryMFA extends HttpServlet {
 
     private static final Logger log;
-
-    static {
-        log = LogManager.getLogger(Reset.class.getName());
-    }
-
-    static String password;
+    static String mfaToken;
     static String email;
     static String uname;
-    static String result;
-    static String token;
-    static String response;
+    static String inet;
+    static String device;
+    static MFAResponseDTO result;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    static {
+        log = LogManager.getLogger(VeryMFA.class.getName());
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        email = (String) req.getSession().getAttribute("email");
+        mfaToken = req.getParameter("mfaToken");
         uname = (String) req.getSession().getAttribute("uname");
-        password = req.getParameter("password");
-        token = req.getParameter("token");
-        log.info("Preparing to reset user password for {}", email);
+        email = (String) req.getSession().getAttribute("email");
+        inet = (String) req.getSession().getAttribute("inet");
+        device = (String) req.getSession().getAttribute("userAgent");
+        log.info("Preparing to confirm login token");
         // Call DAO method
-        result = AuthDAO.resetPassword(email, token.toUpperCase(Locale.ROOT), password);
+        result = AuthDAO.confirmMFA(uname,email,mfaToken.toUpperCase(Locale.ROOT),inet,device);
+        log.info("Logging response of login confirmation email {}", result.getResponse());
         // Check response and redirect
-        if ("success".equalsIgnoreCase(result)) {
-            log.info("Password reset ran successfully for {}", email);
-            // Send reset email to the new user
-            response = ResetMail.sendMail(email,uname);
-            log.info("Password reset email response is : {}", response);
-            resp.sendRedirect("signin.jsp");
+        if ("success".equalsIgnoreCase(result.getResponse())) {
+            log.info("MFA email confirmed successfully");
+            log.info("Session token is: {}", result.getSessionToken());
+            req.getSession().setAttribute("SessionToken", result.getSessionToken());
+            resp.sendRedirect("index.jsp");
         } else {
-            resp.sendRedirect("reset.jsp");
+            log.error("MFA email confirmation failed with the following: {}", result.getResponse());
+            // Stay on signup page, optionally show error message
+            req.setAttribute("errorMessage", result.getSessionToken());
+            req.getRequestDispatcher("mfa.jsp").forward(req, resp);
         }
+
     }
 }

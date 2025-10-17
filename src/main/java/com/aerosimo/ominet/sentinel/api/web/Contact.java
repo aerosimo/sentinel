@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Signout.java                                                    *
- * Created:   18/09/2025, 23:35                                               *
+ * File:      Contact.java                                                    *
+ * Created:   06/10/2025, 22:36                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,9 +29,10 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
+import com.aerosimo.ominet.sentinel.dao.mapper.ProfileDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,44 +42,59 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "logout",
-        description = "A simple logout servlet to log a user out of the application",
-        value = "/logout")
-public class Signout extends HttpServlet {
+@WebServlet(name = "contact",
+        description = "Servlet to save user contact details",
+        value = "/contact")
+public class Contact extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Signout.class.getName());
+        log = LogManager.getLogger(Contact.class.getName());
     }
 
-    static String response;
-    static String uname;
     static String email;
-    static String SessionToken;
+    static String[] channels;
+    static String[] addresses;
+    static String[] consents;
+    static String uname;
+    static String channel;
+    static String address;
+    static String consent;
+    static String response;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         resp.setContentType("text/html; charset=UTF-8");
-        uname = (String) req.getSession().getAttribute("uname");
-        email = (String) req.getSession().getAttribute("email");
-        SessionToken = (String) req.getSession().getAttribute("SessionToken");
-        // Call DAO method
-        response = AuthDAO.logout(uname, email, SessionToken);
-        if ("success".equalsIgnoreCase(response)) {
-            log.info("Sign out successful with the session: {}", email);
-            // Remove all stored session attributes
-            req.getSession().removeAttribute("inet");
-            req.getSession().removeAttribute("host");
-            req.getSession().removeAttribute("user");
-            req.getSession().removeAttribute("email");
-            req.getSession().removeAttribute("device");
-            req.getSession().removeAttribute("SessionToken");
-            req.getSession().invalidate();
-            resp.sendRedirect("signin.jsp");
+
+        email = req.getParameter("email");
+        uname = (String) req.getSession().getAttribute("uname");;
+        // Multiple contacts - expects arrays from the form
+        channels = req.getParameterValues("channel");
+        addresses = req.getParameterValues("address");
+        consents = req.getParameterValues("consent");
+
+        if (channels != null && addresses != null) {
+            int total = channels.length;
+            log.info("Saving {} contact(s) for user {}", total, email);
+            for (int i = 0; i < channels.length; i++) {
+                channel = channels[i];
+                address = (i < addresses.length) ? addresses[i] : "";
+                consent = (consents != null && i < consents.length) ? consents[i] : "NO";
+                log.info("Saving contact: email={}, channel={}, address={}, consent={}",
+                        email, channel, address, consent);
+                response = ProfileDAO.saveContact(uname, email, channel, address, consent);
+                log.info("SaveContact response: {}", response);
+                if (!"success".equalsIgnoreCase(response)) {
+                    log.warn("Contact save failed for {} on channel {}: {}", email, channel, response);
+                }
+            }
         } else {
-            log.error("Logout request failed with the following: {}", response);
-            resp.sendRedirect("index.jsp");
+            log.warn("No contact details provided for {}", email);
         }
+        // Redirect or forward back to settings.jsp
+        req.getRequestDispatcher("settings.jsp").forward(req, resp);
     }
 }

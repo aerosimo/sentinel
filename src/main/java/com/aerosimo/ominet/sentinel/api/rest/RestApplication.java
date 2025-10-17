@@ -2,9 +2,9 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Silhouette.java                                                 *
- * Created:   05/10/2025, 18:28                                               *
- * Modified:  10/10/2025, 16:04                                               *
+ * File:      RestApplication.java                                            *
+ * Created:   18/10/2025, 00:48                                               *
+ * Modified:  18/10/2025, 00:48                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,50 +29,21 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.rest;
 
-import com.aerosimo.ominet.sentinel.dao.impl.SilhouetteResponseDTO;
-import com.aerosimo.ominet.sentinel.dao.mapper.SilhouetteDAO;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-@WebServlet(name = "silhouette",
-        description = "A simple servlet to populate person, contacts and profile information",
-        value = "/silhouette")
-public class Silhouette extends HttpServlet {
-
-    private static final Logger log = LogManager.getLogger(Silhouette.class.getName());
-
+@ApplicationPath("/api")
+public class RestApplication extends Application {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // ✅ Get logged-in user's email from session
-        String email = (String) req.getSession().getAttribute("email");
-
-        if (email == null) {
-            log.warn("User not logged in, redirecting to login.");
-            resp.sendRedirect("login.jsp");
-            return;
-        }
-        log.info("Fetching Silhouette for email: {}", email);
-        // ✅ Fetch horoscope directly via DAO
-        SilhouetteResponseDTO silhouette = SilhouetteDAO.getSilhouette(email);
-        log.info("Fetching Silhouette: {}", silhouette);
-        if (silhouette != null) {
-            log.info("Loaded silhouette for {}",email);
-            req.setAttribute("silhouette", silhouette);
-        } else {
-            log.warn("No silhouette found for email: {}", email);
-            req.setAttribute("silhouette", null);
-        }
-        req.getRequestDispatcher("/profile.jsp").forward(req, resp);
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(AvatarREST.class);
+        // add other REST services (PostmasterREST, CardValidatorREST, etc.)
+        return classes;
     }
 }

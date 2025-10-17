@@ -108,7 +108,7 @@ response.sendRedirect("signin.jsp");
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
-                            <img src="${silhouette.image.avatar != null ? silhouette.image.avatar : 'assets/img/user/user.png'}"
+                            <img src="api/avatar/${email} onerror="this.src='assets/img/user/user.png';"
                             alt="User" class="rounded-circle me-2" width="40" height="40">
                             <span>${uname}</span>
                         </a>
@@ -394,7 +394,7 @@ response.sendRedirect("signin.jsp");
                                         <div id="dropZone" class="drop-zone text-center p-4 border rounded" onclick="document.getElementById('avatarInput').click()">
                                             <c:choose>
                                                 <c:when test="${not empty silhouette.image.avatar}">
-                                                    <img src="${silhouette.image.avatar}" alt="Avatar Preview"
+                                                    <img src="pi/avatar/${email}" alt="Avatar Preview"
                                                          class="img-fluid rounded-circle shadow-sm mb-2" width="150">
                                                 </c:when>
                                                 <c:otherwise>

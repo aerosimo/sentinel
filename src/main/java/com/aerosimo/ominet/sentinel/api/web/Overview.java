@@ -29,7 +29,7 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
 import com.aerosimo.ominet.sentinel.core.model.ServerOverview;
 import jakarta.servlet.annotation.WebServlet;

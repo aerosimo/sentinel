@@ -2,8 +2,8 @@
  * This piece of work is to enhance sentinel project functionality.           *
  *                                                                            *
  * Author:    eomisore                                                        *
- * File:      Forgot.java                                                     *
- * Created:   10/10/2025, 16:03                                               *
+ * File:      Signout.java                                                    *
+ * Created:   18/09/2025, 23:35                                               *
  * Modified:  10/10/2025, 16:04                                               *
  *                                                                            *
  * Copyright (c)  2025.  Aerosimo Ltd                                         *
@@ -29,11 +29,8 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.ominet.sentinel.web;
+package com.aerosimo.ominet.sentinel.api.web;
 
-import com.aerosimo.ominet.sentinel.dao.impl.ForgotResponseDTO;
-import com.aerosimo.ominet.sentinel.mail.ForgotMail;
-import com.aerosimo.ominet.sentinel.dao.impl.SignupResponseDTO;
 import com.aerosimo.ominet.sentinel.dao.mapper.AuthDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -44,40 +41,43 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "forgot",
-        description = "A simple servlet to recover password for the application user",
-        value = "/forgot")
-public class Forgot extends HttpServlet {
+@WebServlet(name = "logout",
+        description = "A simple logout servlet to log a user out of the application",
+        value = "/logout")
+public class Signout extends HttpServlet {
 
     private static final Logger log;
 
     static {
-        log = LogManager.getLogger(Forgot.class.getName());
+        log = LogManager.getLogger(Signout.class.getName());
     }
 
+    static String response;
+    static String uname;
     static String email;
-    static String result;
-    static ForgotResponseDTO response;
+    static String SessionToken;
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        email = req.getParameter("email");
-        log.info("Preparing to find user via email address {}", email);
+        uname = (String) req.getSession().getAttribute("uname");
+        email = (String) req.getSession().getAttribute("email");
+        SessionToken = (String) req.getSession().getAttribute("SessionToken");
         // Call DAO method
-        response = AuthDAO.forgotPassword(email);
-        log.info("Logging response of sign in {}", response.getResponse());
-        // Check response and redirect
-        if ("success".equalsIgnoreCase(response.getResponse())) {
-            log.info("Password forgot ran successfully for {}", email);
-            log.info("email verification code of password reset is: {}", response.getAuthcode());
-            // Send forgot email to the new user
-            result = ForgotMail.sendMail(email,response.getUname(),response.getAuthcode());
-            log.info("Forgot email response is : {}", result);
-            req.getSession().setAttribute("email", email);
-            req.getSession().setAttribute("uname", response.getUname());
-            resp.sendRedirect("reset.jsp");
+        response = AuthDAO.logout(uname, email, SessionToken);
+        if ("success".equalsIgnoreCase(response)) {
+            log.info("Sign out successful with the session: {}", email);
+            // Remove all stored session attributes
+            req.getSession().removeAttribute("inet");
+            req.getSession().removeAttribute("host");
+            req.getSession().removeAttribute("user");
+            req.getSession().removeAttribute("email");
+            req.getSession().removeAttribute("device");
+            req.getSession().removeAttribute("SessionToken");
+            req.getSession().invalidate();
+            resp.sendRedirect("signin.jsp");
         } else {
-            log.error("Forgot password request failed with the following: {}", response.getResponse());
+            log.error("Logout request failed with the following: {}", response);
             resp.sendRedirect("index.jsp");
         }
     }
