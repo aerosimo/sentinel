@@ -461,5 +461,13 @@ response.sendRedirect("signin.jsp");
 
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/main.js"></script>
+
+<script>
+document.getElementById('avatarUploadForm').addEventListener('submit', function() {
+    const input = document.getElementById('avatarInput');
+    input.value = ''; // reset field after submission
+});
+</script>
+
 </body>
 </html>

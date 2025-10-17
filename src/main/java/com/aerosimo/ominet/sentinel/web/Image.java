@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @WebServlet("/image")
-@MultipartConfig(maxFileSize = 5 * 1024 * 1024) // 5 MB
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class Image extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(Image.class.getName());
@@ -59,11 +59,36 @@ public class Image extends HttpServlet {
         String uname = (String) req.getSession().getAttribute("uname");
         Part filePart = req.getPart("avatar");
 
-        if (filePart == null || filePart.getSize() == 0) {
-            log.warn("No file uploaded in avatar field.");
-            resp.sendRedirect("settings.jsp?error=no_file");
+        req.getSession().removeAttribute("lastUploadedFile");
+
+        String lastFile = (String) req.getSession().getAttribute("lastUploadedFile");
+        if (lastFile != null && lastFile.equals(filePart.getSubmittedFileName())) {
+            log.info("Same file uploaded again; proceeding with re-upload.");
+        }
+        req.getSession().setAttribute("lastUploadedFile", filePart.getSubmittedFileName());
+
+        try {
+            filePart = req.getPart("avatar");
+        }catch (IllegalStateException | ServletException err) {
+            log.error("Error reading multipart part: ", err);
+        }
+
+        if (filePart == null) {
+            log.warn("Avatar part missing in request.");
+            resp.sendRedirect("settings.jsp?error=no_part");
             return;
         }
+        if (filePart.getSize() == 0) {
+            log.warn("Avatar file empty or same file re-uploaded.");
+            resp.sendRedirect("settings.jsp?error=empty_file");
+            return;
+        }
+
+        // if (filePart == null || filePart.getSize() == 0) {
+            // log.warn("No file uploaded in avatar field.");
+            // resp.sendRedirect("settings.jsp?error=no_file");
+            // return;
+        // }
 
         if (email == null || uname == null) {
             log.error("Session attributes missing (email/uname). Cannot save image.");
@@ -73,16 +98,16 @@ public class Image extends HttpServlet {
 
         try (InputStream avatarStream = filePart.getInputStream()) {
             String dbResponse = ProfileDAO.saveImage(uname, email, avatarStream);
-            log.info("ProfileDAO.saveImage -> {}", dbResponse);
-            if ("success".equalsIgnoreCase(dbResponse)) {
-                resp.sendRedirect("settings.jsp?msg=avatar_updated");
-            } else {
-                resp.sendRedirect("settings.jsp?error=upload_failed");
-            }
-
+            log.info("ProfileDAO.saveImage returned: {}", dbResponse);
+            resp.sendRedirect("settings.jsp?msg=" + dbResponse);
+            //if ("success".equalsIgnoreCase(dbResponse)) {
+               // resp.sendRedirect("settings.jsp?msg=" + dbResponse);
+           // } else {
+                // resp.sendRedirect("settings.jsp?error=upload_failed");
+           // }
         } catch (Exception err) {
             log.error("Exception while saving avatar for user -> {}", email, err);
-            resp.sendRedirect("settings.jsp?error=exception");
+            resp.sendRedirect("settings.jsp?error=upload_failed");
         }
     }
 }
