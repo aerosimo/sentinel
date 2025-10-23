@@ -108,7 +108,7 @@ response.sendRedirect("signin.jsp");
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#">
-                            <img src="api/avatar/${email} onerror="this.src='assets/img/user/user.png';"
+                            <img src="api/avatar/${email}" onerror="this.src='assets/img/user/user.png';"
                             alt="User" class="rounded-circle me-2" width="40" height="40">
                             <span>${uname}</span>
                         </a>
