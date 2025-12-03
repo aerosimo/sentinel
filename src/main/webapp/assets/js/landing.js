@@ -156,35 +156,97 @@ document.addEventListener('DOMContentLoaded', () => {
 // CARD 4
 
 // landing.js
+
+// Helper: Convert GB string to number
+function gbToNumber(gbStr) {
+    return parseFloat(gbStr.replace('GB', '').trim());
+}
+
+// Helper: Determine color based on usage %
+function usageColor(value) {
+    if (value <= 50) return '#00ff44'; // Green
+    if (value <= 75) return '#ffaa00'; // Orange
+    return '#ff0033';                 // Red
+}
+
+// Create doughnut chart with internal labels
+function createDoughnutChart(ctx, used, label) {
+    const free = 100 - used;
+    const colorUsed = usageColor(used);
+
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [label, 'Free'],
+            datasets: [{
+                data: [used, free],
+                backgroundColor: [colorUsed, '#4d3b7a33'],
+                borderColor: '#0d0d0f',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw.toFixed(1) + '%';
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 14 },
+                    formatter: (value, ctx) => {
+                        return ctx.chart.data.labels[ctx.dataIndex] === label ? value.toFixed(1) + '%' : '';
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
+// Fetch metrics from API and update charts
 async function fetchSystemMetrics() {
     try {
-        const resp = await fetch("https://ominet.aerosimo.com:9443/infraguard/api/guard/metric");
-        const data = await resp.json();
+        const response = await fetch('https://ominet.aerosimo.com:9443/infraguard/api/guard/metric');
+        if (!response.ok) throw new Error('Failed to fetch metrics');
+        const data = await response.json();
 
-        // Memory
-        const usedMem = parseFloat(data.memory.used);
-        const maxMem = parseFloat(data.memory.max);
-        const memPercent = Math.round((usedMem / maxMem) * 100);
-        createDoughnutChart(document.getElementById('memoryChart').getContext('2d'), memPercent);
+        // Memory usage % = (used / max) * 100
+        const memoryUsed = parseFloat(data.memory.used);
+        const memoryMax = parseFloat(data.memory.max);
+        const memoryPercent = (memoryUsed / memoryMax) * 100;
 
-        // Disk
-        const totalDisk = parseFloat(data.disk.total);
-        const usedDisk = totalDisk - parseFloat(data.disk.free);
-        const diskPercent = Math.round((usedDisk / totalDisk) * 100);
-        createDoughnutChart(document.getElementById('diskChart').getContext('2d'), diskPercent);
+        // Disk usage % = ((total - free) / total) * 100
+        const diskTotal = gbToNumber(data.disk.total);
+        const diskFree = gbToNumber(data.disk.free);
+        const diskPercent = ((diskTotal - diskFree) / diskTotal) * 100;
 
-        // CPU (simplified example: sum of all cpuTimes)
-        const cpuTimes = data.cpu.map(c => parseInt(c.cpuTime));
-        const totalCpuTime = cpuTimes.reduce((a,b) => a+b, 0);
-        const maxCpuTime = Math.max(...cpuTimes);
-        const cpuPercent = Math.round((maxCpuTime / totalCpuTime) * 100);
-        createDoughnutChart(document.getElementById('cpuChart').getContext('2d'), cpuPercent);
+        // CPU usage % approximation based on cumulative cpuTime per thread
+        let cpuTimes = data.cpu.map(t => parseInt(t.cpuTime));
+        const maxCpuTime = Math.max(...cpuTimes); // approximate scaling
+        const cpuPercent = Math.min((cpuTimes.reduce((a,b) => a+b,0) / (maxCpuTime*cpuTimes.length))*100, 100);
 
-    } catch(err) {
-        console.error("Failed to fetch system metrics:", err);
+        // Draw charts
+        const memoryCtx = document.getElementById('memoryChart').getContext('2d');
+        const diskCtx = document.getElementById('diskChart').getContext('2d');
+        const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+
+        createDoughnutChart(memoryCtx, memoryPercent, 'Memory');
+        createDoughnutChart(diskCtx, diskPercent, 'Disk');
+        createDoughnutChart(cpuCtx, cpuPercent, 'CPU');
+
+    } catch (err) {
+        console.error('Error fetching system metrics:', err);
     }
 }
 
+// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     fetchSystemMetrics();
 });
