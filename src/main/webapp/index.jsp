@@ -172,33 +172,50 @@
                                     <th>Timestamp</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                    <%
-                                        for (int i = 0; i < errors.length(); i++) {
-                                            JSONObject err = errors.getJSONObject(i);
-                                            String ref = err.getString("errorRef");
-                                            String msg = err.getString("errorMessage");
-                                            String time = err.getString("errorTime");
-                                            // Derive status from errorCode (example logic)
-                                            String status = err.getString("errorCode").startsWith("TE") ? "OPEN" : "RESOLVED";
-                                            String statusClass = "badge bg-primary";
-                                            String statusIcon = "⚠️";
-                                            switch(status) {
-                                                case "OPEN": statusClass="badge bg-danger"; statusIcon="⚠️"; break;
-                                                case "RESOLVED": statusClass="badge bg-success"; statusIcon="✅"; break;
-                                                case "CLOSED": statusClass="badge bg-secondary"; statusIcon="❌"; break;
-                                                case "PENDING": statusClass="badge bg-warning"; statusIcon="⏳"; break;
-                                            }
-                                    %>
-                                        <tr>
-                                            <td><%= ref %></td>
-                                            <td><span class="<%= statusClass %>"><%= statusIcon %> <%= status %></span></td>
-                                            <td><%= time %></td>
-                                        </tr>
-                                    <%
+                                <tbody>
+                                <%
+                                    // Fetch JSON array from API or service
+                                    // Assuming 'errorsArray' is a JSONArray obtained from your API
+                                    for (int i = 0; i < errorsArray.length() && i < 5; i++) {
+                                        JSONObject err = errorsArray.getJSONObject(i);
+                                        String ref = err.getString("errorRef");
+                                        String msg = err.getString("errorMessage");
+                                        String time = err.getString("errorTime");
+
+                                        // Derive status from errorCode (example logic)
+                                        String errorStatus = err.getString("errorCode").startsWith("TE") ? "OPEN" : "RESOLVED";
+
+                                        String statusClass = "badge bg-primary";
+                                        String statusIcon = "ℹ️";
+
+                                        switch (errorStatus) {
+                                            case "OPEN":
+                                                statusClass = "badge bg-danger";
+                                                statusIcon = "⚠️";
+                                                break;
+                                            case "RESOLVED":
+                                                statusClass = "badge bg-success";
+                                                statusIcon = "✅";
+                                                break;
+                                            case "CLOSED":
+                                                statusClass = "badge bg-secondary";
+                                                statusIcon = "✖️";
+                                                break;
+                                            case "PENDING":
+                                                statusClass = "badge bg-warning";
+                                                statusIcon = "⏳";
+                                                break;
                                         }
-                                    %>
-                            </tbody>
+                                %>
+                                <tr class="<%=errorStatus.toLowerCase()%>">
+                                    <td><%= ref %></td>
+                                    <td><span class="error-status <%=errorStatus.toLowerCase()%>"><%= statusIcon %> <%= errorStatus %></span></td>
+                                    <td><%= time %></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+                                </tbody>
                         </table>
                     </div>
                     <div class="text-center mt-2">
