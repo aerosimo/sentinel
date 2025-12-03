@@ -156,6 +156,7 @@
             }
             JSONArray errors = new JSONArray(jsonErrors);
         %>
+
         <!-- Card 3: Error Intelligence -->
         <div class="card-col">
             <div class="ominet-card">
@@ -165,65 +166,81 @@
                 <div class="error-table-wrapper">
                     <div class="table-responsive">
                         <table class="error-table table table-sm table-hover align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Reference</th>
-                                    <th>Status</th>
-                                    <th>Timestamp</th>
-                                </tr>
+                            <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Status</th>
+                                <th>Timestamp</th>
+                            </tr>
                             </thead>
-                                <tbody>
-                                <%
-                                    // Fetch JSON array from API or service
-                                    // Assuming 'errorsArray' is a JSONArray obtained from your API
-                                    for (int i = 0; i < errorsArray.length() && i < 5; i++) {
-                                        JSONObject err = errorsArray.getJSONObject(i);
-                                        String ref = err.getString("errorRef");
-                                        String msg = err.getString("errorMessage");
-                                        String time = err.getString("errorTime");
+                            <tbody>
+                            <%
+                                // --- Fetch JSON from API ---
+                                java.net.URL url = new java.net.URL("https://ominet.aerosimo.com:9443/spectre/api/errors/retrieve?records=5");
+                                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                                conn.setRequestMethod("GET");
+                                conn.setRequestProperty("Accept", "application/json");
 
-                                        // Derive status from errorCode (example logic)
-                                        String errorStatus = err.getString("errorCode").startsWith("TE") ? "OPEN" : "RESOLVED";
+                                java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+                                while ((line = br.readLine()) != null) {
+                                    sb.append(line);
+                                }
+                                br.close();
+                                conn.disconnect();
 
-                                        String statusClass = "badge bg-primary";
-                                        String statusIcon = "ℹ️";
+                                org.json.JSONArray errorsArray = new org.json.JSONArray(sb.toString());
 
-                                        switch (errorStatus) {
-                                            case "OPEN":
-                                                statusClass = "badge bg-danger";
-                                                statusIcon = "⚠️";
-                                                break;
-                                            case "RESOLVED":
-                                                statusClass = "badge bg-success";
-                                                statusIcon = "✅";
-                                                break;
-                                            case "CLOSED":
-                                                statusClass = "badge bg-secondary";
-                                                statusIcon = "✖️";
-                                                break;
-                                            case "PENDING":
-                                                statusClass = "badge bg-warning";
-                                                statusIcon = "⏳";
-                                                break;
-                                        }
-                                %>
-                                <tr class="<%=errorStatus.toLowerCase()%>">
-                                    <td><%= ref %></td>
-                                    <td><span class="error-status <%=errorStatus.toLowerCase()%>"><%= statusIcon %> <%= errorStatus %></span></td>
-                                    <td><%= time %></td>
-                                </tr>
-                                <%
+                                // --- Loop through top 5 errors ---
+                                for (int i = 0; i < errorsArray.length() && i < 5; i++) {
+                                    org.json.JSONObject err = errorsArray.getJSONObject(i);
+                                    String ref = err.getString("errorRef");
+                                    String time = err.getString("errorTime");
+
+                                    // Derive status from errorCode (example logic)
+                                    String errorStatus = err.getString("errorCode").startsWith("TE") ? "OPEN" : "RESOLVED";
+
+                                    String statusClass = "badge bg-primary";
+                                    String statusIcon = "ℹ️";
+
+                                    switch(errorStatus) {
+                                        case "OPEN":
+                                            statusClass = "badge bg-danger";
+                                            statusIcon = "⚠️";
+                                            break;
+                                        case "RESOLVED":
+                                            statusClass = "badge bg-success";
+                                            statusIcon = "✅";
+                                            break;
+                                        case "CLOSED":
+                                            statusClass = "badge bg-secondary";
+                                            statusIcon = "✖️";
+                                            break;
+                                        case "PENDING":
+                                            statusClass = "badge bg-warning";
+                                            statusIcon = "⏳";
+                                            break;
                                     }
-                                %>
-                                </tbody>
+                            %>
+                            <tr class="<%=errorStatus.toLowerCase()%>">
+                                <td><%= ref %></td>
+                                <td><span class="error-status <%=errorStatus.toLowerCase()%>"><%= statusIcon %> <%= errorStatus %></span></td>
+                                <td><%= time %></td>
+                            </tr>
+                            <%
+                                }
+                            %>
+                            </tbody>
                         </table>
                     </div>
                     <div class="text-center mt-2">
-                        <button class="btn btn-sm btn-outline-primary" onclick="fetchRecentErrors()">Refresh</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="location.reload()">Refresh</button>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Card 4: System Metrics -->
         <div class="card-col">
