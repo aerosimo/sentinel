@@ -101,10 +101,20 @@
             </div>
         </div>
 
-        <!-- Card 2: Activity Monitor / Server Overview -->
+        <!-- Card 2: Server Health Monitor -->
+        <%
+            com.aerosimo.ominet.core.model.HealthService healthService = new com.aerosimo.ominet.core.model.HealthService();
+            org.json.JSONObject health = healthService.fetchHealth();
+            String uptime = health.optString("uptime", "--");
+            String load = health.optString("load", "--");
+            String connections = health.optString("connections", "--");
+            String status = health.optString("status", "--");
+            String badgeStatusClass = status.equalsIgnoreCase("Running") ? "bg-success" : "bg-danger";
+        %>
+        <!-- Card 2: Server Health Monitor -->
         <div class="card-col">
             <div class="ominet-card">
-                <h3 class="card-title-top">Activity Monitor</h3>
+                <h3 class="card-title-top">Server Health Monitor</h3>
                 <p>Tracks realtime server uptime status.</p>
                 <br/><br/><br/>
                 <div class="activity-monitor">
@@ -112,27 +122,28 @@
                         <li>
                             <span class="metric-icon"><i class="fas fa-server"></i></span>
                             Uptime
-                            <span id="uptime" class="badge bg-success">--</span>
+                            <span id="uptime" class="badge bg-success"><%= uptime %></span>
                         </li>
                         <li>
                             <span class="metric-icon"><i class="fas fa-tachometer-alt"></i></span>
                             Load Average
-                            <span id="load" class="badge bg-info">--</span>
+                            <span id="load" class="badge bg-info"><%= load %></span>
                         </li>
                         <li>
                             <span class="metric-icon"><i class="fas fa-network-wired"></i></span>
                             Active Connections
-                            <span id="connections" class="badge bg-primary">--</span>
+                            <span id="connections" class="badge bg-primary"><%= connections %></span>
                         </li>
                         <li>
                             <span class="metric-icon"><i class="fas fa-heartbeat"></i></span>
                             Health Status
-                            <span id="status" class="badge bg-success">--</span>
+                            <span id="status" class="badge <%= badgeStatusClass %>"><%= status %></span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+
 
         <!-- Card 3: Error Intelligence -->
         <div class="card-col">
