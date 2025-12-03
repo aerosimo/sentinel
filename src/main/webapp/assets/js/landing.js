@@ -152,3 +152,39 @@ async function fetchRecentErrors() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchRecentErrors();
 });
+
+// CARD 4
+
+// landing.js
+async function fetchSystemMetrics() {
+    try {
+        const resp = await fetch("https://ominet.aerosimo.com:9443/infraguard/api/guard/metric");
+        const data = await resp.json();
+
+        // Memory
+        const usedMem = parseFloat(data.memory.used);
+        const maxMem = parseFloat(data.memory.max);
+        const memPercent = Math.round((usedMem / maxMem) * 100);
+        createDoughnutChart(document.getElementById('memoryChart').getContext('2d'), memPercent);
+
+        // Disk
+        const totalDisk = parseFloat(data.disk.total);
+        const usedDisk = totalDisk - parseFloat(data.disk.free);
+        const diskPercent = Math.round((usedDisk / totalDisk) * 100);
+        createDoughnutChart(document.getElementById('diskChart').getContext('2d'), diskPercent);
+
+        // CPU (simplified example: sum of all cpuTimes)
+        const cpuTimes = data.cpu.map(c => parseInt(c.cpuTime));
+        const totalCpuTime = cpuTimes.reduce((a,b) => a+b, 0);
+        const maxCpuTime = Math.max(...cpuTimes);
+        const cpuPercent = Math.round((maxCpuTime / totalCpuTime) * 100);
+        createDoughnutChart(document.getElementById('cpuChart').getContext('2d'), cpuPercent);
+
+    } catch(err) {
+        console.error("Failed to fetch system metrics:", err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchSystemMetrics();
+});
