@@ -75,22 +75,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // CARD 1
-function refreshServerStatus(){
-fetch("pulseStatus").then(res => res.json()).then(data => {
-updateLight("jenkins", data.jenkins);
-updateLight("tomee", data.tomee);
-updateLight("fedora", data.linux);
-updateLight("oracle", data.oracle);})
-.catch(err => console.error("Pulse fetch failed:",err));
+function refreshServerStatus() {
+    fetch("pulseStatus")
+        .then(res => res.json())
+        .then(data => {
+            updateLight("jenkins", data.jenkins);
+            updateLight("tomee", data.tomee);
+            updateLight("fedora", data.linux);
+            updateLight("oracle", data.oracle);
+        })
+        .catch(err => console.error("Pulse fetch failed:", err));
 }
 
-function updateLight(refreshServerStatus, status) {
-const light = document.querySelector(`.${server} .status-light`);
-light.classList.remove("online", "offline", "warning");
-if (status === "online") light.classList.add("online");
-else if (status === "offline") light.classList.add("offline");
-else light.classLight.add("warning");
+function updateLight(server, status) {
+    const light = document.querySelector(`.${server} .status-light`);
+
+    light.classList.remove("online", "offline", "warning");
+
+    if (status === "online") light.classList.add("online");
+    else if (status === "offline") light.classList.add("offline");
+    else light.classList.add("warning");
 }
 
+// Auto-refresh every 10 seconds
 setInterval(refreshServerStatus, 10000);
-document.addEventListener("DOMContentLoaded",refreshServerStatus);
+
+// Run immediately on load
+document.addEventListener("DOMContentLoaded", refreshServerStatus);
