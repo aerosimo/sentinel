@@ -187,7 +187,7 @@ function createDoughnutChart(ctx, used, label) {
         },
         options: {
             responsive: true,
-            cutout: '70%',
+            cutout: '40%',
             plugins: {
                 legend: { display: false },
                 tooltip: {

@@ -31,11 +31,13 @@
 
 package com.aerosimo.ominet.core.model;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -45,11 +47,14 @@ import javax.net.ssl.X509TrustManager;
 
 public class HealthService {
 
+    private static final Logger log = LogManager.getLogger(HealthService.class);
+
     private static final String HEALTH_URL = "https://ominet.aerosimo.com:9443/infraguard/api/guard/health";
 
     static {
         try {
             // Accept all SSL certificates (self-signed support)
+            log.info("Initializing health service ...");
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
@@ -57,30 +62,31 @@ public class HealthService {
                         public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
                     }
             };
+            log.info("Initializing SSL connection ...");
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+            log.info("Successfully connected to server");
         } catch (Exception ignored) {}
     }
 
     public static JSONObject fetchHealth() {
         try {
+            log.info("Fetching health service ...");
             URL url = new URL(HEALTH_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-
+            log.info("Successfully get connection to server");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(conn.getInputStream())
             );
             String inputLine;
             StringBuilder response = new StringBuilder();
-
+            log.info("Successfully fetching health service response");
             while ((inputLine = in.readLine()) != null)
                 response.append(inputLine);
-
             in.close();
-
             return new JSONObject(response.toString());
 
         } catch (Exception e) {
@@ -90,6 +96,7 @@ public class HealthService {
             error.put("load", "N/A");
             error.put("connections", "N/A");
             error.put("hostname", "Unknown");
+            log.error("error message {}",error.toString());
             return error;
         }
     }

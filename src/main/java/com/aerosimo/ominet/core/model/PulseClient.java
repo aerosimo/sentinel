@@ -31,6 +31,9 @@
 
 package com.aerosimo.ominet.core.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,7 +41,10 @@ import java.net.URL;
 
 public class PulseClient {
 
+    private static final Logger log = LogManager.getLogger(PulseClient.class);
+
     public static String fetchPulse() throws Exception {
+        log.info("Fetching pulse data...");
         URL url = new URL("https://ominet.aerosimo.com:9443/infraguard/api/guard/pulse");
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -52,6 +58,7 @@ public class PulseClient {
         }
         br.close();
         conn.disconnect();
+        log.info("pulse data returned {}",sb.toString());
         return sb.toString();
     }
 }

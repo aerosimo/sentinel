@@ -38,22 +38,27 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 @WebServlet("/pulseStatus")
 public class PulseServlet extends HttpServlet {
 
+    private static final Logger log = LogManager.getLogger(PulseServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+        log.trace("doGet");
         resp.setContentType("application/json");
-
         try {
             String json = PulseClient.fetchPulse();
+            log.info("Pulse status: {}", json);
             resp.getWriter().write(json);
         } catch (Exception e) {
+            log.error(e);
             resp.setStatus(500);
             resp.getWriter().write("{\"error\":\"Unable to fetch server status\"}");
         }

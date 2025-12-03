@@ -31,6 +31,9 @@
 
 package com.aerosimo.ominet.core.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -38,9 +41,12 @@ import java.net.URL;
 
 public class ErrorRetriever {
 
+    private static final Logger log = LogManager.getLogger(ErrorRetriever.class);
+
     private static final String ERROR_API = "https://ominet.aerosimo.com:9443/spectre/api/errors/retrieve?records=5";
 
     public static String getRecentErrors() throws Exception {
+        log.info("Retrieving recent top 5 errors...");
         URL url = new URL(ERROR_API);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -53,6 +59,7 @@ public class ErrorRetriever {
         }
         br.close();
         conn.disconnect();
+        log.info("top 5 errors are {}",sb.toString());
         return sb.toString(); // JSON array
     }
 }
