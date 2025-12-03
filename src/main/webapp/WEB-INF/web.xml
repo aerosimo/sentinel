@@ -32,46 +32,8 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <web-app>
-
-    <!-- Display name -->
     <display-name>Sentinel | Aerosimo Ltd</display-name>
-
-    <!-- Logging configuration -->
-    <context-param>
-        <param-name>log4jConfiguration</param-name>
-        <param-value>log4j2.xml</param-value>
-    </context-param>
-
-    <!-- Specifying the welcome page -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
-    <!-- Specifying the error pages -->
-    <error-page>
-        <!-- Unauthorized directory listing -->
-        <error-code>401</error-code>
-        <location>/401.jsp</location>
-    </error-page>
-    <error-page>
-        <!-- Forbidden directory listing -->
-        <error-code>403</error-code>
-        <location>/403.jsp</location>
-    </error-page>
-    <error-page>
-        <!-- Missing resource -->
-        <error-code>404</error-code>
-        <location>/404.jsp</location>
-    </error-page>
-    <error-page>
-        <!-- Not Allowed resource -->
-        <error-code>405</error-code>
-        <location>/405.jsp</location>
-    </error-page>
-    <error-page>
-        <!-- Uncaught exception -->
-        <error-code>500</error-code>
-        <location>/500.jsp</location>
-    </error-page>
-
 </web-app>
