@@ -102,3 +102,53 @@ setInterval(refreshServerStatus, 10000);
 
 // Run immediately on load
 document.addEventListener("DOMContentLoaded", refreshServerStatus);
+
+// CARD 3
+// Function to fetch recent errors for Card 3
+async function fetchRecentErrors() {
+    const tableBody = document.getElementById('errorsTableBody') || document.querySelector('.error-table tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    try {
+        const response = await fetch('https://ominet.aerosimo.com:9443/spectre/api/errors/retrieve?records=5');
+        const data = await response.json();
+
+        data.forEach(err => {
+            const ref = err.errorRef;
+            const timestamp = err.errorTime;
+
+            // Derive status (example logic)
+            let status = 'OPEN';
+            if (err.errorCode.startsWith('TE')) status = 'OPEN';
+            else status = 'RESOLVED';
+
+            let statusClass = 'open';
+            let statusIcon = '⚠️';
+            switch(status) {
+                case 'OPEN': statusClass = 'open'; statusIcon='⚠️'; break;
+                case 'RESOLVED': statusClass = 'resolved'; statusIcon='✅'; break;
+                case 'CLOSED': statusClass = 'closed'; statusIcon='❌'; break;
+                case 'PENDING': statusClass = 'pending'; statusIcon='⏳'; break;
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = statusClass;
+
+            tr.innerHTML = `
+                <td>${ref}</td>
+                <td><span class="error-status ${statusClass}">${statusIcon} ${status}</span></td>
+                <td>${timestamp}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+    } catch(err) {
+        console.error('Error fetching recent errors:', err);
+        tableBody.innerHTML = `<tr><td colspan="3">Unable to load errors</td></tr>`;
+    }
+}
+
+// Auto-load on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchRecentErrors();
+});

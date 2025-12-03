@@ -145,50 +145,59 @@
         </div>
 
 
+        <%@ page import="com.aerosimo.ominet.core.model.ErrorRetriever" %>
+        <%@ page import="org.json.*" %>
+        <%
+            String jsonErrors = "[]";
+            try {
+                jsonErrors = ErrorRetriever.getRecentErrors();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            JSONArray errors = new JSONArray(jsonErrors);
+        %>
         <!-- Card 3: Error Intelligence -->
         <div class="card-col">
             <div class="ominet-card">
                 <h3 class="card-title-top">Error Intelligence</h3>
-                <p>Quick snapshot of top 5 recent error statuses.</p>
+                <p>Integrates with Error Harbour to provide insights into anomalies and recoverable fault patterns.</p>
                 <br/><br/><br/>
                 <div class="error-table-wrapper">
                     <div class="table-responsive">
                         <table class="error-table table table-sm table-hover align-middle">
-                            <thead>
-                            <tr>
-                                <th>Reference</th>
-                                <th>Status</th>
-                                <th>Timestamp</th>
-                            </tr>
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Status</th>
+                                    <th>Timestamp</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- JS will populate top 5 recent errors -->
-                            <!-- Example Row -->
-                                <tr class="open">
-                                    <td>ERR|B96R39</td>
-                                    <td><span class="error-status open">OPEN</span></td>
-                                    <td>01-DEC-25 22.02.27.492352000</td>
-                                </tr>
-                                <tr class="resolved">
-                                    <td>ERR|B96R39</td>
-                                    <td><span class="error-status resolved">RESOLVED</span></td>
-                                    <td>01-DEC-25 22.02.27.492352000</td>
-                                </tr>
-                                <tr class="pending">
-                                    <td>ERR|B96R39</td>
-                                    <td><span class="error-status pending">PENDING</span></td>
-                                    <td>01-DEC-25 22.02.27.492352000</td>
-                                </tr>
-                                <tr class="closed">
-                                    <td>ERR|B96R39</td>
-                                    <td><span class="error-status closed">CLOSED</span></td>
-                                    <td>01-DEC-25 22.02.27.492352000</td>
-                                </tr>
-                                <tr class="open">
-                                    <td>ERR|B96R39</td>
-                                    <td><span class="error-status open">OPEN</span></td>
-                                    <td>01-DEC-25 22.02.27.492352000</td>
-                                </tr>
+                                    <%
+                                        for (int i = 0; i < errors.length(); i++) {
+                                            JSONObject err = errors.getJSONObject(i);
+                                            String ref = err.getString("errorRef");
+                                            String msg = err.getString("errorMessage");
+                                            String time = err.getString("errorTime");
+                                            // Derive status from errorCode (example logic)
+                                            String status = err.getString("errorCode").startsWith("TE") ? "OPEN" : "RESOLVED";
+                                            String statusClass = "badge bg-primary";
+                                            String statusIcon = "⚠️";
+                                            switch(status) {
+                                                case "OPEN": statusClass="badge bg-danger"; statusIcon="⚠️"; break;
+                                                case "RESOLVED": statusClass="badge bg-success"; statusIcon="✅"; break;
+                                                case "CLOSED": statusClass="badge bg-secondary"; statusIcon="❌"; break;
+                                                case "PENDING": statusClass="badge bg-warning"; statusIcon="⏳"; break;
+                                            }
+                                    %>
+                                        <tr>
+                                            <td><%= ref %></td>
+                                            <td><span class="<%= statusClass %>"><%= statusIcon %> <%= status %></span></td>
+                                            <td><%= time %></td>
+                                        </tr>
+                                    <%
+                                        }
+                                    %>
                             </tbody>
                         </table>
                     </div>
