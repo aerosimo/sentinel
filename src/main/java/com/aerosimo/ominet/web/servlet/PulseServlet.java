@@ -33,7 +33,6 @@ package com.aerosimo.ominet.web.servlet;
 
 
 import com.aerosimo.ominet.core.model.PulseClient;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,7 +49,7 @@ public class PulseServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+            throws IOException {
         log.trace("doGet");
         resp.setContentType("application/json");
         try {
