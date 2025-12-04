@@ -51,12 +51,6 @@
 
     <body>
             <!-- Parallax Section -->
-            <div class="parallax">
-                <div style="text-align: right; padding: 20px;">
-                    <button class="cta-login-btn" onclick="openAuthModal()">
-                        <span class="btn-icon">🔑</span> Login
-                    </button>
-                </div>
                 <div class="parallax-text">
                     <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">
                     <h1>OMINET SENTINEL</h1>

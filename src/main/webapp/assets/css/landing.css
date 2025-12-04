@@ -1,528 +1,220 @@
+/* ===============================
+    GLOBAL
+================================*/
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #0d0d0f;
-  color: #f0f0f0;
-  overflow-x: hidden;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background: #0d0d0f;
+    color: #fff;
 }
 
-/* Parallax Background */
+h1, h2, h3 {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* ===============================
+    PARALLAX HEADER
+================================*/
 .parallax {
-  background-image: url("../img/banner/parallax.jpg");
-  height: 80vh;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  filter: brightness(60%);
-  position: relative;
-}
-
-.parallax-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+    background: url('../img/bg/parallax.jpg') center/cover no-repeat fixed;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .parallax-text img {
-  width: 150px;
-  height: auto;
-  margin-bottom: 20px;
+    height: 80px;
+    margin-bottom: 10px;
 }
 
 .parallax-text h1 {
     font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: #ffffff; /* White text */
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6); /* subtle shadow for contrast */
+    letter-spacing: 2px;
 }
 
-/* CTA Button */
-.cta-login-btn {
-    background: linear-gradient(145deg, #4d3b7a, #6a55b0);
-    color: #fff;
-    border: none;
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 12px;
+/* ===============================
+    BUTTONS
+================================*/
+button {
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    border: none;
+    border-radius: 5px;
 }
 
-.cta-login-btn:hover {
-    background: linear-gradient(145deg, #3b2e61, #5a3f99);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+.cta-login-btn {
+    background: #4d3b7a;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1rem;
 }
 
-.cta-login-btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+.btn-primary-dark {
+    background: #4d3b7a;
+    color: #fff;
+    padding: 10px 15px;
+    margin-top: 10px;
+    width: 100%;
 }
 
-.btn-icon {
-    font-size: 18px;
+.btn-primary-dark:hover {
+    background: #6a56a8;
 }
 
-/* === Modal Login + Signup + Token ==== */
-/* MODAL BACKDROP */
+/* ===============================
+    MODAL
+================================*/
 .ominet-modal {
     position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
+    top: 0; left: 0; right:0; bottom:0;
+    background: rgba(0,0,0,0.8);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
 
-.hidden { display: none !important; }
-
-/* CONTENT */
-.ominet-modal-content.modern-dark {
-    width: 420px;
-    padding: 30px;
-    border-radius: 18px;
-
-    background: rgba(20, 20, 30, 0.85);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.08);
-
-    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-    animation: fadeIn 0.35s ease;
-    position: relative;
+.ominet-modal.hidden {
+    display: none;
 }
 
-@keyframes fadeIn {
-    from { transform: scale(0.95); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
+.ominet-modal-content {
+    background: #1a1a1f;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+    position: relative;
 }
 
 .modal-close {
     position: absolute;
-    right: 20px;
-    top: 12px;
-    font-size: 28px;
-    color: #bbb;
+    top: 10px; right: 15px;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.modal-close:hover {
-    color: white;
+.input-group {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    background: #2a2a35;
+    border-radius: 5px;
+    padding: 5px 10px;
 }
 
-/* SWITCH BUTTONS */
+.input-group input {
+    border: none;
+    background: transparent;
+    color: #fff;
+    flex: 1;
+    padding: 8px;
+}
+
+.input-icon {
+    margin-right: 8px;
+}
+
+/* ===============================
+    AUTH SWITCH
+================================*/
 .auth-switch {
     display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
 .switch-btn {
     flex: 1;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.06);
-    color: #aaa;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.25s;
+    padding: 8px;
+    margin: 0 5px;
+    background: #2a2a35;
+    color: #fff;
+    border-radius: 5px;
 }
 
 .switch-btn.active {
     background: #4d3b7a;
-    color: #fff;
-    border: none;
 }
 
-/* TITLES */
-.modal-title {
-    color: white;
-    margin-bottom: 20px;
-    font-size: 22px;
-}
-
-/* INPUT GROUP WITH ICON */
-.input-group {
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 10px;
-    margin-top: 15px;
-}
-
-.input-group input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    width: 100%;
-    padding-left: 8px;
-}
-
-.input-icon {
-    font-size: 18px;
-    color: #bbb;
-}
-
-/* PRIMARY BUTTON */
-.btn-primary-dark {
-    width: 100%;
-    background: linear-gradient(135deg, #4d3b7a, #6a56b0);
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    margin-top: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.25s;
-}
-
-.btn-primary-dark:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
-
-/* === Ominet Cards === */
+/* ===============================
+    CARDS
+================================*/
 .ominet-card {
-  background: linear-gradient(145deg, #121214, #0a0a0c);
-  border: 1px solid #1c1c1f;
-  box-shadow: 0 0 25px rgba(77, 59, 122, 0.15);
-  border-radius: 12px;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  transition: 0.35s ease-in-out;
-  backdrop-filter: blur(5px);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 20px;
-  text-align: center;
+    background: #1f1f29;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-.ominet-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 35px rgba(77, 59, 122, 0.45);
-}
-
-.ominet-card h3 {
-  color: #4d3b7a;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-/* === Card 2: Activity Monitor / Server Overview === */
-.activity-monitor {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
-}
-
-.activity-monitor h6 {
-  color: #4d3b7a;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.activity-monitor ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.activity-monitor li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1a1a1c;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-}
-
-.activity-monitor li span {
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.activity-monitor .bg-success { background-color: #00ff44; }
-.activity-monitor .bg-info    { background-color: #00bfff; }
-.activity-monitor .bg-primary { background-color: #4d3b7a; }
-.activity-monitor .bg-warning { background-color: #ffaa00; }
-.activity-monitor .bg-danger  { background-color: #ff0033; }
-
-/* === Section & Layout === */
-.section-title {
-  font-size: 2rem;
-  color: #4d3b7a;
-  margin-top: 60px;
-  text-align: center;
-  margin-bottom: 40px;
-  letter-spacing: 1px;
+.card-title-top {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
 }
 
 .card-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .card-col {
-  flex: 0 0 48%; /* Two cards per row */
+    flex: 1 1 calc(25% - 20px);
+    min-width: 250px;
 }
 
-@media (max-width: 768px) {
-  .card-col {
-    flex: 0 0 100%; /* Single column on smaller screens */
-  }
-}
-
-/* === Star Topology Card 1 === */
-.star-topology {
-  position: relative;
-  width: 100%;
-  height: 230px;
-  margin-top: 10px;
-}
-
-/* Hub */
-.hub-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.hub-core {
-  width: 45px;
-  height: 45px;
-  background-color: #4d3b7a;
-  border-radius: 50%;
-  box-shadow: 0 0 12px #4d3b7a;
-}
-
-.hub-center p {
-  margin-top: 5px;
-  font-size: 12px;
-}
-
-/* Generic server node */
-.node {
-  position: absolute;
-  text-align: center;
-  width: 70px;
-}
-
-.node img {
-  width: 55px;
-  height: auto;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,0.1));
-}
-
-.node p {
-  font-size: 12px;
-  margin-top: 4px;
-}
-
+/* ===============================
+    STATUS LIGHTS
+================================*/
 .status-light {
-  position: absolute;
-  top: -5px;
-  right: 8px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  box-shadow: 0 0 6px currentColor;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 5px auto;
 }
 
-.online  { background: #00ff44; animation: blink 1.5s infinite; }
-.offline { background: #ff0033; animation: blink 1.2s infinite; }
-.warning { background: #ffaa00; animation: blink 1.4s infinite; }
+.online { background: #00ff44; }
+.offline { background: #ff0033; }
+.warning { background: #ffaa00; }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .3; }
-}
-
-/* Star layout positions */
-.jenkins { top: 0%; left: 50%; transform: translate(-50%, 0); }
-.oracle  { top: 50%; left: 100%; transform: translate(-100%, -50%); }
-.tomee   { top: 130%; left: 50%; transform: translate(-50%, -100%); }
-.fedora  { top: 50%; left: 0%; transform: translate(0, -50%); }
-
-.node::before {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 55px;
-  top: 28px;
-  left: 50%;
-  background: #4d3b7a60;
-  transform-origin: top;
-}
-
-/* Optional: Topology wrapper inside card for alignment */
-.topology-wrapper {
-  width: 100%;
-  height: 75%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Activity Monitor / Server Overview  Card 2*/
-.activity-monitor h4 {
-    color: #4d3b7a;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.overview-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.overview-list li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #1c1c1f;
-    font-size: 0.95rem;
-}
-
-.overview-list li:last-child {
-    border-bottom: none;
-}
-
-/* Metric Icons */
-.metric-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    margin-right: 8px;
-    color: #4d3b7a;
-    font-size: 0.9rem;
-}
-
-/* Adjust badge spacing */
-.overview-list span.badge {
-    min-width: 40px;
-    font-size: 0.85rem;
-}
-
-/* Error Intelligence Table Card 3*/
-/* Error Table Wrapper */
-.error-table-wrapper {
-    /* No max-height or scroll, natural height for top 5 rows */
-    overflow: visible;
-}
-
-/* Table Styles */
+/* ===============================
+    ERROR TABLE
+================================*/
 .error-table {
     width: 100%;
-    border-collapse: collapse;
-}
-
-/* Table Header */
-.error-table thead th {
-    background-color: #4d3b7a; /* purple header */
     color: #fff;
-    font-weight: 600;
-    text-align: center; /* center header text */
-    padding: 6px;
 }
 
-/* Table Body Cells */
-.error-table tbody td {
-    background-color: #121214; /* dark background */
-    color: #f0f0f0;
-    text-align: center; /* center cell content */
-    vertical-align: middle;
-    position: relative;
-    padding: 6px 10px;
-}
+.error-status.open { color: #ff0033; }
+.error-status.resolved { color: #00ff44; }
+.error-status.closed { color: #aaa; }
+.error-status.pending { color: #ffaa00; }
 
-/* Row Left Border Based on Status */
-.error-table tbody tr.open td:first-child::before {
-    background-color: #ff0033; /* Red for OPEN */
-}
-.error-table tbody tr.resolved td:first-child::before {
-    background-color: #00ff44; /* Green for RESOLVED */
-}
-.error-table tbody tr.closed td:first-child::before {
-    background-color: #4d3b7a; /* Purple for CLOSED */
-}
-.error-table tbody tr.pending td:first-child::before {
-    background-color: #ffaa00; /* Orange for PENDING */
-}
-
-/* Status Badges */
-.error-status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #fff;
-    min-width: 70px;
-    text-align: center;
-}
-
-/* Status Colors + Icons */
-.error-status.open      { background-color: #ff0033; content: "⚠️"; }
-.error-status.resolved  { background-color: #00ff44; content: "✅"; }
-.error-status.closed    { background-color: #4d3b7a; content: "🗂️"; }
-.error-status.pending   { background-color: #ffaa00; content: "⏳"; }
-
-/* Hover effect for rows */
-.error-table tbody tr:hover td {
-    background-color: #1c1c1f;
-}
-
-/* System Metrics Card 4*/
+/* ===============================
+    CHARTS
+================================*/
 .chart-row {
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    margin-top: 15px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
 .chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 30%;
-    margin-bottom: 10px;
+    text-align: center;
+}
+.chart-label {
+    margin-top: 5px;
+    font-size: 0.9rem;
 }
 
-.chart-label {
-    margin-top: 8px;
-    font-size: 0.9rem;
-    color: #f0f0f0;
+/* ===============================
+    FOOTER
+================================*/
+footer {
+    text-align: center;
+    margin: 30px 0;
+    color: #aaa;
 }
