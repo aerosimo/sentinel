@@ -8,6 +8,7 @@ body {
   overflow-x: hidden;
 }
 
+<<<<<<< HEAD
 /* Parallax Background */
 .parallax {
   background-image: url("../img/banner/parallax.jpg");
@@ -829,6 +830,8 @@ function loginUser() {
     });
 }
 
+=======
+>>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
 // Ensure plugin is available before registering
 if (typeof ChartDataLabels !== "undefined") {
     Chart.register(ChartDataLabels);

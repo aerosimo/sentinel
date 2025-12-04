@@ -65,6 +65,7 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.35);
 }
 
+<<<<<<< HEAD
 .cta-login-btn:active {
     transform: translateY(1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
@@ -303,6 +304,8 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
+=======
+>>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
 /* === Ominet Cards === */
 .ominet-card {
   background: linear-gradient(145deg, #121214, #0a0a0c);

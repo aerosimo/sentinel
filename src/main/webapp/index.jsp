@@ -51,12 +51,18 @@
 
     <body>
             <!-- Parallax Section -->
+<<<<<<< HEAD
+=======
+            <div class="parallax">
+                <a href="#login" class="login-btn">Login</a>
+>>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
                 <div class="parallax-text">
                     <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">
                     <h1>OMINET SENTINEL</h1>
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- AUTH MODAL -->
             <div id="authModal" class="ominet-modal hidden">
                 <div class="ominet-modal-content modern-dark">
@@ -123,6 +129,8 @@
                 </div>
             </div>
 
+=======
+>>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
             <!-- Snapshot Section -->
             <div class="container mt-5 mb-5">
                 <h2 class="section-title">SYSTEM SNAPSHOT</h2>
