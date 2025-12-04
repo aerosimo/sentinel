@@ -52,10 +52,53 @@
     <body>
             <!-- Parallax Section -->
             <div class="parallax">
-                <a href="#login" class="login-btn">Login</a>
+                <button class="cta-btn" onclick="openAuthModal()">Login</button>
                 <div class="parallax-text">
                     <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">
                     <h1>OMINET SENTINEL</h1>
+                </div>
+            </div>
+
+            <!-- AUTH MODAL (Login + Signup) -->
+            <div id="authModal" class="ominet-modal hidden">
+                <div class="ominet-modal-content">
+                    <span class="modal-close" onclick="closeAuthModal()">×</span>
+
+                    <!-- LOGIN FORM -->
+                    <div id="loginForm" class="auth-section">
+                        <h2>Sign In</h2>
+                        <input type="text" id="loginUsername" placeholder="Username" class="input-field">
+                        <input type="password" id="loginPassword" placeholder="Password" class="input-field">
+                        <button class="btn-primary" onclick="loginUser()">Login</button>
+                        <p class="switch-text">
+                            New here? <a href="#" onclick="showSignup()">Create account</a>
+                        </p>
+                    </div>
+
+                    <!-- SIGNUP FORM -->
+                    <div id="signupForm" class="auth-section hidden">
+                        <h2>Create Account</h2>
+                        <input type="text" id="signupUsername" placeholder="Choose Username" class="input-field">
+                        <input type="password" id="signupPassword" placeholder="Choose Password" class="input-field">
+                        <input type="email" id="signupEmail" placeholder="Email (for token)" class="input-field">
+                        <button class="btn-primary" onclick="signupUser()">Sign Up</button>
+                        <p class="switch-text">
+                            Already registered? <a href="#" onclick="showLogin()">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOKEN VERIFICATION MODAL -->
+            <div id="tokenModal" class="ominet-modal hidden">
+                <div class="ominet-modal-content">
+                    <span class="modal-close" onclick="closeTokenModal()">×</span>
+                    <div id="verifySection">
+                        <h2>Verify Your Account</h2>
+                        <p>We've emailed a verification token to you.</p>
+                        <input type="text" id="verifyToken" placeholder="Enter verification token" class="input-field">
+                        <button class="btn-primary" onclick="verifyToken()">Verify</button>
+                    </div>
                 </div>
             </div>
 

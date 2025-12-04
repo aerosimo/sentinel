@@ -59,6 +59,67 @@ body {
   background-color: #5e4ba5;
 }
 
+/* === Modal Login + Signup + Token ==== */
+.ominet-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.ominet-modal-content {
+    background: #fff;
+    width: 380px;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.btn-primary {
+    width: 100%;
+    background: #4d3b7a;
+    color: white;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #3b2e61;
+}
+
+.switch-text {
+    margin-top: 15px;
+    text-align: center;
+}
+
 /* === Ominet Cards === */
 .ominet-card {
   background: linear-gradient(145deg, #121214, #0a0a0c);

@@ -1,5 +1,104 @@
 // landing.js
 
+/** ===============================
+    MODAL CONTROL
+================================**/
+function openAuthModal() {
+    document.getElementById("authModal").classList.remove("hidden");
+}
+
+function closeAuthModal() {
+    document.getElementById("authModal").classList.add("hidden");
+}
+
+function showSignup() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("signupForm").classList.remove("hidden");
+}
+
+function showLogin() {
+    document.getElementById("signupForm").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+}
+
+/** ===============================
+    SIGNUP + TOKEN FLOW
+================================**/
+function signupUser() {
+    const user = {
+        username: document.getElementById("signupUsername").value,
+        password: document.getElementById("signupPassword").value,
+        email: document.getElementById("signupEmail").value
+    };
+
+    // Call your signup API
+    fetch("/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            closeAuthModal();
+            openTokenModal();
+        } else {
+            alert(data.message || "Signup failed");
+        }
+    });
+}
+
+function openTokenModal() {
+    document.getElementById("tokenModal").classList.remove("hidden");
+}
+
+function closeTokenModal() {
+    document.getElementById("tokenModal").classList.add("hidden");
+}
+
+function verifyToken() {
+    const token = document.getElementById("verifyToken").value;
+
+    fetch("/auth/verify-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "verified") {
+            alert("Account verified successfully!");
+            closeTokenModal();
+        } else {
+            alert("Invalid token");
+        }
+    });
+}
+
+/** ===============================
+    LOGIN
+================================**/
+function loginUser() {
+    const creds = {
+        username: document.getElementById("loginUsername").value,
+        password: document.getElementById("loginPassword").value
+    };
+
+    fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(creds)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "authorized") {
+            window.location.href = "dashboard.jsp";
+        } else {
+            alert("Invalid credentials");
+        }
+    });
+}
+
 // Ensure plugin is available before registering
 if (typeof ChartDataLabels !== "undefined") {
     Chart.register(ChartDataLabels);
