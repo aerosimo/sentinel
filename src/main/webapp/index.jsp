@@ -51,86 +51,14 @@
 
     <body>
             <!-- Parallax Section -->
-<<<<<<< HEAD
-=======
             <div class="parallax">
                 <a href="#login" class="login-btn">Login</a>
->>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
                 <div class="parallax-text">
                     <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">
                     <h1>OMINET SENTINEL</h1>
                 </div>
             </div>
 
-<<<<<<< HEAD
-            <!-- AUTH MODAL -->
-            <div id="authModal" class="ominet-modal hidden">
-                <div class="ominet-modal-content modern-dark">
-                    <span class="modal-close" onclick="closeAuthModal()">×</span>
-
-                    <!-- AUTH SELECT BUTTONS -->
-                    <div class="auth-switch">
-                        <button id="btnLoginSwitch" class="switch-btn active" onclick="showLogin()">Sign In</button>
-                        <button id="btnSignupSwitch" class="switch-btn" onclick="showSignup()">Create Account</button>
-                    </div>
-
-                    <!-- LOGIN FORM -->
-                    <div id="loginForm" class="auth-section">
-                        <h2 class="modal-title">Welcome Back</h2>
-                        <div class="input-group">
-                            <span class="input-icon">👤</span>
-                            <input type="text" id="loginUsername" placeholder="Username">
-                        </div>
-                        <div class="input-group">
-                            <span class="input-icon">🔑</span>
-                            <input type="password" id="loginPassword" placeholder="Password">
-                        </div>
-                        <button class="btn-primary-dark" onclick="loginUser()">Login</button>
-                    </div>
-
-                    <!-- SIGNUP FORM -->
-                    <div id="signupForm" class="auth-section hidden">
-                        <h2 class="modal-title">Create Account</h2>
-
-                        <div class="input-group">
-                            <span class="input-icon">👤</span>
-                            <input type="text" id="signupUsername" placeholder="Choose Username">
-                        </div>
-
-                        <div class="input-group">
-                            <span class="input-icon">🔑</span>
-                            <input type="password" id="signupPassword" placeholder="Choose Password">
-                        </div>
-
-                        <div class="input-group">
-                            <span class="input-icon">📧</span>
-                            <input type="email" id="signupEmail" placeholder="Email Address">
-                        </div>
-
-                        <button class="btn-primary-dark" onclick="signupUser()">Sign Up</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TOKEN VERIFICATION MODAL -->
-            <div id="tokenModal" class="ominet-modal hidden">
-                <div class="ominet-modal-content modern-dark">
-                    <span class="modal-close" onclick="closeTokenModal()">×</span>
-
-                    <h2 class="modal-title">Verify Your Account</h2>
-                    <p style="color:#ccc;">A verification token has been emailed to you.</p>
-
-                    <div class="input-group">
-                        <span class="input-icon">🔐</span>
-                        <input type="text" id="verifyToken" placeholder="Enter token">
-                    </div>
-
-                    <button class="btn-primary-dark" onclick="verifyToken()">Verify</button>
-                </div>
-            </div>
-
-=======
->>>>>>> parent of c803cb1 ([AER04122025] Testing the modal login sign-up and verification)
             <!-- Snapshot Section -->
             <div class="container mt-5 mb-5">
                 <h2 class="section-title">SYSTEM SNAPSHOT</h2>
