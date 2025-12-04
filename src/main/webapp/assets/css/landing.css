@@ -42,21 +42,35 @@ body {
 }
 
 /* CTA Button */
-.login-btn {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  background-color: #4d3b7a;
-  color: #fff;
-  padding: 10px 25px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
+.cta-login-btn {
+    background: linear-gradient(145deg, #4d3b7a, #6a55b0);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.login-btn:hover {
-  background-color: #5e4ba5;
+.cta-login-btn:hover {
+    background: linear-gradient(145deg, #3b2e61, #5a3f99);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.cta-login-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.btn-icon {
+    font-size: 18px;
 }
 
 /* === Modal Login + Signup + Token ==== */
