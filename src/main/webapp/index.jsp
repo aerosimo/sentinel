@@ -52,53 +52,78 @@
     <body>
             <!-- Parallax Section -->
             <div class="parallax">
-                <button class="cta-btn" onclick="openAuthModal()">Login</button>
+                <div style="text-align: right; padding: 20px;">
+                    <button class="cta-login-btn" onclick="openAuthModal()">Login</button>
+                </div>
                 <div class="parallax-text">
                     <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">
                     <h1>OMINET SENTINEL</h1>
                 </div>
             </div>
 
-            <!-- AUTH MODAL (Login + Signup) -->
+            <!-- AUTH MODAL -->
             <div id="authModal" class="ominet-modal hidden">
-                <div class="ominet-modal-content">
+                <div class="ominet-modal-content modern-dark">
                     <span class="modal-close" onclick="closeAuthModal()">×</span>
+
+                    <!-- AUTH SELECT BUTTONS -->
+                    <div class="auth-switch">
+                        <button id="btnLoginSwitch" class="switch-btn active" onclick="showLogin()">Sign In</button>
+                        <button id="btnSignupSwitch" class="switch-btn" onclick="showSignup()">Create Account</button>
+                    </div>
 
                     <!-- LOGIN FORM -->
                     <div id="loginForm" class="auth-section">
-                        <h2>Sign In</h2>
-                        <input type="text" id="loginUsername" placeholder="Username" class="input-field">
-                        <input type="password" id="loginPassword" placeholder="Password" class="input-field">
-                        <button class="btn-primary" onclick="loginUser()">Login</button>
-                        <p class="switch-text">
-                            New here? <a href="#" onclick="showSignup()">Create account</a>
-                        </p>
+                        <h2 class="modal-title">Welcome Back</h2>
+                        <div class="input-group">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="loginUsername" placeholder="Username">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="loginPassword" placeholder="Password">
+                        </div>
+                        <button class="btn-primary-dark" onclick="loginUser()">Login</button>
                     </div>
 
                     <!-- SIGNUP FORM -->
                     <div id="signupForm" class="auth-section hidden">
-                        <h2>Create Account</h2>
-                        <input type="text" id="signupUsername" placeholder="Choose Username" class="input-field">
-                        <input type="password" id="signupPassword" placeholder="Choose Password" class="input-field">
-                        <input type="email" id="signupEmail" placeholder="Email (for token)" class="input-field">
-                        <button class="btn-primary" onclick="signupUser()">Sign Up</button>
-                        <p class="switch-text">
-                            Already registered? <a href="#" onclick="showLogin()">Sign in</a>
-                        </p>
+                        <h2 class="modal-title">Create Account</h2>
+
+                        <div class="input-group">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="signupUsername" placeholder="Choose Username">
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="signupPassword" placeholder="Choose Password">
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="signupEmail" placeholder="Email Address">
+                        </div>
+
+                        <button class="btn-primary-dark" onclick="signupUser()">Sign Up</button>
                     </div>
                 </div>
             </div>
 
             <!-- TOKEN VERIFICATION MODAL -->
             <div id="tokenModal" class="ominet-modal hidden">
-                <div class="ominet-modal-content">
+                <div class="ominet-modal-content modern-dark">
                     <span class="modal-close" onclick="closeTokenModal()">×</span>
-                    <div id="verifySection">
-                        <h2>Verify Your Account</h2>
-                        <p>We've emailed a verification token to you.</p>
-                        <input type="text" id="verifyToken" placeholder="Enter verification token" class="input-field">
-                        <button class="btn-primary" onclick="verifyToken()">Verify</button>
+
+                    <h2 class="modal-title">Verify Your Account</h2>
+                    <p style="color:#ccc;">A verification token has been emailed to you.</p>
+
+                    <div class="input-group">
+                        <span class="input-icon">🔐</span>
+                        <input type="text" id="verifyToken" placeholder="Enter token">
                     </div>
+
+                    <button class="btn-primary-dark" onclick="verifyToken()">Verify</button>
                 </div>
             </div>
 

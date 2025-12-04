@@ -11,14 +11,26 @@ function closeAuthModal() {
     document.getElementById("authModal").classList.add("hidden");
 }
 
+function openTokenModal() {
+    document.getElementById("tokenModal").classList.remove("hidden");
+}
+
+function closeTokenModal() {
+    document.getElementById("tokenModal").classList.add("hidden");
+}
+
 function showSignup() {
-    document.getElementById("loginForm").classList.add("hidden");
     document.getElementById("signupForm").classList.remove("hidden");
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("btnSignupSwitch").classList.add("active");
+    document.getElementById("btnLoginSwitch").classList.remove("active");
 }
 
 function showLogin() {
-    document.getElementById("signupForm").classList.add("hidden");
     document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("signupForm").classList.add("hidden");
+    document.getElementById("btnLoginSwitch").classList.add("active");
+    document.getElementById("btnSignupSwitch").classList.remove("active");
 }
 
 /** ===============================

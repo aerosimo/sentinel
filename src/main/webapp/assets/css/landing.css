@@ -60,64 +60,127 @@ body {
 }
 
 /* === Modal Login + Signup + Token ==== */
+/* MODAL BACKDROP */
 .ominet-modal {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.55);
+    inset: 0;
+    background: rgba(0,0,0,0.75);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
 
-.hidden {
-    display: none !important;
+.hidden { display: none !important; }
+
+/* CONTENT */
+.ominet-modal-content.modern-dark {
+    width: 420px;
+    padding: 30px;
+    border-radius: 18px;
+
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.08);
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    animation: fadeIn 0.35s ease;
+    position: relative;
 }
 
-.ominet-modal-content {
-    background: #fff;
-    width: 380px;
-    border-radius: 14px;
-    padding: 25px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    position: relative;
+@keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
 }
 
 .modal-close {
     position: absolute;
-    right: 15px;
-    top: 10px;
-    font-size: 22px;
+    right: 20px;
+    top: 12px;
+    font-size: 28px;
+    color: #bbb;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-.input-field {
-    width: 100%;
-    padding: 10px;
-    margin-top: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-.btn-primary {
-    width: 100%;
-    background: #4d3b7a;
+.modal-close:hover {
     color: white;
-    padding: 12px;
-    margin-top: 20px;
-    border-radius: 8px;
-    border: none;
+}
+
+/* SWITCH BUTTONS */
+.auth-switch {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.switch-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
+    color: #aaa;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.25s;
 }
 
-.btn-primary:hover {
-    background: #3b2e61;
+.switch-btn.active {
+    background: #4d3b7a;
+    color: #fff;
+    border: none;
 }
 
-.switch-text {
+/* TITLES */
+.modal-title {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+/* INPUT GROUP WITH ICON */
+.input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px;
     margin-top: 15px;
-    text-align: center;
+}
+
+.input-group input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    width: 100%;
+    padding-left: 8px;
+}
+
+.input-icon {
+    font-size: 18px;
+    color: #bbb;
+}
+
+/* PRIMARY BUTTON */
+.btn-primary-dark {
+    width: 100%;
+    background: linear-gradient(135deg, #4d3b7a, #6a56b0);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-primary-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 /* === Ominet Cards === */
