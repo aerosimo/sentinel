@@ -53,12 +53,12 @@
 <!-- Parallax Section -->
 <div class="parallax">
     <div style="text-align: right; padding: 20px; display:flex; gap:10px; justify-content:flex-end;">
-        <button class="cta-btn" onclick="openLoginModal()">
+        <a href="login.jsp" class="btn btn-cta">
             <span class="btn-icon">🔑</span> Login
-        </button>
-        <button class="cta-btn register" onclick="openRegisterModal()">
+        </a>
+        <a href="register.jsp" class="btn btn-cta register">
             <span class="btn-icon">📝</span> Register
-        </button>
+        </a>
     </div>
     <div class="parallax-text">
         <img src="assets/img/logo/logo.png" alt="Aerosimo Logo">

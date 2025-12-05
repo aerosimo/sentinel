@@ -100,39 +100,36 @@
 
 <!-- Bootstrap JS (local) -->
 <script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const uname = document.getElementById('regUsername').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value.trim();
-        const msgDiv = document.getElementById('regMessage');
-        msgDiv.textContent = '';
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const uname = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+    const msgDiv = document.getElementById('regMessage');
+    msgDiv.textContent = '';
 
-        try {
-            const res = await fetch('https://ominet.aerosimo.com:9443/authcore/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: uname, email: email, password: password })
-            });
-            const data = await res.json();
-            if(data.status === 'success') {
-                msgDiv.style.color = '#00ff44';
-                msgDiv.textContent = `Registered successfully! Redirecting to verification...`;
+    try {
+        const res = await fetch('https://ominet.aerosimo.com:9443/authcore/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: uname, email: email, password: password })
+        });
+        const data = await res.json();
+        if(data.status === 'success') {
+            msgDiv.style.color = '#00ff44';
+            msgDiv.textContent = "Registered successfully! Check your email for the verification code.";
 
-                // Redirect to verify.jsp with email and token
-                setTimeout(() => {
-                    window.location.href = `verify.jsp?email=${encodeURIComponent(email)}&token=${data.message}`;
-                }, 2000);
-            } else {
-                msgDiv.style.color = '#ff0033';
-                msgDiv.textContent = data.message || 'Registration failed';
-            }
-        } catch(err) {
+            // Removed auto redirect; user will manually go to verify.jsp
+        } else {
             msgDiv.style.color = '#ff0033';
-            msgDiv.textContent = 'Unable to reach server';
-            console.error(err);
+            msgDiv.textContent = data.message || 'Registration failed';
         }
-    });
+    } catch(err) {
+        msgDiv.style.color = '#ff0033';
+        msgDiv.textContent = 'Unable to reach server';
+        console.error(err);
+    }
+});
 </script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
