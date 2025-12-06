@@ -62,49 +62,17 @@
             <form id="verifyForm" novalidate>
                 <div class="field">
                     <label for="verifyToken">Verification Code</label>
-                    <input type="text" id="verifyToken" name="token" class="form-control"
-                           maxlength="10" pattern="[A-Za-z0-9]{10}" required placeholder="XXXXXXXXXX">
-                    <div class="error-msg">Enter 10 alphanumeric characters</div>
+                    <input id="verifyToken" name="verifyToken" class="form-control input-control" type="text" maxlength="10" required pattern="[A-Za-z0-9]{10}">
+                    <div class="error-msg">Enter 10-character token</div>
                 </div>
-
-                <div id="verifyMessage" class="text-center mt-3"></div>
-
                 <div class="text-center">
-                    <button type="submit" class="btn btn-cta">Verify</button>
+                    <button class="btn btn-cta" type="submit">Verify</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script>
-    document.getElementById('verifyForm').addEventListener('submit', async function(e){
-        e.preventDefault();
-        const token = document.getElementById('verifyToken').value.trim();
-        const msgDiv = document.getElementById('verifyMessage');
-        msgDiv.textContent = '';
-
-        try {
-            const res = await fetch('https://ominet.aerosimo.com:9443/authcore/api/auth/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: token })
-            });
-            const data = await res.json();
-            if(data.status === 'success') {
-                msgDiv.style.color = '#00ff44';
-                msgDiv.textContent = data.message;
-            } else {
-                msgDiv.style.color = '#ff0033';
-                msgDiv.textContent = data.message || 'Verification failed';
-            }
-        } catch(err){
-            msgDiv.style.color = '#ff0033';
-            msgDiv.textContent = 'Unable to reach server';
-            console.error(err);
-        }
-    });
-</script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

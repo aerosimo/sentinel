@@ -63,60 +63,23 @@
                 <div class="field">
                     <label for="loginUsername">Username</label>
                     <span class="input-icon">👤</span>
-                    <input type="text" id="loginUsername" name="username" class="form-control" required>
-                    <div class="error-msg">Enter a valid username</div>
+                    <input id="loginUsername" name="Username" class="form-control input-control" required pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$">
+                    <div class="error-msg">Username invalid</div>
                 </div>
-
                 <div class="field">
                     <label for="loginPassword">Password</label>
                     <span class="input-icon">🔒</span>
-                    <input type="password" id="loginPassword" name="password" class="form-control" required>
-                    <div class="error-msg">Enter your password</div>
+                    <input id="loginPassword" name="password" class="form-control input-control" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$" type="password">
+                    <div class="error-msg">Password invalid</div>
                 </div>
-
-                <div id="loginMessage" class="text-center mt-3"></div>
-
                 <div class="text-center">
-                    <button type="submit" class="btn btn-cta">Sign in</button>
-                </div>
-                <div class="form-actions text-center mt-3">
-                    <a href="register.jsp">Don't have an account? Register</a>
+                    <button class="btn btn-cta" type="submit">Sign in</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e){
-        e.preventDefault();
-        const uname = document.getElementById('loginUsername').value.trim();
-        const pword = document.getElementById('loginPassword').value.trim();
-        const msgDiv = document.getElementById('loginMessage');
-        msgDiv.textContent = '';
-
-        try {
-            const res = await fetch('https://ominet.aerosimo.com:9443/authcore/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: uname, password: pword })
-            });
-            const data = await res.json();
-            if(data.status === 'success') {
-                msgDiv.style.color = '#00ff44';
-                msgDiv.textContent = 'Login successful! Token: ' + data.message;
-                // Optionally store token and redirect
-            } else {
-                msgDiv.style.color = '#ff0033';
-                msgDiv.textContent = data.message || 'Login failed';
-            }
-        } catch(err){
-            msgDiv.style.color = '#ff0033';
-            msgDiv.textContent = 'Unable to reach server';
-            console.error(err);
-        }
-    });
-</script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

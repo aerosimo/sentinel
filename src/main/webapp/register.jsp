@@ -63,35 +63,23 @@
                 <div class="field">
                     <label for="regUsername">Username</label>
                     <span class="input-icon">👤</span>
-                    <input type="text" id="regUsername" name="username" class="form-control"
-                           placeholder="Username" required pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$">
-                    <div class="error-msg">4-20 chars, letters, numbers, . _ - allowed</div>
+                    <input id="regUsername" name="Username" class="form-control input-control" required pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$" placeholder="Username" title="4-20 chars, letters, numbers, . _ - allowed">
+                    <div class="error-msg">Username invalid</div>
                 </div>
-
                 <div class="field">
                     <label for="regEmail">Email</label>
                     <span class="input-icon">📧</span>
-                    <input type="email" id="regEmail" name="email" class="form-control"
-                           placeholder="Email" required>
+                    <input id="regEmail" name="email" class="form-control input-control" type="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="Email">
                     <div class="error-msg">Enter a valid email</div>
                 </div>
-
                 <div class="field">
                     <label for="regPassword">Password</label>
                     <span class="input-icon">🔒</span>
-                    <input type="password" id="regPassword" name="password" class="form-control"
-                           placeholder="●●●●●●●●" required
-                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
-                    <div class="error-msg">Must have 1 uppercase, 1 lowercase, 1 number, 1 symbol</div>
+                    <input id="regPassword" name="password" class="form-control input-control" type="password" required minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$" placeholder="••••••••">
+                    <div class="error-msg">Password must contain uppercase, lowercase, number & symbol</div>
                 </div>
-
-                <div id="regMessage" class="text-center mt-3"></div>
-
                 <div class="text-center">
-                    <button type="submit" class="btn btn-cta">Register</button>
-                </div>
-                <div class="form-actions text-center mt-3">
-                    <a href="login.jsp">Already have an account? Sign in</a>
+                    <button class="btn btn-cta" type="submit">Register</button>
                 </div>
             </form>
         </div>
@@ -99,38 +87,6 @@
 </div>
 
 <!-- Bootstrap JS (local) -->
-<script>
-document.getElementById('registerForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const uname = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value.trim();
-    const msgDiv = document.getElementById('regMessage');
-    msgDiv.textContent = '';
-
-    try {
-        const res = await fetch('https://ominet.aerosimo.com:9443/authcore/api/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: uname, email: email, password: password })
-        });
-        const data = await res.json();
-        if(data.status === 'success') {
-            msgDiv.style.color = '#00ff44';
-            msgDiv.textContent = "Registered successfully! Check your email for the verification code.";
-
-            // Removed auto redirect; user will manually go to verify.jsp
-        } else {
-            msgDiv.style.color = '#ff0033';
-            msgDiv.textContent = data.message || 'Registration failed';
-        }
-    } catch(err) {
-        msgDiv.style.color = '#ff0033';
-        msgDiv.textContent = 'Unable to reach server';
-        console.error(err);
-    }
-});
-</script>
 <script src="assets/js/auth.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
