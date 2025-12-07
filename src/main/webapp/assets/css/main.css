@@ -1,5 +1,5 @@
 /* ------------------------------
-   MAIN DASHBOARD STYLES
+   MAIN DASHBOARD STYLES (Refactored)
 ------------------------------- */
 
 /* Root Colors */
@@ -8,7 +8,7 @@
     --brand-accent: #bda7ff;
     --brand-glow: rgba(77, 59, 122, 0.6);
     --bg-dark: #1f1f27;
-    --bg-sidebar: #2a2540;
+    --bg-sidebar: #2a1f4b;
     --bg-hover: #3b3260;
     --text-light: #f1f1f2;
     --text-muted: #a8a8b3;
@@ -17,31 +17,39 @@
 }
 
 /* ------------------------------
-   Layout
+   Base Layout
 ------------------------------- */
-body, html {
+html, body {
     margin: 0;
     padding: 0;
     font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-light);
-}
-
-.layout {
-    display: flex;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
 }
 
+.layout, .dashboard-wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+/* ------------------------------
+   Sidebar
+------------------------------- */
 .sidebar {
-    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
     background: var(--bg-sidebar);
+    color: var(--text-light);
     display: flex;
     flex-direction: column;
     transition: width 0.3s ease;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 10;
+    z-index: 1000;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.5);
 }
 
 .sidebar.collapsed {
@@ -49,88 +57,70 @@ body, html {
 }
 
 .sidebar .logo {
-    padding: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    padding: 20px 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--brand-accent);
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.sidebar .logo img {
-    height: 36px;
+.sidebar.collapsed .logo {
+    font-size: 1.5rem;
 }
 
-.sidebar .logo .logo-text {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--text-light);
-}
-
-.sidebar.collapsed .logo .logo-text {
-    display: none;
-}
-
-.nav-links {
+.sidebar nav {
+    flex: 1;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    flex: 1;
 }
 
-.nav-links a {
+.sidebar nav a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
+    padding: 15px 20px;
     color: var(--text-light);
     text-decoration: none;
-    font-weight: 500;
-    position: relative;
     transition: all 0.3s ease;
+    border-left: 4px solid transparent;
 }
 
-.nav-links a i {
+.sidebar nav a i {
+    margin-right: 12px;
     font-size: 1.2rem;
 }
 
-.nav-links a span {
+.sidebar nav a span {
     white-space: nowrap;
 }
 
-.nav-links a:hover {
-    background-color: var(--bg-hover);
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: rgba(189,167,255,0.15);
     color: var(--text-accent);
-    box-shadow: inset 3px 0 0 var(--active-glow);
+    border-left-color: var(--active-glow);
+    box-shadow: 0 0 12px rgba(189,167,255,0.3);
 }
 
-.nav-links a.active {
-    background-color: var(--bg-hover);
-    color: var(--text-accent);
-    box-shadow: inset 3px 0 0 var(--active-glow);
+.sidebar.collapsed nav a {
+    justify-content: center;
 }
 
-/* Divider line */
-.divider {
-    margin: 20px 0;
-    height: 1px;
-    background: rgba(255,255,255,0.1);
-}
-
-/* ------------------------------
-   Main content
-------------------------------- */
-.main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-dark);
-    overflow-y: auto;
+.sidebar.collapsed nav a span {
+    display: none;
 }
 
 /* ------------------------------
    Topbar
 ------------------------------- */
 .topbar {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    right: 0;
     height: 60px;
     display: flex;
     align-items: center;
@@ -139,7 +129,12 @@ body, html {
     background: rgba(40,36,60,0.95);
     backdrop-filter: blur(6px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    z-index: 5;
+    z-index: 900;
+    transition: left 0.3s ease;
+}
+
+.sidebar.collapsed + .topbar {
+    left: 70px;
 }
 
 .topbar .toggle-btn {
@@ -158,24 +153,18 @@ body, html {
     position: relative;
 }
 
-.topbar .user .avatar {
-    width: 38px;
-    height: 38px;
+.topbar .user img.avatar {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    margin-right: 8px;
     object-fit: cover;
+    margin-right: 10px;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
 }
 
-.topbar .user .avatar:hover {
+.topbar .user img.avatar:hover {
     box-shadow: 0 0 8px var(--brand-glow);
-}
-
-.topbar .user .name-block {
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
 }
 
 .topbar .user .name {
@@ -185,64 +174,89 @@ body, html {
 
 .topbar .user .dropdown {
     display: none;
+    flex-direction: column;
     position: absolute;
     right: 0;
-    top: 50px;
+    top: 60px;
     background: var(--bg-sidebar);
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    z-index: 50;
-    flex-direction: column;
+    box-shadow: 0 0 12px rgba(0,0,0,0.5);
     min-width: 140px;
+    z-index: 50;
+}
+
+.topbar .user:hover .dropdown {
+    display: flex;
 }
 
 .topbar .user .dropdown a {
-    padding: 10px 15px;
+    padding: 12px 20px;
     color: var(--text-light);
     text-decoration: none;
-    transition: background 0.3s;
+    transition: background 0.2s;
 }
 
 .topbar .user .dropdown a:hover {
-    background-color: var(--bg-hover);
-    color: var(--text-accent);
+    background: rgba(189,167,255,0.15);
 }
 
 /* ------------------------------
-   Page content
+   Main Content
 ------------------------------- */
-.content {
-    flex: 1;
-    padding: 20px;
+.main-content {
+    margin-left: 250px;
+    padding: 80px 30px 30px 30px;
+    transition: margin-left 0.3s ease;
     background: var(--bg-dark);
+    overflow-y: auto;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 70px;
 }
 
 /* ------------------------------
    Footer
 ------------------------------- */
 footer {
-    padding: 12px 20px;
     text-align: center;
-    font-size: 0.875rem;
-    color: var(--text-muted);
+    padding: 15px 0;
     background: rgba(40,36,60,0.95);
-    border-top: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    position: fixed;
+    bottom: 0;
+    left: 250px;
+    right: 0;
+    transition: left 0.3s ease;
+}
+
+.sidebar.collapsed ~ footer {
+    left: 70px;
 }
 
 /* ------------------------------
-   Misc & responsive
+   Responsive
 ------------------------------- */
 @media (max-width: 768px) {
     .sidebar {
         position: absolute;
-        left: -220px;
+        left: -250px;
         top: 0;
         height: 100%;
         transition: left 0.3s ease;
     }
 
     .sidebar.collapsed {
+        left: 0;
+    }
+
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar.collapsed ~ footer {
         left: 0;
     }
 }

@@ -2,15 +2,17 @@
 
 // Wait for DOM
 document.addEventListener('DOMContentLoaded', () => {
-
   // ---------------- Sidebar Toggle ----------------
-  const sidebar = document.querySelector('.sidebar');
-  const toggleBtn = document.getElementById('sidebarToggle');
-  if (toggleBtn && sidebar) {
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-    });
-  }
+
+      const sidebar = document.querySelector('.sidebar');
+      const toggleBtn = document.querySelector('.topbar .toggle-btn');
+
+      if(toggleBtn && sidebar) {
+          toggleBtn.addEventListener('click', () => {
+              sidebar.classList.toggle('collapsed');
+          });
+      }
+  });
 
   // ---------------- Active Link Highlight ----------------
   const currentPage = window.location.pathname.split('/').pop();

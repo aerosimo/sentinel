@@ -53,23 +53,23 @@
 <div class="dashboard-cards">
     <div class="card" onclick="location.href='card1.jsp'">
         <div class="card-icon"><i class="bi bi-memory"></i></div>
-        <div class="card-title">Memory Usage</div>
-        <div class="card-desc">View detailed memory statistics</div>
+        <div class="card-title">Server Rack Overview</div>
+        <div class="card-desc">Tracks realtime server status across ominet estate.</div>
     </div>
     <div class="card" onclick="location.href='card2.jsp'">
         <div class="card-icon"><i class="bi bi-hdd"></i></div>
-        <div class="card-title">Disk Usage</div>
-        <div class="card-desc">Check disk space utilization</div>
+        <div class="card-title">Server Health Monitor</div>
+        <div class="card-desc">Tracks realtime server uptime status.</div>
     </div>
     <div class="card" onclick="location.href='card3.jsp'">
         <div class="card-icon"><i class="bi bi-cpu"></i></div>
-        <div class="card-title">CPU Usage</div>
-        <div class="card-desc">Monitor CPU load and performance</div>
+        <div class="card-title">Error Intelligence</div>
+        <div class="card-desc">Integrates with Error Harbour to provide insights into anomalies and recoverable fault patterns.</div>
     </div>
     <div class="card" onclick="location.href='card4.jsp'">
         <div class="card-icon"><i class="bi bi-exclamation-triangle"></i></div>
-        <div class="card-title">Recent Errors</div>
-        <div class="card-desc">Analyze recent system errors</div>
+        <div class="card-title">System Metrics</div>
+        <div class="card-desc">Displays current memory, disk, and CPU usage across monitored servers.</div>
     </div>
 </div>
 

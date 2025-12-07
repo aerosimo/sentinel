@@ -1,5 +1,13 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="dashboard.jspf" %>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+    request.setAttribute("page", "card2");
+    request.setAttribute("contentPage", "card2-content.jspf");
+%>
+
+<jsp:include page="dashboard.jspf" />
+
 
 <div class="page-header">
     <h1>Disk Usage</h1>
@@ -85,5 +93,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 </script>
-
-<%@ include file="dashboard-footer.jspf" %>

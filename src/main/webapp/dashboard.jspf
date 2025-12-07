@@ -1,49 +1,94 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!-- Dashboard shared include: sidebar + topbar + footer -->
-<link rel="stylesheet" href="assets/css/main.css">
-<script src="assets/js/main.js" defer></script>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
 
-<div class="dashboard-container">
+<!-- Dashboard JSPF: Sidebar + Topbar + Footer -->
+<div class="layout">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-      <div class="logo">
-          <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Ominet Logo">
-          <span class="brand-name">Ominet</span>
-      </div>
-      <nav class="nav-links">
-          <a href="dashboard.jsp"><i class="bi bi-house"></i> <span class="link-text">Home</span></a>
-          <a href="card1.jsp"><i class="bi bi-memory"></i> <span class="link-text">Memory</span></a>
-          <a href="card2.jsp"><i class="bi bi-hdd"></i> <span class="link-text">Disk</span></a>
-          <a href="card3.jsp"><i class="bi bi-cpu"></i> <span class="link-text">CPU</span></a>
-          <a href="card4.jsp"><i class="bi bi-exclamation-triangle"></i> <span class="link-text">Errors</span></a>
-          <a href="profile.jsp"><i class="bi bi-person-circle"></i> <span class="link-text">Profile</span></a>
-          <a href="settings.jsp"><i class="bi bi-gear"></i> <span class="link-text">Settings</span></a>
-      </nav>
-  </aside>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="assets/img/logo.png" alt="Ominet Logo" height="36">
+            <span class="logo-text">Ominet</span>
+        </div>
+        <nav>
+            <a href="dashboard.jsp" class="<c:if test='${page eq "dashboard"}'>active</c:if>">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Home</span>
+            </a>
+            <a href="card1.jsp" class="<c:if test='${page eq "card1"}'>active</c:if>">
+                <i class="bi bi-layout-text-window-reverse"></i>
+                <span>Server Rack Overview</span>
+            </a>
+            <a href="card2.jsp" class="<c:if test='${page eq "card2"}'>active</c:if>">
+                <i class="bi bi-heart-pulse"></i>
+                <span>Server Health Monitor</span>
+            </a>
+            <a href="card3.jsp" class="<c:if test='${page eq "card3"}'>active</c:if>">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Error Intelligence</span>
+            </a>
+            <a href="card4.jsp" class="<c:if test='${page eq "card4"}'>active</c:if>">
+                <i class="bi bi-graph-up-arrow"></i>
+                <span>System Metrics</span>
+            </a>
+            <div class="divider"></div>
+            <a href="profile.jsp" class="<c:if test='${page eq "profile"}'>active</c:if>">
+                <i class="bi bi-person-circle"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.jsp" class="<c:if test='${page eq "settings"}'>active</c:if>">
+                <i class="bi bi-gear-fill"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </aside>
 
-  <!-- Main content area -->
-  <div class="main-content">
+    <!-- Main Content Wrapper -->
+    <div class="main-content">
 
-      <!-- Topbar -->
-      <header class="topbar">
-          <div class="left">
-              <!-- Sidebar toggle button replaces search -->
-              <button class="btn btn-outline-secondary me-2" id="sidebarToggle">
-                  <i class="bi bi-list"></i>
-              </button>
-              <span class="page-title">Dashboard</span>
-          </div>
-          <div class="user">
-              <img class="avatar user-toggle" src="assets/img/user/user.webp" alt="User Avatar" height="40" width="40">
-              <div class="name" id="topUsername">Guest</div>
-              <div class="dropdown">
-                  <a href="profile.jsp">Profile</a>
-                  <a href="settings.jsp">Settings</a>
-                  <a id="logoutBtn">Logout</a>
-              </div>
-          </div>
-      </header>
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="toggle-btn" id="sidebarToggle"><i class="bi bi-list"></i></button>
+            <div class="user">
+                <img class="avatar" src="assets/img/user/user.webp" alt="User Avatar" height="40" width="40">
+                <div class="name"><c:out value="${sessionScope.username != null ? sessionScope.username : 'Guest'}"/></div>
+                <div class="dropdown">
+                    <a href="profile.jsp">Profile</a>
+                    <a href="settings.jsp">Settings</a>
+                    <a href="javascript:void(0);" id="logoutBtn">Logout</a>
+                </div>
+            </div>
+        </header>
 
-      <!-- Page-specific content starts here -->
-      <div class="page-content">
+        <!-- Page Content Placeholder -->
+        <div class="content">
+            <jsp:include page="${contentPage}" />
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class='copy'>&copy; <script>document.write(new Date().getFullYear());</script> Ominet by Aerosimo Ltd. All rights reserved.</div>
+        </footer>
+
+    </div>
+</div>
+
+<!-- Dashboard JS -->
+<script>
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+    });
+
+    // Logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn){
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.clear();
+            window.location.href = 'login.jsp';
+        });
+    }
+</script>

@@ -1,9 +1,0 @@
-            </div> <!-- end page-content -->
-
-            <!-- Footer -->
-            <footer>
-                <div class='copy'>&copy; <script>document.write(new Date().getFullYear());</script> Ominet by Aerosimo Ltd. All rights reserved.</div>
-            </footer>
-        </div> <!-- end main-content -->
-
-      </div> <!-- end dashboard-container -->

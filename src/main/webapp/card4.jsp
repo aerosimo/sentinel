@@ -1,5 +1,13 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="dashboard.jspf" %>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+    request.setAttribute("page", "card4");
+    request.setAttribute("contentPage", "card4-content.jspf");
+%>
+
+<jsp:include page="dashboard.jspf" />
+
 
 <div class="page-header">
     <h1>Recent Errors</h1>
@@ -66,5 +74,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 </script>
-
-<%@ include file="dashboard-footer.jspf" %>
