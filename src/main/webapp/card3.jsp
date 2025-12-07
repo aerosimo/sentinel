@@ -1,5 +1,6 @@
 <%@ page session="false" %>
-<%@ taglib uri="https://jakarta.ee/jstl/core" prefix="c" %>
+// <%@ taglib uri="https://jakarta.ee/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <%
     request.setAttribute("page", "card3");
