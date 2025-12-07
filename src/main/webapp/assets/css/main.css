@@ -1,45 +1,248 @@
-/* main.css — Modern glossy dark theme for Ominet Dashboard */
-:root{
---bg:#0b0b0e; --panel:#0f0f14; --muted:#9aa0b4; --accent:#4d3b7a; --accent-2:#6a54a3; --glass: rgba(255,255,255,0.03);
+/* ------------------------------
+   MAIN DASHBOARD STYLES
+------------------------------- */
+
+/* Root Colors */
+:root {
+    --brand: #4d3b7a;
+    --brand-accent: #bda7ff;
+    --brand-glow: rgba(77, 59, 122, 0.6);
+    --bg-dark: #1f1f27;
+    --bg-sidebar: #2a2540;
+    --bg-hover: #3b3260;
+    --text-light: #f1f1f2;
+    --text-muted: #a8a8b3;
+    --text-accent: #bda7ff;
+    --active-glow: #6c4df5;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#e8eef8;background:linear-gradient(180deg,#050506 0%, #0b0b0e 60%);}
-.app {
-display:flex; min-height:100vh; overflow:hidden;
+
+/* ------------------------------
+   Layout
+------------------------------- */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
 }
-/* SIDEBAR */
-.sidebar{
-width:260px; background:linear-gradient(180deg,var(--panel), #0b0b12); border-right:1px solid rgba(255,255,255,0.03); backdrop-filter: blur(8px); transition:width .28s ease;
+
+.layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
-.sidebar.collapsed{width:72px}
-.sidebar .brand{display:flex;align-items:center;gap:12px;padding:20px}
-.sidebar .brand img{width:40px;height:40px;border-radius:8px;box-shadow:0 6px 16px rgba(77,59,122,0.15)}
-.sidebar .brand h3{margin:0;color:var(--accent);font-size:1.05rem}
-.sidebar.collapsed .brand h3{display:none}
-.nav{padding:12px}
-.nav a{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--muted);text-decoration:none;margin-bottom:6px;transition:all .15s}
-.nav a:hover{background:rgba(77,59,122,0.06);color:#fff;transform:translateY(-2px)}
-.nav a .icon{width:28px;text-align:center}
-.sidebar.collapsed .nav a span.label{display:none}
-.toggle-btn{margin:12px;padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);cursor:pointer}
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column}
-.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid rgba(255,255,255,0.02);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
-.topbar .left{display:flex;align-items:center;gap:16px}
-.search{min-width:260px;background:var(--glass);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);color:var(--muted)}
-.topbar .user{display:flex;align-items:center;gap:12px;position:relative}
-.user .avatar{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-.user .name{color:#fff}
-.user .dropdown{position:absolute;right:0;top:60px;background:var(--panel);border-radius:10px;padding:8px;min-width:160px;box-shadow:0 8px 30px rgba(0,0,0,0.6);display:none}
-.user.open .dropdown{display:block}
-.dropdown a{display:block;padding:8px 10px;color:var(--muted);text-decoration:none;border-radius:8px}
-.dropdown a:hover{background:rgba(255,255,255,0.02);color:#fff}
-/* CONTENT */
-.content{padding:20px;overflow:auto}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 24px rgba(3,3,6,0.35);min-height:180px;display:flex;flex-direction:column}
-.card h4{margin:0 0 8px 0;color:var(--accent)}
-.small{font-size:0.85rem;color:var(--muted)}
-/* responsive */
-@media(max-width:1000px){.grid{grid-template-columns:1fr}.sidebar{position:fixed;left:-300px;z-index:40}.sidebar.open{left:0}.main{margin-left:0}}
+
+.sidebar {
+    width: 220px;
+    background: var(--bg-sidebar);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar .logo {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar .logo img {
+    height: 36px;
+}
+
+.sidebar .logo .logo-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.sidebar.collapsed .logo .logo-text {
+    display: none;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    flex: 1;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-links a i {
+    font-size: 1.2rem;
+}
+
+.nav-links a span {
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-accent);
+    box-shadow: inset 3px 0 0 var(--active-glow);
+}
+
+.nav-links a.active {
+    background-color: var(--bg-hover);
+    color: var(--text-accent);
+    box-shadow: inset 3px 0 0 var(--active-glow);
+}
+
+/* Divider line */
+.divider {
+    margin: 20px 0;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+}
+
+/* ------------------------------
+   Main content
+------------------------------- */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-dark);
+    overflow-y: auto;
+}
+
+/* ------------------------------
+   Topbar
+------------------------------- */
+.topbar {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: rgba(40,36,60,0.95);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 5;
+}
+
+.topbar .toggle-btn {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.topbar .user {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.topbar .user .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-right: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.topbar .user .avatar:hover {
+    box-shadow: 0 0 8px var(--brand-glow);
+}
+
+.topbar .user .name-block {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.topbar .user .name {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.topbar .user .dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: var(--bg-sidebar);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 50;
+    flex-direction: column;
+    min-width: 140px;
+}
+
+.topbar .user .dropdown a {
+    padding: 10px 15px;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.topbar .user .dropdown a:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-accent);
+}
+
+/* ------------------------------
+   Page content
+------------------------------- */
+.content {
+    flex: 1;
+    padding: 20px;
+    background: var(--bg-dark);
+}
+
+/* ------------------------------
+   Footer
+------------------------------- */
+footer {
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    background: rgba(40,36,60,0.95);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ------------------------------
+   Misc & responsive
+------------------------------- */
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        left: -220px;
+        top: 0;
+        height: 100%;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.collapsed {
+        left: 0;
+    }
+}

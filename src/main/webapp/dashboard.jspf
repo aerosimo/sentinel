@@ -1,0 +1,49 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- Dashboard shared include: sidebar + topbar + footer -->
+<link rel="stylesheet" href="assets/css/main.css">
+<script src="assets/js/main.js" defer></script>
+
+<div class="dashboard-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+      <div class="logo">
+          <img src="https://thumbs4.imagebam.com/3e/10/82/MED2HDH_t.png" alt="Ominet Logo">
+          <span class="brand-name">Ominet</span>
+      </div>
+      <nav class="nav-links">
+          <a href="dashboard.jsp"><i class="bi bi-house"></i> <span class="link-text">Home</span></a>
+          <a href="card1.jsp"><i class="bi bi-memory"></i> <span class="link-text">Memory</span></a>
+          <a href="card2.jsp"><i class="bi bi-hdd"></i> <span class="link-text">Disk</span></a>
+          <a href="card3.jsp"><i class="bi bi-cpu"></i> <span class="link-text">CPU</span></a>
+          <a href="card4.jsp"><i class="bi bi-exclamation-triangle"></i> <span class="link-text">Errors</span></a>
+          <a href="profile.jsp"><i class="bi bi-person-circle"></i> <span class="link-text">Profile</span></a>
+          <a href="settings.jsp"><i class="bi bi-gear"></i> <span class="link-text">Settings</span></a>
+      </nav>
+  </aside>
+
+  <!-- Main content area -->
+  <div class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+          <div class="left">
+              <!-- Sidebar toggle button replaces search -->
+              <button class="btn btn-outline-secondary me-2" id="sidebarToggle">
+                  <i class="bi bi-list"></i>
+              </button>
+              <span class="page-title">Dashboard</span>
+          </div>
+          <div class="user">
+              <img class="avatar user-toggle" src="assets/img/user/user.webp" alt="User Avatar" height="40" width="40">
+              <div class="name" id="topUsername">Guest</div>
+              <div class="dropdown">
+                  <a href="profile.jsp">Profile</a>
+                  <a href="settings.jsp">Settings</a>
+                  <a id="logoutBtn">Logout</a>
+              </div>
+          </div>
+      </header>
+
+      <!-- Page-specific content starts here -->
+      <div class="page-content">

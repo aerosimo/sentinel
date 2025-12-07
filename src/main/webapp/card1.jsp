@@ -1,27 +1,85 @@
-        <%@ include file="/includes/dashboard.jspf" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="dashboard.jspf" %>
 
-        <!-- ===== PAGE CONTENT (injected by each page) ===== -->
-        <main class="content">
+<div class="page-header">
+    <h1>Memory Usage</h1>
+    <p>Detailed view of memory consumption across the system.</p>
+</div>
 
-        <div style="padding:20px;max-width:1100px;margin:0 auto">
-        <a href="dashboard.jsp">← Back</a>
-        <h2>Server Rack Overview</h2>
-        <div class="card">Here you can show a bigger star-topology, node details and controls.</div>
+<div class="metrics-container">
+    <!-- Memory usage chart -->
+    <canvas id="memoryChartDetail" width="400" height="200"></canvas>
+
+    <!-- Additional memory details -->
+    <div class="memory-details">
+        <div class="detail-item">
+            <span class="label">Total Memory:</span>
+            <span class="value" id="memoryTotal">Loading...</span>
         </div>
+        <div class="detail-item">
+            <span class="label">Used Memory:</span>
+            <span class="value" id="memoryUsed">Loading...</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">Free Memory:</span>
+            <span class="value" id="memoryFree">Loading...</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">Memory Utilization:</span>
+            <span class="value" id="memoryPercent">Loading...</span>
+        </div>
+    </div>
+</div>
 
-                </main>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('https://ominet.aerosimo.com:9443/infraguard/api/guard/metric');
+        const data = await res.json();
 
-                <!-- FOOTER -->
-                <footer>
-                    <div class="copy">
-                        &copy; <script>document.write(new Date().getFullYear());</script>
-                        Ominet by Aerosimo Ltd. All rights reserved.
-                    </div>
-                </footer>
+        const memoryUsed = parseFloat(data.memory.used);
+        const memoryMax = parseFloat(data.memory.max);
+        const memoryPercent = Math.min(100, Math.max(0, (memoryUsed / memoryMax) * 100));
+        const memoryFree = memoryMax - memoryUsed;
 
-            </div><!-- end main -->
+        document.getElementById('memoryTotal').textContent = memoryMax + ' GB';
+        document.getElementById('memoryUsed').textContent = memoryUsed + ' GB';
+        document.getElementById('memoryFree').textContent = memoryFree + ' GB';
+        document.getElementById('memoryPercent').textContent = memoryPercent.toFixed(1) + ' %';
 
-        </div><!-- end layout -->
+        // Render chart
+        const ctx = document.getElementById('memoryChartDetail').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Used', 'Free'],
+                datasets: [{
+                    data: [memoryUsed, memoryFree],
+                    backgroundColor: ['#ff0033', '#4d3b7a33'],
+                    borderColor: '#0d0d0f',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { display: true, position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + Number(context.raw).toFixed(1) + ' GB';
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
-        <!-- Global Dashboard JS -->
-        <script src="assets/js/main.js"></script>
+    } catch (err) {
+        console.error('Error fetching memory metrics:', err);
+    }
+});
+</script>
+
+<%@ include file="dashboard-footer.jspf" %>

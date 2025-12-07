@@ -1,25 +1,89 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Server Health</title>
-<link rel="stylesheet" href="assets/css/main.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-<div style="padding:20px;max-width:1100px;margin:0 auto">
-<a href="dashboard.jsp">← Back</a>
-<h2>Server Health Monitor</h2>
-<div class="grid" style="margin-top:12px">
-<div class="card"><canvas id="memChart"></canvas><p class="small">Memory</p></div>
-<div class="card"><canvas id="diskChart"></canvas><p class="small">Disk</p></div>
+<%@ include file="dashboard.jspf" %>
+
+<div class="page-header">
+    <h1>Disk Usage</h1>
+    <p>Detailed view of disk storage across the system.</p>
 </div>
+
+<div class="metrics-container">
+    <!-- Disk usage chart -->
+    <canvas id="diskChartDetail" width="400" height="200"></canvas>
+
+    <!-- Additional disk details -->
+    <div class="disk-details">
+        <div class="detail-item">
+            <span class="label">Total Disk:</span>
+            <span class="value" id="diskTotal">Loading...</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">Used Disk:</span>
+            <span class="value" id="diskUsed">Loading...</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">Free Disk:</span>
+            <span class="value" id="diskFree">Loading...</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">Disk Utilization:</span>
+            <span class="value" id="diskPercent">Loading...</span>
+        </div>
+    </div>
+</div>
+
 <script>
-// small demo
-const ctx = document.getElementById('memChart'); if(ctx) new Chart(ctx,{type:'doughnut',data:{labels:['Used','Free'],datasets:[{data:[60,40],backgroundColor:['#4d3b7a','#1f1f24']}]}});
-const dctx = document.getElementById('diskChart'); if(dctx) new Chart(dctx,{type:'doughnut',data:{labels:['Used','Free'],datasets:[{data:[32,68],backgroundColor:['#ffaa00','#1f1f24']}]}});
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('https://ominet.aerosimo.com:9443/infraguard/api/guard/metric');
+        const data = await res.json();
+
+        function gbToNumber(str) {
+            return parseFloat(String(str).replace('GB','').trim());
+        }
+
+        const diskTotal = gbToNumber(data.disk.total);
+        const diskFree = gbToNumber(data.disk.free);
+        const diskUsed = diskTotal - diskFree;
+        const diskPercent = Math.min(100, Math.max(0, (diskUsed / diskTotal) * 100));
+
+        document.getElementById('diskTotal').textContent = diskTotal + ' GB';
+        document.getElementById('diskUsed').textContent = diskUsed + ' GB';
+        document.getElementById('diskFree').textContent = diskFree + ' GB';
+        document.getElementById('diskPercent').textContent = diskPercent.toFixed(1) + ' %';
+
+        // Render chart
+        const ctx = document.getElementById('diskChartDetail').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Used', 'Free'],
+                datasets: [{
+                    data: [diskUsed, diskFree],
+                    backgroundColor: ['#ffaa00', '#4d3b7a33'],
+                    borderColor: '#0d0d0f',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { display: true, position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + Number(context.raw).toFixed(1) + ' GB';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    } catch (err) {
+        console.error('Error fetching disk metrics:', err);
+    }
+});
 </script>
-</div>
-</body>
-</html>
+
+<%@ include file="dashboard-footer.jspf" %>

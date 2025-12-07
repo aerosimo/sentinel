@@ -1,54 +1,62 @@
-// main.js — Dashboard interactions
-(function(){
-const sidebar = document.querySelector('.sidebar');
-const toggleBtn = document.getElementById('sidebarToggle');
-const body = document.body;
+/* main.js - handles dashboard interactivity */
 
+// Wait for DOM
+document.addEventListener('DOMContentLoaded', () => {
 
-function setCollapsed(v){
-if(v){ sidebar.classList.add('collapsed'); localStorage.setItem('sidCollapsed','1'); }
-else { sidebar.classList.remove('collapsed'); localStorage.removeItem('sidCollapsed'); }
-}
+  // ---------------- Sidebar Toggle ----------------
+  const sidebar = document.querySelector('.sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+  if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+  }
 
+  // ---------------- Active Link Highlight ----------------
+  const currentPage = window.location.pathname.split('/').pop();
+  const navLinks = document.querySelectorAll('.nav-links a');
+  navLinks.forEach(link => {
+    const hrefPage = link.getAttribute('href');
+    if (hrefPage === currentPage) {
+      link.classList.add('active');
+    }
+  });
 
-// initialize
-document.addEventListener('DOMContentLoaded', ()=>{
-const collapsed = localStorage.getItem('sidCollapsed') === '1';
-setCollapsed(collapsed);
+  // ---------------- User Dropdown ----------------
+  const userAvatar = document.querySelector('.topbar .user .avatar');
+  const userDropdown = document.querySelector('.topbar .user .dropdown');
+  if (userAvatar && userDropdown) {
+    userAvatar.addEventListener('click', () => {
+      userDropdown.style.display = userDropdown.style.display === 'flex' ? 'none' : 'flex';
+    });
+    document.addEventListener('click', (e) => {
+      if (!userAvatar.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.style.display = 'none';
+      }
+    });
+  }
 
+  // ---------------- Inject Username / Avatar ----------------
+  const username = sessionStorage.getItem('username') || 'Guest';
+  const authToken = sessionStorage.getItem('authToken') || null;
+  const topUsernameEl = document.querySelector('.topbar .user .name');
+  const avatarEl = document.querySelector('.topbar .user .avatar');
 
-if(toggleBtn) toggleBtn.addEventListener('click', ()=> setCollapsed(!sidebar.classList.contains('collapsed')));
+  if (topUsernameEl) topUsernameEl.textContent = username;
+  if (avatarEl) {
+    // Placeholder image by default
+    avatarEl.src = 'assets/img/user/user.webp';
+    // Optionally, inject live avatar if available via session or API
+  }
 
+  // ---------------- Logout ----------------
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('authToken');
+      window.location.href = 'login.jsp';
+    });
+  }
 
-// user dropdown
-document.querySelectorAll('.user-toggle').forEach(btn=>{
-btn.addEventListener('click', (ev)=>{
-const user = btn.closest('.user'); user.classList.toggle('open');
 });
-});
-
-
-// load username from sessionStorage
-const uname = sessionStorage.getItem('username') || 'Guest';
-const nameEl = document.getElementById('topUsername');
-if(nameEl) nameEl.textContent = uname;
-
-
-// logout
-const logout = document.getElementById('logoutBtn');
-if(logout) logout.addEventListener('click', ()=>{
-sessionStorage.removeItem('username'); sessionStorage.removeItem('authToken');
-window.location.href = 'index.jsp';
-});
-
-
-// card click navigation
-document.querySelectorAll('[data-card-link]').forEach(el=>{
-el.style.cursor = 'pointer';
-el.addEventListener('click', ()=> {
-const target = el.getAttribute('data-card-link');
-if(target) window.location.href = target;
-});
-});
-});
-})();

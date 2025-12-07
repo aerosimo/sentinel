@@ -30,6 +30,7 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="dashboard.jspf" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,75 +50,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
-<div class="app">
-    <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <img src="assets/img/logo/logo.png" alt="logo">
-            <h3>OMINET</h3>
-        </div>
-        <div style="padding:0 16px">
-            <button id="sidebarToggle" class="toggle-btn">Toggle</button>
-        </div>
-        <nav class="nav">
-            <a href="dashboard.jsp"><span class="icon"><i class="fas fa-home"></i></span><span class="label">Home</span></a>
-            <a href="card1.jsp"><span class="icon"><i class="fas fa-server"></i></span><span class="label">Server Rack</span></a>
-            <a href="card2.jsp"><span class="icon"><i class="fas fa-heartbeat"></i></span><span class="label">Server Health</span></a>
-            <a href="card3.jsp"><span class="icon"><i class="fas fa-bug"></i></span><span class="label">Error Intelligence</span></a>
-            <a href="card4.jsp"><span class="icon"><i class="fas fa-chart-pie"></i></span><span class="label">Server Metrics</span></a>
-            <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:12px 0">
-            <a href="#"><span class="icon"><i class="fas fa-cog"></i></span><span class="label">Settings</span></a>
-            <a href="#"><span class="icon"><i class="fas fa-users"></i></span><span class="label">Teams</span></a>
-        </nav>
-    </aside>
-    <div class="main">
-        <header class="topbar">
-            <div class="left">
-                <div class="search">Search (TODO)</div>
-            </div>
-            <div class="user">
-                <div class="avatar user-toggle"> <span id="topUsername">G</span></div>
-                <div style="text-align:right;margin-left:8px;">
-                    <div id="topUsername" class="name">Guest</div>
-                </div>
-                <div class="dropdown">
-                    <a href="#">Profile</a>
-                    <a href="#">Settings</a>
-                    <a id="logoutBtn">Logout</a>
-                </div>
-            </div>
-        </header>
-
-
-        <main class="content">
-            <div class="grid">
-                <div class="card" data-card-link="card1.jsp">
-                    <h4>Server Rack Overview</h4>
-                    <div class="small">Quick snapshot of rack topology and node statuses</div>
-                </div>
-                <div class="card" data-card-link="card2.jsp">
-                    <h4>Server Health Monitor</h4>
-                    <div class="small">Uptime, load, active connections and health</div>
-                </div>
-                <div class="card" data-card-link="card3.jsp">
-                    <h4>Error Intelligence</h4>
-                    <div class="small">Recent errors and aggregated insight</div>
-                </div>
-                <div class="card" data-card-link="card4.jsp">
-                    <h4>System Metrics</h4>
-                    <div class="small">Memory / Disk / CPU usage</div>
-                </div>
-            </div>
-
-
-            <section style="margin-top:18px">
-                <div class="card">
-                    <h4>Overview</h4>
-                    <p class="small">This dashboard shell is wired to use your existing landing APIs for data. Click a card to view a detailed page.</p>
-                </div>
-            </section>
-        </main>
+<div class="dashboard-cards">
+    <div class="card" onclick="location.href='card1.jsp'">
+        <div class="card-icon"><i class="bi bi-memory"></i></div>
+        <div class="card-title">Memory Usage</div>
+        <div class="card-desc">View detailed memory statistics</div>
+    </div>
+    <div class="card" onclick="location.href='card2.jsp'">
+        <div class="card-icon"><i class="bi bi-hdd"></i></div>
+        <div class="card-title">Disk Usage</div>
+        <div class="card-desc">Check disk space utilization</div>
+    </div>
+    <div class="card" onclick="location.href='card3.jsp'">
+        <div class="card-icon"><i class="bi bi-cpu"></i></div>
+        <div class="card-title">CPU Usage</div>
+        <div class="card-desc">Monitor CPU load and performance</div>
+    </div>
+    <div class="card" onclick="location.href='card4.jsp'">
+        <div class="card-icon"><i class="bi bi-exclamation-triangle"></i></div>
+        <div class="card-title">Recent Errors</div>
+        <div class="card-desc">Analyze recent system errors</div>
     </div>
 </div>
+
+<script>
+    // Highlight active sidebar link
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebarLinks = document.querySelectorAll('.sidebar .nav-links a');
+        sidebarLinks.forEach(link => {
+            if(link.href === window.location.href) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
