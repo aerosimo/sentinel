@@ -62,8 +62,8 @@
             <a href="dashboard.jsp"><span class="icon"><i class="fas fa-home"></i></span><span class="label">Home</span></a>
             <a href="card1.jsp"><span class="icon"><i class="fas fa-server"></i></span><span class="label">Server Rack</span></a>
             <a href="card2.jsp"><span class="icon"><i class="fas fa-heartbeat"></i></span><span class="label">Server Health</span></a>
-            <a href="card3.jsp"><span class="icon"><i class="fas fa-bug"></i></span><span class="label">Errors</span></a>
-            <a href="card4.jsp"><span class="icon"><i class="fas fa-chart-pie"></i></span><span class="label">Metrics</span></a>
+            <a href="card3.jsp"><span class="icon"><i class="fas fa-bug"></i></span><span class="label">Error Intelligence</span></a>
+            <a href="card4.jsp"><span class="icon"><i class="fas fa-chart-pie"></i></span><span class="label">Server Metrics</span></a>
             <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:12px 0">
             <a href="#"><span class="icon"><i class="fas fa-cog"></i></span><span class="label">Settings</span></a>
             <a href="#"><span class="icon"><i class="fas fa-users"></i></span><span class="label">Teams</span></a>
